@@ -1,0 +1,12 @@
+version: 2
+updates:
+- package-ecosystem: "terraform"
+  directories:
+    - "/gcp/modules/**/*"
+  schedule:
+    interval: monthly
+  groups:
+    terraform:
+      patterns:
+        - "*"
+
