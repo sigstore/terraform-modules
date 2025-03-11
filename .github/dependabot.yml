@@ -1,12 +1,15 @@
 version: 2
 updates:
-- package-ecosystem: "terraform"
-  directories:
-    - "/gcp/modules/**/*"
-  schedule:
-    interval: monthly
-  groups:
-    terraform:
-      patterns:
-        - "*"
-
+  - package-ecosystem: "terraform"
+    directories:
+      - "/gcp/modules/**/*"
+    schedule:
+      interval: monthly
+    groups:
+      terraform:
+        patterns:
+          - "*"
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
