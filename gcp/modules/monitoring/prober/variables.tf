@@ -86,15 +86,13 @@ locals {
   # Note: timestamp is not part of "all endpoints" as it may not be enabled
   all_endpoints_filter = format("metric.labels.endpoint = one_of(\"%s\")", join("\", \"", distinct(concat(var.rekor_probed_endpoints, var.fulcio_probed_endpoints))))
 
+  # Note: timestamp is not yet included in hosts by default
   hosts = [{
     host            = var.fulcio_url
     endpoint_filter = local.fulcio_endpoint_filter
     }, {
     host            = var.rekor_url
     endpoint_filter = local.rekor_endpoint_filter
-    }, {
-    host            = var.timestamp_url
-    endpoint_filter = local.timestamp_endpoint_filter
     }
   ]
 }
