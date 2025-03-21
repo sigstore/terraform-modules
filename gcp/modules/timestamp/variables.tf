@@ -43,13 +43,13 @@ variable "timestamp_keyring_name" {
 variable "timestamp_encryption_key_name" {
   type        = string
   description = "Name of KMS key for encrypting Tink private key for Timestamp Authority"
-  default     = "timestamp-encryption-key"
+  default     = "timestamp-key-encryption-key"
 }
 
-variable "timestamp_intermediate_ca_key_name" {
+variable "timestamp_ca_key_name" {
   type        = string
-  description = "Name of KMS key for intermediate CA for Timestamp Authority"
-  default     = "timestamp-intermediate-ca-key"
+  description = "Name of KMS key for self-signed CA for Timestamp Authority"
+  default     = "timestamp-ca-key"
 }
 
 variable "kms_location" {
