@@ -285,9 +285,9 @@ module "timestamp" {
   count = var.timestamp.enabled ? 1 : 0
 
   // KMS
-  timestamp_keyring_name             = var.timestamp_keyring_name
-  timestamp_encryption_key_name      = var.timestamp_encryption_key_name
-  timestamp_intermediate_ca_key_name = var.timestamp_intermediate_ca_key_name
+  timestamp_keyring_name        = var.timestamp_keyring_name
+  timestamp_encryption_key_name = var.timestamp_encryption_key_name
+  timestamp_ca_key_name         = var.timestamp_ca_key_name
 
   dns_zone_name   = var.dns_zone_name
   dns_domain_name = var.dns_domain_name

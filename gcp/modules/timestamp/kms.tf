@@ -47,8 +47,8 @@ resource "google_kms_crypto_key" "timestamp-encryption-key" {
   depends_on = [google_kms_key_ring.timestamp-keyring]
 }
 
-resource "google_kms_crypto_key" "timestamp-intermediate-ca-key" {
-  name     = var.timestamp_intermediate_ca_key_name
+resource "google_kms_crypto_key" "timestamp-ca-key" {
+  name     = var.timestamp_ca_key_name
   key_ring = google_kms_key_ring.timestamp-keyring.id
   purpose  = "ASYMMETRIC_SIGN"
   version_template {
