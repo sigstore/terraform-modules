@@ -297,7 +297,7 @@ variable "timestamp_keyring_name" {
 variable "timestamp_encryption_key_name" {
   type        = string
   description = "Name of KMS key for encrypting Tink private key for Timestamp Authority."
-  default     = "timestamp-encryption-key"
+  default     = "timestamp-key-encryption-key"
 }
 
 variable "timestamp_ca_key_name" {

@@ -36,7 +36,7 @@ resource "google_kms_key_ring" "timestamp-keyring" {
   depends_on = [google_project_service.service]
 }
 
-resource "google_kms_crypto_key" "timestamp-encryption-key" {
+resource "google_kms_crypto_key" "timestamp-key-encryption-key" {
   name     = var.timestamp_encryption_key_name
   key_ring = google_kms_key_ring.timestamp-keyring.id
   # purpose defaults to symmetric encryption/decryption
