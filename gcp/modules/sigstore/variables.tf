@@ -130,6 +130,7 @@ variable "monitoring" {
     dex_url                  = string
     ctlog_url                = string
     notification_channel_ids = list(string)
+    timestamp_enabled        = bool
   })
   default = {
     enabled                  = false
@@ -139,6 +140,7 @@ variable "monitoring" {
     dex_url                  = "oauth2.example.com"
     ctlog_url                = "ctlog.example.com"
     notification_channel_ids = []
+    timestamp_enabled        = false
   }
 }
 
