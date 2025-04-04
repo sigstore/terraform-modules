@@ -144,3 +144,50 @@ resource "google_monitoring_alert_policy" "timestamp_k8s_pod_unschedulable" {
   notification_channels = local.notification_channels
   project               = var.project_id
 }
+
+# Signing Cert Expiration -- alert when cert will expire within 10 weeks
+resource "google_monitoring_alert_policy" "signing_cert_expiration_alert" {
+  # In the absence of data, incident will auto-close in 7 days
+  alert_strategy {
+    auto_close = "604800s"
+  }
+
+  combiner = "OR"
+
+  conditions {
+    condition_threshold {
+      aggregations {
+        alignment_period   = "300s"
+        per_series_aligner = "ALIGN_MIN"
+      }
+
+      comparison = "COMPARISON_LT"
+      duration   = "300s"
+      filter     = "metric.type=\"prometheus.googleapis.com/timestamp_authority_certificate_valid_days_remaining/gauge\" resource.type=\"prometheus_target\""
+      // alert on 10 weeks = 7 days per week X 10 weeks
+      threshold_value = "70"
+
+      trigger {
+        count   = "1"
+        percent = "0"
+      }
+    }
+
+    display_name = "Signing certificate expiration [MIN]"
+  }
+
+  display_name = "Signing Cert Expiration"
+
+  documentation {
+    content   = "Signing certs will expire in 10 weeks. Please rotate the appropriate cert."
+    mime_type = "text/markdown"
+  }
+
+  user_labels = {
+    severity = "warning"
+  }
+
+  enabled               = "true"
+  notification_channels = local.notification_channels
+  project               = var.project_id
+}
