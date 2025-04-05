@@ -46,7 +46,7 @@ module "slos" {
       slos = {
         api-v1-timestamp-certchain-get = {
           display_suffix = "/api/v1/timestamp/certchain - GET"
-          label_filter   = "metric.labels.path=\"/api/v1/timestamp/certchain\" metric.labels.method=\"GET\""
+          label_filter   = "metric.labels.endpoint=\"/api/v1/timestamp/certchain\" metric.labels.method=\"GET\""
           goal           = 0.995
         },
       }
