@@ -28,7 +28,7 @@ module "slos" {
   availability_slos = {
     server-availability = {
       display_prefix            = "Availability (Server)"
-      base_total_service_filter = "metric.type=\"prometheus.googleapis.com/timestamp_qps_by_api/counter\" resource.type=\"prometheus_target\""
+      base_total_service_filter = "metric.type=\"prometheus.googleapis.com/timestamp_authority_http_requests_total/counter\" resource.type=\"prometheus_target\""
       # Only count 500s as server errors since clients can trigger 400s.
       bad_filter = "metric.labels.code=monitoring.regex.full_match(\"5[0-9][0-9]\")"
       slos = {
