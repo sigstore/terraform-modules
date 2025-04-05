@@ -53,8 +53,8 @@ locals {
     for slo in local.flattened_availability_slos : {
       alert_id            = "${slo.slo_id}-slow"
       display_name        = "SLO Slow Burn: ${var.display_name} ${slo.display_name}"
-      window              = "72h"
-      burn_rate_threshold = 1
+      window              = "24h" # this used to be 72h but the API now prevents > 24h values here
+      burn_rate_threshold = 1.5   # detects a 5% budget burn in 24 hours for a 30 day window
       slo_id              = slo.slo_id
       page                = slo.page_configuration.slow_burn
     }
