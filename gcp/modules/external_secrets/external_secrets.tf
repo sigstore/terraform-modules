@@ -54,11 +54,6 @@ resource "google_service_account_iam_member" "gke_sa_iam_member_external_secrets
   depends_on         = [google_service_account.external_secrets_sa]
 }
 
-// Needs roles/iam.serviceAccountKeyAdmin
-resource "google_service_account_key" "external_secrets_key" {
-  service_account_id = google_service_account.external_secrets_sa.name
-}
-
 resource "kubectl_manifest" "secretstore_gcp_backend" {
   yaml_body = <<YAML
 apiVersion: external-secrets.io/v1beta1
