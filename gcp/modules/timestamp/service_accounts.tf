@@ -28,13 +28,6 @@ resource "google_service_account_iam_member" "gke_sa_iam_member_timestamp" {
   depends_on         = [google_service_account.timestamp-sa]
 }
 
-resource "google_project_iam_member" "timestamp_kms_signer_verifier_member" {
-  project    = var.project_id
-  role       = "roles/cloudkms.signerVerifier"
-  member     = "serviceAccount:${google_service_account.timestamp-sa.email}"
-  depends_on = [google_service_account.timestamp-sa]
-}
-
 // Decrypt encrypted Tink keyset to get signing key
 resource "google_project_iam_member" "timestamp_kms_decrypter_member" {
   project    = var.project_id
