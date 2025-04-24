@@ -116,7 +116,7 @@ variable "dns_zone_name" {
 }
 
 variable "dns_domain_name" {
-  description = "name of DNS domain name in Google Cloud DNS"
+  description = "name of DNS domain name in Google Cloud DNS; set to '' in a development environment to avoid creating DNS records and associated TLS certificates"
   type        = string
 }
 
@@ -133,4 +133,50 @@ variable "cluster_namespace_suffix" {
 variable "cluster_service_account" {
   description = "kubernetes service account name for the transparency log deployment"
   type        = string
+}
+
+variable "network" {
+  description = "VPC network in which the GKE cluster lives"
+  type        = string
+  default     = "default"
+}
+
+variable "http_service_port" {
+  description = "internal HTTP port for the transparency log service pod"
+  type        = string
+  default     = "3000"
+}
+
+variable "grpc_service_port" {
+  description = "internal gRPC port for the transparency log service pod"
+  type        = string
+  default     = "3001"
+}
+
+variable "service_health_check_path" {
+  description = "HTTP URL request path for the service health check"
+  type        = string
+  default     = "/healthz"
+}
+
+variable "cluster_network_tag" {
+  type        = string
+  description = "GKE cluster network tag for firewall"
+  default     = ""
+}
+
+variable "network_endpoint_group_http_name_suffix" {
+  type        = string
+  description = "suffix of the name of the network endpoint group that will be created for the HTTP service by the tiles Kubernetes service"
+}
+
+variable "network_endpoint_group_grpc_name_suffix" {
+  type        = string
+  description = "suffix of the name of the network endpoint group that will be created for the gRPC service by the tiles Kubernetes service"
+}
+
+variable "network_endpoint_group_zones" {
+  type        = list(string)
+  description = "zones where the NEGs live. NEGs will not exist until the Kubernetes service they belong to exists and creates them. This value must be set to empty if NEGs are not expected to exist yet, and then can later be updated."
+  default     = []
 }
