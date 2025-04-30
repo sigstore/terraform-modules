@@ -42,13 +42,19 @@ variable "cluster_name" {
   default = ""
 }
 
-variable "spanner_instance_name_suffix" {
-  description = "base name for transparency log resources"
+variable "shard_name" {
+  description = "name of the log shard"
   type        = string
 }
 
-variable "shard_name" {
-  description = "name of the log shard"
+variable "freeze_shard" {
+  description = "whether the shard is frozen. Spanner instances will be scaled down."
+  type        = bool
+  default     = false
+}
+
+variable "spanner_instance_name_suffix" {
+  description = "base name for transparency log resources"
   type        = string
 }
 
