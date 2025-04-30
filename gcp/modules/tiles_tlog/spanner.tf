@@ -15,6 +15,7 @@
  */
 
 resource "google_spanner_instance" "tessera" {
+  count            = var.freeze_shard ? 0 : 1
   project          = var.project_id
   name             = "${var.shard_name}-${var.spanner_instance_name_suffix}"
   config           = "regional-${var.region}"
@@ -24,6 +25,7 @@ resource "google_spanner_instance" "tessera" {
 }
 
 resource "google_spanner_database" "sequencer" {
+  count      = var.freeze_shard ? 0 : 1
   project    = var.project_id
   name       = "sequencer"
   instance   = google_spanner_instance.tessera.name
@@ -31,6 +33,7 @@ resource "google_spanner_database" "sequencer" {
 }
 
 resource "google_spanner_database" "antispam" {
+  count      = var.freeze_shard ? 0 : 1
   project    = var.project_id
   name       = "antispam"
   instance   = google_spanner_instance.tessera.name
@@ -38,6 +41,7 @@ resource "google_spanner_database" "antispam" {
 }
 
 resource "google_spanner_instance_iam_member" "rekor_tiles_spanner_db_admin" {
+  count      = var.freeze_shard ? 0 : 1
   project    = var.project_id
   instance   = google_spanner_instance.tessera.name
   role       = "roles/spanner.databaseAdmin"
