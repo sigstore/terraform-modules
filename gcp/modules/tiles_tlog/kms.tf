@@ -25,7 +25,7 @@ resource "google_kms_key_ring" "keyring" {
 resource "google_kms_crypto_key" "key_encryption_key" {
   count    = var.keyring_name_suffix == "" ? 0 : 1
   name     = var.key_name
-  key_ring = google_kms_key_ring.keyring[count.index]
+  key_ring = google_kms_key_ring.keyring[count.index].id
   version_template {
     algorithm        = var.kms_crypto_key_algorithm
     protection_level = "SOFTWARE"
