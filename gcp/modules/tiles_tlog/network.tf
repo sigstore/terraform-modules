@@ -144,7 +144,7 @@ resource "google_compute_backend_bucket" "tessera_backend_bucket" {
 
   bucket_name = google_storage_bucket.tessera_store.name
 
-  enable_cdn = true
+  enable_cdn = var.enable_cdn
   cdn_policy {
     cache_mode = "USE_ORIGIN_HEADERS"
   }
