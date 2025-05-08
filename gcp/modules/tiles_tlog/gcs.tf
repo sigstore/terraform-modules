@@ -33,7 +33,7 @@ resource "google_storage_bucket_iam_member" "gcs_user" {
 
 resource "google_storage_bucket_iam_member" "public_reader" {
   bucket = google_storage_bucket.tessera_store.name
-  role   = "roles/storage.legacyObjectReader"
+  role   = "roles/storage.objectViewer"
   member = var.public_bucket_member
 
   depends_on = [google_storage_bucket.tessera_store]
