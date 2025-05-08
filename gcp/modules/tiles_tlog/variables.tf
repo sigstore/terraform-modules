@@ -192,3 +192,9 @@ variable "network_endpoint_group_zones" {
   description = "zones where the NEGs live. NEGs will not exist until the Kubernetes service they belong to exists and creates them. This value must be set to empty if NEGs are not expected to exist yet, and then can later be updated."
   default     = []
 }
+
+variable "enable_cdn" {
+  description = "whether to enable the CDN on the load balancer backend bucket service"
+  type        = bool
+  default     = true
+}
