@@ -70,6 +70,24 @@ variable "spanner_instance_display_name_suffix" {
   default     = "tiles-tlog"
 }
 
+variable "spanner_instance_deletion_protection" {
+  description = "whether to enable deletion protection for the spanner instance"
+  type        = bool
+  default     = true
+}
+
+variable "spanner_database_sequencer_deletion_protection" {
+  description = "whether to enable deletion protection for the spanner sequencer database"
+  type        = bool
+  default     = true
+}
+
+variable "spanner_database_antispam_deletion_protection" {
+  description = "whether to enable deletion protection for the spanner antispam database"
+  type        = bool
+  default     = true
+}
+
 variable "bucket_name_suffix" {
   description = "suffix of the bucket for Tessera tiles and checkpoints"
   type        = string
