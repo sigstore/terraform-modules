@@ -22,8 +22,6 @@ resource "google_spanner_instance" "tessera" {
   display_name     = "${var.shard_name}-${var.spanner_instance_display_name_suffix}"
   processing_units = var.spanner_processing_units
 
-  deletion_protection = var.spanner_instance_deletion_protection
-
   depends_on = [google_project_service.service]
 }
 
