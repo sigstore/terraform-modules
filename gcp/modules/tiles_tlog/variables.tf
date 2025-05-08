@@ -70,12 +70,6 @@ variable "spanner_instance_display_name_suffix" {
   default     = "tiles-tlog"
 }
 
-variable "spanner_instance_deletion_protection" {
-  description = "whether to enable deletion protection for the spanner instance"
-  type        = bool
-  default     = true
-}
-
 variable "spanner_database_sequencer_deletion_protection" {
   description = "whether to enable deletion protection for the spanner sequencer database"
   type        = bool
