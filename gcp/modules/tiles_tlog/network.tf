@@ -152,6 +152,10 @@ resource "google_compute_backend_bucket" "tessera_backend_bucket" {
   depends_on = [google_storage_bucket.tessera_store]
 }
 
+locals {
+  hostname = var.dns_domain_name == "" ? "*" : trimsuffix("${var.shard_name}.${var.dns_subdomain_name}.${var.dns_domain_name}", ".")
+}
+
 resource "google_compute_url_map" "url_map" {
   name    = "${var.shard_name}-${var.dns_subdomain_name}-lb"
   project = var.project_id
@@ -159,7 +163,7 @@ resource "google_compute_url_map" "url_map" {
   default_service = google_compute_backend_service.k8s_http_backend_service.id
 
   host_rule {
-    hosts        = var.dns_domain_name == "" ? ["*"] : ["${var.shard_name}.${var.dns_subdomain_name}.${var.dns_domain_name}"]
+    hosts        = [local.hostname]
     path_matcher = var.shard_name
   }
 
