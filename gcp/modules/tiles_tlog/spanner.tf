@@ -21,22 +21,31 @@ resource "google_spanner_instance" "tessera" {
   config           = "regional-${var.region}"
   display_name     = "${var.shard_name}-${var.spanner_instance_display_name_suffix}"
   processing_units = var.spanner_processing_units
-  depends_on       = [google_project_service.service]
+
+  deletion_protection = var.spanner_instance_deletion_protection
+
+  depends_on = [google_project_service.service]
 }
 
 resource "google_spanner_database" "sequencer" {
-  count      = var.freeze_shard ? 0 : 1
-  project    = var.project_id
-  name       = "sequencer"
-  instance   = google_spanner_instance.tessera[count.index].name
+  count    = var.freeze_shard ? 0 : 1
+  project  = var.project_id
+  name     = "sequencer"
+  instance = google_spanner_instance.tessera[count.index].name
+
+  deletion_protection = var.spanner_database_sequencer_deletion_protection
+
   depends_on = [google_spanner_instance.tessera]
 }
 
 resource "google_spanner_database" "antispam" {
-  count      = var.freeze_shard ? 0 : 1
-  project    = var.project_id
-  name       = "sequencer-antispam"
-  instance   = google_spanner_instance.tessera[count.index].name
+  count    = var.freeze_shard ? 0 : 1
+  project  = var.project_id
+  name     = "sequencer-antispam"
+  instance = google_spanner_instance.tessera[count.index].name
+
+  deletion_protection = var.spanner_database_antispam_deletion_protection
+
   depends_on = [google_spanner_instance.tessera]
 }
 
