@@ -35,7 +35,7 @@ resource "google_spanner_database" "sequencer" {
 resource "google_spanner_database" "antispam" {
   count      = var.freeze_shard ? 0 : 1
   project    = var.project_id
-  name       = "antispam"
+  name       = "sequencer-antispam"
   instance   = google_spanner_instance.tessera[count.index].name
   depends_on = [google_spanner_instance.tessera]
 }
