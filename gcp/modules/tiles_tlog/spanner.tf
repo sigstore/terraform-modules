@@ -71,5 +71,5 @@ resource "google_project_iam_member" "tiles_project_timeseries_creator" {
   project    = var.project_id
   role       = "projects/${var.project_id}/roles/${google_project_iam_custom_role.monitoring_timeseries.role_id}"
   member     = local.workload_iam_member_id
-  depends_on = google_project_iam_custom_role.monitoring_timeseries
+  depends_on = [google_project_iam_custom_role.monitoring_timeseries]
 }
