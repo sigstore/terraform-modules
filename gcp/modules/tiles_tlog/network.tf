@@ -75,7 +75,7 @@ resource "google_compute_health_check" "grpc_health_check" {
   healthy_threshold   = 2
   unhealthy_threshold = 2
 
-  grpc_health_check {
+  tcp_health_check {
     port_specification = "USE_SERVING_PORT"
   }
 }
