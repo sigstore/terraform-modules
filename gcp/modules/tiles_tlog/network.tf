@@ -64,6 +64,10 @@ resource "google_compute_health_check" "http_health_check" {
     request_path       = var.service_health_check_path
     port_specification = "USE_SERVING_PORT"
   }
+
+  log_config {
+    enable = true
+  }
 }
 
 resource "google_compute_health_check" "grpc_health_check" {
@@ -75,8 +79,12 @@ resource "google_compute_health_check" "grpc_health_check" {
   healthy_threshold   = 2
   unhealthy_threshold = 2
 
-  grpc_health_check {
+  tcp_health_check {
     port_specification = "USE_SERVING_PORT"
+  }
+
+  log_config {
+    enable = true
   }
 }
 
