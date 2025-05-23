@@ -406,12 +406,6 @@ variable "gcs_logging_bucket" {
   default     = ""
 }
 
-variable "redis_cluster_memory_size_gb" {
-  description = "size of redis cluster (for rekor) expressed in whole GB"
-  type        = number
-  default     = 30
-}
-
 variable "cluster_monitoring_components" {
   description = "The GKE components exposing metrics. Supported values include: SYSTEM_COMPONENTS, APISERVER, CONTROLLER_MANAGER, and SCHEDULER."
   type        = list(string)

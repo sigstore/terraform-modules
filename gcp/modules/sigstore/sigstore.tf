@@ -221,9 +221,6 @@ module "rekor" {
   project_id   = var.project_id
   cluster_name = var.cluster_name
 
-  // Redis
-  network = module.network.network_self_link
-
   // KMS
   rekor_keyring_name = var.rekor_keyring_name
   rekor_key_name     = var.rekor_key_name
@@ -241,12 +238,9 @@ module "rekor" {
 
   new_entry_pubsub_consumers = var.rekor_new_entry_pubsub_consumers
 
-  redis_cluster_memory_size_gb = var.redis_cluster_memory_size_gb
-
   index_database_instance_name = module.mysql.mysql_instance
 
   depends_on = [
-    module.network,
     module.gke-cluster,
     module.project_roles
   ]
