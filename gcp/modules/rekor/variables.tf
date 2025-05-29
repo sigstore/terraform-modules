@@ -33,11 +33,6 @@ variable "cluster_name" {
   default = ""
 }
 
-variable "network" {
-  type    = string
-  default = "default"
-}
-
 // Storage
 variable "enable_attestations" {
   type        = bool
@@ -102,12 +97,6 @@ variable "dns_zone_name" {
 variable "dns_domain_name" {
   description = "Name of DNS domain name in Google Cloud DNS"
   type        = string
-}
-
-variable "redis_cluster_memory_size_gb" {
-  description = "size of redis cluster expressed in whole GB"
-  type        = number
-  default     = 30
 }
 
 variable "new_entry_pubsub_consumers" {
