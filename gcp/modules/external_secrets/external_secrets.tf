@@ -56,7 +56,7 @@ resource "google_service_account_iam_member" "gke_sa_iam_member_external_secrets
 
 resource "kubectl_manifest" "secretstore_gcp_backend" {
   yaml_body = <<YAML
-apiVersion: external-secrets.io/v1beta1
+apiVersion: external-secrets.io/v1
 kind: ClusterSecretStore
 metadata:
   name: gcp-backend
@@ -80,7 +80,7 @@ YAML
 
 resource "kubectl_manifest" "trillian_mysql_external_secret" {
   yaml_body = <<YAML
-apiVersion: external-secrets.io/v1beta1
+apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
   name: trillian-mysql
@@ -119,7 +119,7 @@ YAML
 
 resource "kubectl_manifest" "rekor_mysql_external_secret" {
   yaml_body = <<YAML
-apiVersion: external-secrets.io/v1beta1
+apiVersion: external-secrets.io/v1
 kind: ExternalSecret
 metadata:
   name: rekor-mysql
