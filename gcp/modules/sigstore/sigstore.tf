@@ -388,7 +388,7 @@ module "ctlog_shards" {
   cloud_sql_iam_service_account = module.mysql.trillian_serviceaccount
   breakglass_iam_group          = var.breakglass_sql_iam_group
 
-  database_flags = try(each.value["mysql_database_flags"],{})
+  database_flags = try(each.value["mysql_database_flags"], {})
 
   depends_on = [
     module.gke-cluster,
