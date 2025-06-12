@@ -138,3 +138,9 @@ variable "breakglass_iam_group" {
   type        = string
   description = "name of Cloud IAM group to use for database access in case of emergency"
 }
+
+variable "database_flags" {
+  type        = map(string)
+  description = "configuration flags to set on the MySQL instance"
+  default     = {}
+}

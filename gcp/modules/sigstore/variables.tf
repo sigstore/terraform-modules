@@ -445,3 +445,9 @@ variable "breakglass_sql_iam_group" {
   type        = string
   default     = ""
 }
+
+variable "mysql_database_flags" {
+  type        = map(string)
+  description = "configuration flags to set on the MySQL instance"
+  default     = {}
+}
