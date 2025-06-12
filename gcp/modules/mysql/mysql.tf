@@ -133,6 +133,14 @@ resource "google_sql_database_instance" "sigstore" {
       value = "on"
     }
 
+    dynamic "database_flags" {
+      for_each = var.database_flags
+      content {
+        name  = database_flags.key
+        value = database_flags.value
+      }
+    }
+
     backup_configuration {
       enabled            = var.backup_enabled
       binary_log_enabled = var.binary_log_backup_enabled
