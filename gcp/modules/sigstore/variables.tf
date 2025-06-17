@@ -452,3 +452,9 @@ variable "mysql_database_flags" {
   description = "configuration flags to set on the MySQL instance"
   default     = {}
 }
+
+variable "audit_log_types" {
+  type        = list(string)
+  description = "list of audit log types to apply against allServices"
+  default     = ["ADMIN_READ", "DATA_READ", "DATA_WRITE"]
+}

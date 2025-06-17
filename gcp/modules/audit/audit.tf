@@ -19,13 +19,11 @@ resource "google_project_iam_audit_config" "all-services" {
   project = var.project_id
   service = "allServices"
 
-  audit_log_config {
-    log_type = "ADMIN_READ"
-  }
-  audit_log_config {
-    log_type = "DATA_READ"
-  }
-  audit_log_config {
-    log_type = "DATA_WRITE"
+  dynamic "audit_log_config" {
+    for_each = var.log_types
+
+    content {
+      log_type = audit_log_config.value
+    }
   }
 }
