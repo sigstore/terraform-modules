@@ -116,8 +116,17 @@ resource "google_sql_database_instance" "sigstore" {
 
   settings {
     tier              = var.tier
+    edition           = var.edition
     activation_policy = "ALWAYS"
     availability_type = var.availability_type
+
+    dynamic "data_cache_config" {
+      for_each = var.data_cache_enabled ? ["yes"] : []
+
+      content {
+        data_cache_enabled = true
+      }
+    }
 
     # this sets the flag on the GCP platform to prevent deletion across all API surfaces
     deletion_protection_enabled = var.deletion_protection
@@ -175,7 +184,16 @@ resource "google_sql_database_instance" "read_replica" {
 
   settings {
     tier              = var.replica_tier
+    edition           = var.edition
     availability_type = "ZONAL"
+
+    dynamic "data_cache_config" {
+      for_each = var.data_cache_enabled ? ["yes"] : []
+
+      content {
+        data_cache_enabled = true
+      }
+    }
 
     ip_configuration {
       ipv4_enabled    = var.ipv4_enabled

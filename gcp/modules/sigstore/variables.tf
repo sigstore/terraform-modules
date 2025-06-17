@@ -453,6 +453,30 @@ variable "mysql_database_flags" {
   default     = {}
 }
 
+variable "mysql_edition_rekor" {
+  type        = string
+  description = "The edition of the instance, currently either ENTERPRISE or ENTERPRISE_PLUS"
+  default     = "ENTERPRISE"
+}
+
+variable "mysql_edition_ctlog" {
+  type        = string
+  description = "The edition of the instance, currently either ENTERPRISE or ENTERPRISE_PLUS"
+  default     = "ENTERPRISE"
+}
+
+variable "mysql_data_cache_enabled_rekor" {
+  type        = bool
+  description = "Whether the data cache is enabled for the instance"
+  default     = false
+}
+
+variable "mysql_data_cache_enabled_ctlog" {
+  type        = bool
+  description = "Whether the data cache is enabled for the instance"
+  default     = false
+}
+
 variable "audit_log_types" {
   type        = list(string)
   description = "list of audit log types to apply against allServices"
