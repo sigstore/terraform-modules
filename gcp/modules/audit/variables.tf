@@ -22,3 +22,8 @@ variable "project_id" {
     error_message = "Must specify project_id variable."
   }
 }
+
+variable "log_types" {
+  type    = list(string)
+  default = ["ADMIN_READ", "DATA_READ", "DATA_WRITE"]
+}

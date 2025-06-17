@@ -476,3 +476,9 @@ variable "mysql_data_cache_enabled_ctlog" {
   description = "Whether the data cache is enabled for the instance"
   default     = false
 }
+
+variable "audit_log_types" {
+  type        = list(string)
+  description = "list of audit log types to apply against allServices"
+  default     = ["ADMIN_READ", "DATA_READ", "DATA_WRITE"]
+}
