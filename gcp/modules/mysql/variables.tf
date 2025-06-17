@@ -138,3 +138,15 @@ variable "database_flags" {
   description = "configuration flags to set on the MySQL instance"
   default     = {}
 }
+
+variable "edition" {
+  type        = string
+  description = "The edition of the instance, currently either ENTERPRISE or ENTERPRISE_PLUS"
+  default     = "ENTERPRISE"
+}
+
+variable "data_cache_enabled" {
+  type        = bool
+  description = "Whether the data cache is enabled for the instance"
+  default     = false
+}

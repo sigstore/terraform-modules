@@ -198,6 +198,9 @@ module "mysql" {
 
   database_flags = var.mysql_database_flags
 
+  edition            = var.mysql_edition_rekor
+  data_cache_enabled = var.mysql_data_cache_enabled_rekor
+
   depends_on = [
     module.network,
     module.gke-cluster,
@@ -389,6 +392,9 @@ module "ctlog_shards" {
   breakglass_iam_group          = var.breakglass_sql_iam_group
 
   database_flags = try(each.value["mysql_database_flags"], {})
+
+  edition            = var.mysql_edition_ctlog
+  data_cache_enabled = var.mysql_data_cache_enabled_ctlog
 
   depends_on = [
     module.gke-cluster,
