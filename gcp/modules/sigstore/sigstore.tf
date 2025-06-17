@@ -305,6 +305,7 @@ module "timestamp" {
 module "audit" {
   source     = "../audit"
   project_id = var.project_id
+  log_types  = var.audit_log_types
 }
 
 // OSLogin configuration
