@@ -453,6 +453,12 @@ variable "mysql_database_flags" {
   default     = {}
 }
 
+variable "mysql_rekor_tier" {
+  type        = string
+  description = "Machine tier for Rekor MySQL instance."
+  default     = "db-perf-optimized-N-4"
+}
+
 variable "mysql_edition_rekor" {
   type        = string
   description = "The edition of the instance, currently either ENTERPRISE or ENTERPRISE_PLUS"
