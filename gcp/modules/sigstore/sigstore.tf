@@ -177,7 +177,7 @@ module "mysql" {
 
   cluster_name      = var.cluster_name
   database_version  = var.mysql_db_version
-  tier              = var.mysql_tier
+  tier              = var.mysql_rekor_tier
   availability_type = var.mysql_availability_type
   collation         = var.mysql_collation
 
