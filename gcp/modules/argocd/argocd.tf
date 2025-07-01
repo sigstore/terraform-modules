@@ -56,8 +56,8 @@ spec:
       data:
         url: "git@github.com:${var.github_repo}.git"
         name: "${var.argocd_repo_name}"
-        type: git
-        insecure: ${var.argocd_repo_insecure}
+        type: "git"
+        insecure: "${var.argocd_repo_insecure}"
   data:
   - secretKey: sshPrivateKey
     remoteRef:
