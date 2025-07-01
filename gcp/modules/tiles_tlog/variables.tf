@@ -100,15 +100,15 @@ variable "public_bucket_member" {
 }
 
 variable "keyring_name_suffix" {
-  description = "suffix of the KMS keyring for the Tessera checkpoint signer"
+  description = "suffix of the KMS keyring for Tinkey to encrypt/decrypt a checkpoint signing key"
   type        = string
   default     = ""
 }
 
 variable "key_name" {
-  description = "name of the KMS key for Tessera checkpoint signer"
+  description = "name of the KMS encryption key for Tinkey to encrypt/decrypt a checkpoint signing key"
   type        = string
-  default     = "checkpoint-signer"
+  default     = "checkpoint-signer-key-encryption-key"
 }
 
 variable "kms_location" {
