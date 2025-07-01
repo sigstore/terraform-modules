@@ -53,6 +53,17 @@ variable "gcp_secret_name_ssh" {
   type        = string
 }
 
+variable "argocd_repo_insecure" {
+  description = "Whether to skip SSH host key checking for the repository connection."
+  type        = bool
+  default     = false
+}
+
+variable "argocd_repo_name" {
+  description = "The name of the repository in ArgoCD."
+  type        = string
+}
+
 variable "gcp_secret_name_slack_token" {
   description = "GCP Secret name that holds the slack token to argocd send notifications."
   type        = string
