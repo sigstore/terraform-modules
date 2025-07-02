@@ -58,6 +58,7 @@ spec:
         name: "${var.argocd_repo_name}"
         type: "git"
         insecure: "${var.argocd_repo_insecure}"
+        sshPrivateKey: "{{ .sshPrivateKey | toString }}"
   data:
   - secretKey: sshPrivateKey
     remoteRef:
