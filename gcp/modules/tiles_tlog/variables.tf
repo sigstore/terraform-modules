@@ -100,13 +100,13 @@ variable "public_bucket_member" {
 }
 
 variable "keyring_name_suffix" {
-  description = "suffix of the KMS keyring for Tinkey to encrypt/decrypt a checkpoint signing key"
+  description = "suffix of the KMS keyring for Tinkey to encrypt/decrypt a checkpoint signing key, or used to sign checkpoints"
   type        = string
   default     = ""
 }
 
 variable "key_name" {
-  description = "name of the KMS encryption key for Tinkey to encrypt/decrypt a checkpoint signing key"
+  description = "name of the KMS encryption key for Tinkey to encrypt/decrypt a checkpoint signing key, or used to sign checkpoints"
   type        = string
   default     = "checkpoint-signer-key-encryption-key"
 }
@@ -118,8 +118,9 @@ variable "kms_location" {
 }
 
 variable "kms_crypto_key_algorithm" {
-  description = "signing algorithm"
+  description = "the encryption algorithm for a Tink key encryption key, or a signing algorithm for signing checkpoints"
   type        = string
+  default     = "GOOGLE_SYMMETRIC_ENCRYPTION"
 }
 
 variable "dns_zone_name" {

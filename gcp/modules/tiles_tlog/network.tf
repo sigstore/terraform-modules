@@ -38,6 +38,7 @@ resource "google_dns_record_set" "A_tlog" {
 }
 
 resource "google_compute_firewall" "backend_service_health_check" {
+  count   = var.freeze_shard ? 0 : 1
   name    = "${var.shard_name}-${var.dns_subdomain_name}-fw-allow-health-check-and-proxy"
   project = var.project_id
 
@@ -52,6 +53,7 @@ resource "google_compute_firewall" "backend_service_health_check" {
 }
 
 resource "google_compute_health_check" "http_health_check" {
+  count   = var.freeze_shard ? 0 : 1
   name    = "${var.shard_name}-${var.dns_subdomain_name}-http-health-check"
   project = var.project_id
 
@@ -71,6 +73,7 @@ resource "google_compute_health_check" "http_health_check" {
 }
 
 resource "google_compute_health_check" "grpc_health_check" {
+  count   = var.freeze_shard ? 0 : 1
   name    = "${var.shard_name}-${var.dns_subdomain_name}-grpc-health-check"
   project = var.project_id
 
@@ -89,7 +92,7 @@ resource "google_compute_health_check" "grpc_health_check" {
 }
 
 data "google_compute_network_endpoint_group" "k8s_http_neg" {
-  for_each = toset(var.network_endpoint_group_zones)
+  for_each = var.freeze_shard ? [] : toset(var.network_endpoint_group_zones)
 
   name    = "${var.shard_name}-${var.network_endpoint_group_http_name_suffix}"
   project = var.project_id
@@ -97,7 +100,7 @@ data "google_compute_network_endpoint_group" "k8s_http_neg" {
 }
 
 data "google_compute_network_endpoint_group" "k8s_grpc_neg" {
-  for_each = toset(var.network_endpoint_group_zones)
+  for_each = var.freeze_shard ? [] : toset(var.network_endpoint_group_zones)
 
   name    = "${var.shard_name}-${var.network_endpoint_group_grpc_name_suffix}"
   project = var.project_id
@@ -105,6 +108,7 @@ data "google_compute_network_endpoint_group" "k8s_grpc_neg" {
 }
 
 resource "google_compute_backend_service" "k8s_http_backend_service" {
+  count   = var.freeze_shard ? 0 : 1
   name    = "${var.shard_name}-${var.dns_subdomain_name}-k8s-neg-backend-service"
   project = var.project_id
 
@@ -126,6 +130,7 @@ resource "google_compute_backend_service" "k8s_http_backend_service" {
 }
 
 resource "google_compute_backend_service" "k8s_grpc_backend_service" {
+  count   = var.freeze_shard ? 0 : 1
   name    = "${var.shard_name}-${var.dns_subdomain_name}-k8s-grpc-neg-backend-service"
   project = var.project_id
 
@@ -168,7 +173,7 @@ resource "google_compute_url_map" "url_map" {
   name    = "${var.shard_name}-${var.dns_subdomain_name}-lb"
   project = var.project_id
 
-  default_service = google_compute_backend_service.k8s_http_backend_service.id
+  default_service = google_compute_backend_service.tessera_backend_bucket.id
 
   host_rule {
     hosts        = [local.hostname]
@@ -177,19 +182,25 @@ resource "google_compute_url_map" "url_map" {
 
   path_matcher {
     name            = var.shard_name
-    default_service = google_compute_backend_service.k8s_http_backend_service.id
-    route_rules {
-      priority = 1
-      service  = google_compute_backend_service.k8s_http_backend_service.id
-      match_rules {
-        full_path_match = "/api/v2/log/entries"
+    default_service = google_compute_backend_service.tessera_backend_bucket.id
+    dynamic "http_backend_route_rule" {
+      for_each = var.freeze_shard ? [] : [1]
+      route_rules {
+        priority = 1
+        service  = google_compute_backend_service.k8s_http_backend_service.id
+        match_rules {
+          full_path_match = "/api/v2/log/entries"
+        }
       }
     }
-    route_rules {
-      priority = 2
-      service  = google_compute_backend_service.k8s_grpc_backend_service.id
-      match_rules {
-        full_path_match = "/dev.sigstore.rekor.v2.Rekor/CreateEntry"
+    dynamic "grpc_backend_route_rule" {
+      for_each = var.freeze_shard ? [] : [1]
+      route_rules {
+        priority = 2
+        service  = google_compute_backend_service.k8s_grpc_backend_service.id
+        match_rules {
+          full_path_match = "/dev.sigstore.rekor.v2.Rekor/CreateEntry"
+        }
       }
     }
     route_rules {
