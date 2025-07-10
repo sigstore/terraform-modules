@@ -15,6 +15,7 @@
  */
 
 resource "google_kms_key_ring" "keyring" {
+  // Keyrings cannot be deleted, so the keyring resource will remain when the shard is frozen
   count      = var.keyring_name_suffix == "" ? 0 : 1
   project    = var.project_id
   name       = "${var.shard_name}-${var.keyring_name_suffix}"
@@ -23,7 +24,8 @@ resource "google_kms_key_ring" "keyring" {
 }
 
 resource "google_kms_crypto_key" "key_encryption_key" {
-  count    = var.keyring_name_suffix == "" ? 0 : 1
+  // Deleting the key will destroy all key versions, but the key resource will remain when the shard is frozen
+  count    = var.keyring_name_suffix == "" || var.freeze_shard ? 0 : 1
   name     = var.key_name
   key_ring = google_kms_key_ring.keyring[count.index].id
   version_template {
@@ -34,14 +36,16 @@ resource "google_kms_crypto_key" "key_encryption_key" {
 }
 
 resource "google_project_iam_member" "decrypter" {
-  count   = var.keyring_name_suffix == "" ? 0 : 1 // Only needed if using KMS signer
+  // Only needed if using KMS signer or when shard is active
+  count   = var.keyring_name_suffix == "" || var.freeze_shard ? 0 : 1
   project = var.project_id
   role    = "roles/cloudkms.cryptoKeyDecrypter"
   member  = local.workload_iam_member_id
 }
 
 resource "google_project_iam_member" "kms_member" {
-  count   = var.keyring_name_suffix == "" ? 0 : 1 // Only needed if using KMS signer
+  // Only needed if using KMS signer or when shard is active
+  count   = var.keyring_name_suffix == "" || var.freeze_shard ? 0 : 1
   project = var.project_id
   role    = "roles/cloudkms.viewer"
   member  = local.workload_iam_member_id

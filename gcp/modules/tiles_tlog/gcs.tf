@@ -21,9 +21,15 @@ resource "google_storage_bucket" "tessera_store" {
   storage_class               = var.storage_class
   uniform_bucket_level_access = true
   depends_on                  = [google_project_service.service]
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "google_storage_bucket_iam_member" "gcs_user" {
+  // Remove the IAM binding for the K8s workload identity once the shard is frozen
+  count  = var.freeze_shard ? 0 : 1
   bucket = google_storage_bucket.tessera_store.name
   role   = "roles/storage.objectUser"
   member = local.workload_iam_member_id
