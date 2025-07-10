@@ -21,6 +21,10 @@ resource "google_storage_bucket" "tessera_store" {
   storage_class               = var.storage_class
   uniform_bucket_level_access = true
   depends_on                  = [google_project_service.service]
+
+  lifecycle {
+    prevent_destroy = true
+  }
 }
 
 resource "google_storage_bucket_iam_member" "gcs_user" {
