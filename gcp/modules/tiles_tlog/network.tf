@@ -123,7 +123,7 @@ resource "google_compute_backend_service" "k8s_http_backend_service" {
   load_balancing_scheme = "EXTERNAL_MANAGED"
   port_name             = "http"
   protocol              = "HTTP"
-  health_checks         = [google_compute_health_check.http_health_check.id]
+  health_checks         = [google_compute_health_check.http_health_check[count.index].id]
 
   dynamic "backend" {
     for_each = data.google_compute_network_endpoint_group.k8s_http_neg
@@ -145,7 +145,7 @@ resource "google_compute_backend_service" "k8s_grpc_backend_service" {
   load_balancing_scheme = "EXTERNAL_MANAGED"
   port_name             = "grpc"
   protocol              = "HTTP2"
-  health_checks         = [google_compute_health_check.grpc_health_check.id]
+  health_checks         = [google_compute_health_check.grpc_health_check[count.index].id]
 
   dynamic "backend" {
     for_each = data.google_compute_network_endpoint_group.k8s_grpc_neg
@@ -185,7 +185,7 @@ resource "google_compute_url_map" "url_map" {
   name    = "${var.shard_name}-${var.dns_subdomain_name}-lb"
   project = var.project_id
 
-  default_service = google_compute_backend_service.tessera_backend_bucket.id
+  default_service = google_compute_backend_bucket.tessera_backend_bucket.id
 
   host_rule {
     hosts        = [local.hostname]
@@ -194,22 +194,24 @@ resource "google_compute_url_map" "url_map" {
 
   path_matcher {
     name            = var.shard_name
-    default_service = google_compute_backend_service.tessera_backend_bucket.id
-    dynamic "http_backend_route_rule" {
+    default_service = google_compute_backend_bucket.tessera_backend_bucket.id
+    dynamic "route_rules" {
       for_each = var.freeze_shard ? [] : [1]
-      route_rules {
+
+      content {
         priority = 1
-        service  = google_compute_backend_service.k8s_http_backend_service.id
+        service  = google_compute_backend_service.k8s_http_backend_service[0].id
         match_rules {
           full_path_match = "/api/v2/log/entries"
         }
       }
     }
-    dynamic "grpc_backend_route_rule" {
+    dynamic "route_rules" {
       for_each = var.freeze_shard ? [] : [1]
-      route_rules {
+
+      content {
         priority = 2
-        service  = google_compute_backend_service.k8s_grpc_backend_service.id
+        service  = google_compute_backend_service.k8s_grpc_backend_service[0].id
         match_rules {
           full_path_match = "/dev.sigstore.rekor.v2.Rekor/CreateEntry"
         }
