@@ -76,7 +76,7 @@ resource "google_compute_health_check" "http_health_check" {
   }
 
   log_config {
-    enable = true
+    enable = var.enable_healthcheck_logging
   }
 }
 
@@ -95,7 +95,7 @@ resource "google_compute_health_check" "grpc_health_check" {
   }
 
   log_config {
-    enable = true
+    enable = var.enable_healthcheck_logging
   }
 }
 
@@ -135,6 +135,10 @@ resource "google_compute_backend_service" "k8s_http_backend_service" {
       max_rate_per_endpoint = 5
     }
   }
+
+  log_config {
+    enable = var.enable_backend_service_logging
+  }
 }
 
 resource "google_compute_backend_service" "k8s_grpc_backend_service" {
@@ -156,6 +160,10 @@ resource "google_compute_backend_service" "k8s_grpc_backend_service" {
       balancing_mode        = "RATE"
       max_rate_per_endpoint = 5
     }
+  }
+
+  log_config {
+    enable = var.enable_backend_service_logging
   }
 }
 

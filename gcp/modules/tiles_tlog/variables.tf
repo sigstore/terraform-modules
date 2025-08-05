@@ -199,3 +199,15 @@ variable "enable_cdn" {
   type        = bool
   default     = true
 }
+
+variable "enable_healthcheck_logging" {
+  description = "whether to enable logging for the HTTP and gRPC health checks"
+  type        = bool
+  default     = true
+}
+
+variable "enable_backend_service_logging" {
+  description = "whether to enable logging for the HTTP and gRPC backend services"
+  type        = bool
+  default     = true
+}
