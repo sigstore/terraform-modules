@@ -50,7 +50,7 @@ resource "google_monitoring_alert_policy" "rekorv2_k8s_pod_restart_failing_conta
     display_name = "K8s Restart Failing Container for more than ten minutes"
   }
 
-  display_name = "Rekor V2 K8s Restart Failing Container"
+  display_name = "Rekor V2 ${var.shard_name} K8s Restart Failing Container"
 
   documentation {
     content   = "K8s is restarting a failing container for longer than the accepted time limit, please see playbook for help.\n"
@@ -95,10 +95,10 @@ resource "google_monitoring_alert_policy" "rekorv2_k8s_pod_unschedulable" {
     display_name = "K8s was unable to schedule a pod for more than ten minutes"
   }
 
-  display_name = "Rekor V2 K8s Unscheduable"
+  display_name = "Rekor V2 ${var.shard_name} K8s Unschedulable"
 
   documentation {
-    content   = "K8s is restarting a failing container for longer than the accepted time limit, please see playbook for help."
+    content   = "K8s was unable to schedule a pod for longer than the accepted time limit, please see playbook for help."
     mime_type = "text/markdown"
   }
 

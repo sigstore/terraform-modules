@@ -128,4 +128,6 @@ resource "google_monitoring_alert_policy" "availability_burn_alert" {
   documentation {
     content = format("SLO burn rate for the past %s exceeded %s times the acceptable error budget rate.", each.value.window, each.value.burn_rate_threshold)
   }
+
+  depends_on = [google_monitoring_slo.availability_slo]
 }

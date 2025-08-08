@@ -262,10 +262,10 @@ resource "google_monitoring_alert_policy" "fulcio_k8s_pod_unschedulable" {
     display_name = "K8s was unable to schedule a pod for more than ten minutes"
   }
 
-  display_name = "Fulcio K8s Unscheduable"
+  display_name = "Fulcio K8s Unschedulable"
 
   documentation {
-    content   = "K8s is failing to schedulable pod for longer than the accepted time limit, please see playbook for help.\n"
+    content   = "K8s was unable to schedule a pod for longer than the accepted time limit, please see playbook for help.\n"
     mime_type = "text/markdown"
   }
 

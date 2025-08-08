@@ -48,7 +48,7 @@ variable "shard_name" {
 }
 
 variable "freeze_shard" {
-  description = "whether the shard is frozen. Spanner instances will be scaled down."
+  description = "whether the shard is frozen. Spanner instances will be scaled down and KMS keys will be destroyed."
   type        = bool
   default     = false
 }
