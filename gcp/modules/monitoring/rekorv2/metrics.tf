@@ -24,7 +24,7 @@ resource "google_logging_metric" "rekorv2_k8s_pod_restart_failing_container" {
     value_type  = "INT64"
   }
 
-  name    = "rekorv2/k8s_pod/restarting-failed-container"
+  name    = "rekorv2-${var.shard_name}/k8s_pod/restarting-failed-container"
   project = var.project_id
 }
 
@@ -38,6 +38,6 @@ resource "google_logging_metric" "k8s_pod_unschedulable" {
     value_type  = "INT64"
   }
 
-  name    = "rekorv2/k8s_pod/unschedulable"
+  name    = "rekorv2-${var.shard_name}/k8s_pod/unschedulable"
   project = var.project_id
 }
