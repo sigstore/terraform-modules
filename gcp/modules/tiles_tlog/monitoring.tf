@@ -14,20 +14,10 @@
  * limitations under the License.
  */
 
-resource "google_project_iam_custom_role" "monitoring_metrics_descriptors" {
-  project     = var.project_id
-  role_id     = "OTelMetrics"
-  title       = "OTel metrics management"
-  description = "grant permissions on project for OTel metrics management"
-  permissions = [
-    "monitoring.metricDescriptors.create",
-  ]
-}
-
 resource "google_project_iam_member" "tessera_metric_descriptors_creator" {
   count      = var.freeze_shard ? 0 : 1
   project    = var.project_id
-  role       = "projects/${var.project_id}/roles/${google_project_iam_custom_role.monitoring_metrics_descriptors.role_id}"
+  role       = "projects/${var.project_id}/roles/${var.monitoring_role_id}"
   member     = local.workload_iam_member_id
   depends_on = [google_project_iam_custom_role.monitoring_metrics_descriptors]
 }

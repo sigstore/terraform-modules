@@ -56,21 +56,10 @@ resource "google_spanner_instance_iam_member" "tiles_spanner_db_admin" {
   depends_on = [google_spanner_instance.tessera]
 }
 
-resource "google_project_iam_custom_role" "monitoring_timeseries" {
-  project     = var.project_id
-  role_id     = "SpannerMonitoringTimeseries"
-  title       = "spanner monitoring timeseries"
-  description = "grant permissions on project for spanner database-related timeseries creation"
-  permissions = [
-    "monitoring.timeSeries.create",
-    "monitoring.timeSeries.list"
-  ]
-}
-
 resource "google_project_iam_member" "tiles_project_timeseries_creator" {
   count      = var.freeze_shard ? 0 : 1
   project    = var.project_id
-  role       = "projects/${var.project_id}/roles/${google_project_iam_custom_role.monitoring_timeseries.role_id}"
+  role       = "projects/${var.project_id}/roles/${var.spanner_timeseries_role_id}"
   member     = local.workload_iam_member_id
   depends_on = [google_project_iam_custom_role.monitoring_timeseries]
 }
