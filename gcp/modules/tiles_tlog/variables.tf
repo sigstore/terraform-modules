@@ -211,3 +211,13 @@ variable "enable_backend_service_logging" {
   type        = bool
   default     = true
 }
+
+variable "spanner_timeseries_role_id" {
+  description = "name of the project role for managing timeseries entries for Spanner - role must include permissions `monitoring.timeSeries.create` and `monitoring.timeSeries.list`"
+  type        = string
+}
+
+variable "monitoring_role_id" {
+  description = "name of the project role for managing metrics - role must include permissions `monitoring.metricDescriptors.create`"
+  type        = string
+}
