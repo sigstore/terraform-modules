@@ -57,9 +57,8 @@ resource "google_spanner_instance_iam_member" "tiles_spanner_db_admin" {
 }
 
 resource "google_project_iam_member" "tiles_project_timeseries_creator" {
-  count      = var.freeze_shard ? 0 : 1
-  project    = var.project_id
-  role       = "projects/${var.project_id}/roles/${var.spanner_timeseries_role_id}"
-  member     = local.workload_iam_member_id
-  depends_on = [google_project_iam_custom_role.monitoring_timeseries]
+  count   = var.freeze_shard ? 0 : 1
+  project = var.project_id
+  role    = "projects/${var.project_id}/roles/${var.spanner_timeseries_role_id}"
+  member  = local.workload_iam_member_id
 }
