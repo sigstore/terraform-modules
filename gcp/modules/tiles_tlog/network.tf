@@ -123,7 +123,9 @@ resource "google_compute_backend_service" "k8s_http_backend_service" {
   load_balancing_scheme = "EXTERNAL_MANAGED"
   port_name             = "http"
   protocol              = "HTTP"
-  health_checks         = [google_compute_health_check.http_health_check[count.index].id]
+
+  connection_draining_timeout_sec = 15
+  health_checks                   = [google_compute_health_check.http_health_check[count.index].id]
 
   dynamic "backend" {
     for_each = data.google_compute_network_endpoint_group.k8s_http_neg
@@ -149,7 +151,9 @@ resource "google_compute_backend_service" "k8s_grpc_backend_service" {
   load_balancing_scheme = "EXTERNAL_MANAGED"
   port_name             = "grpc"
   protocol              = "HTTP2"
-  health_checks         = [google_compute_health_check.grpc_health_check[count.index].id]
+
+  connection_draining_timeout_sec = 15
+  health_checks                   = [google_compute_health_check.grpc_health_check[count.index].id]
 
   dynamic "backend" {
     for_each = data.google_compute_network_endpoint_group.k8s_grpc_neg
