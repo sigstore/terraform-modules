@@ -136,7 +136,7 @@ resource "google_monitoring_alert_policy" "timestamp_k8s_pod_unschedulable" {
   display_name = "Timestamp Authority K8s Unschedulable"
 
   documentation {
-    content   = "K8s is restarting a failing container for longer than the accepted time limit, please see playbook for help."
+    content   = "K8s was unable to schedule a pod for longer than the accepted time limit, please see playbook for help."
     mime_type = "text/markdown"
   }
 
