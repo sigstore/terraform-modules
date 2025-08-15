@@ -457,3 +457,123 @@ resource "google_monitoring_alert_policy" "k8s_container_cpu_allocatable_utiliza
   notification_channels = local.notification_channels
   project               = var.project_id
 }
+
+### Spanner Alerts
+
+# Spanner High Priority CPU Utilization > 65% over 10 minutes
+# (https://cloud.google.com/spanner/docs/monitoring-cloud#high-priority-cpu)
+resource "google_monitoring_alert_policy" "spanner_high_priority_cpu_utilization_warning" {
+  # In the absence of data, incident will auto-close in 7 days
+  alert_strategy {
+    auto_close = "604800s"
+  }
+  combiner = "OR"
+
+  conditions {
+    condition_threshold {
+      aggregations {
+        alignment_period     = "600s"
+        per_series_aligner   = "ALIGN_MEAN"
+        cross_series_reducer = "REDUCE_SUM"
+      }
+      comparison      = "COMPARISON_GT"
+      duration        = "600s"
+      filter          = "metric.type=\"spanner.googleapis.com/instance/cpu/utilization_by_priority\" resource.type=\"spanner_instance\" metric.labels.priority=\"high\""
+      threshold_value = "0.65"
+      trigger {
+        count = "1"
+      }
+    }
+    display_name = "Spanner Instance High Priority CPU Utilization > 65%"
+  }
+  display_name = "Spanner Instance High Priority CPU Utilization > 65%"
+  documentation {
+    content   = "Spanner instance high priority CPU utilization is >65%. Please reduce CPU utilization (https://cloud.google.com/spanner/docs/cpu-utilization#reduce)."
+    mime_type = "text/markdown"
+  }
+  enabled               = "true"
+  notification_channels = local.notification_channels
+  project               = var.project_id
+
+  user_labels = {
+    severity = "warning"
+  }
+}
+
+# Spanner 24 hour rolling average CPU utilization > 90%
+resource "google_monitoring_alert_policy" "spanner_smoothed_cpu_utilization_warning" {
+  # In the absence of data, incident will auto-close in 7 days
+  alert_strategy {
+    auto_close = "604800s"
+  }
+  combiner = "OR"
+
+  conditions {
+    condition_threshold {
+      aggregations {
+        alignment_period     = "600s"
+        per_series_aligner   = "ALIGN_MEAN"
+        cross_series_reducer = "REDUCE_SUM"
+      }
+      comparison      = "COMPARISON_GT"
+      duration        = "600s"
+      filter          = "metric.type=\"spanner.googleapis.com/instance/cpu/smoothed_utilization\" resource.type=\"spanner_instance\""
+      threshold_value = "0.90"
+      trigger {
+        count = "1"
+      }
+    }
+    display_name = "Spanner Instance 24 Hour Rolling Average CPU Utilization > 90%"
+  }
+  display_name = "Spanner Instance 24 Hour Rolling Average CPU Utilization > 90%"
+  documentation {
+    content   = "Spanner instance 24 hour rolling average CPU utilization is >90%. Please reduce CPU utilization (https://cloud.google.com/spanner/docs/cpu-utilization#reduce)."
+    mime_type = "text/markdown"
+  }
+  enabled               = "true"
+  notification_channels = local.notification_channels
+  project               = var.project_id
+
+  user_labels = {
+    severity = "warning"
+  }
+}
+
+# Spanner storage utilization > 80%
+resource "google_monitoring_alert_policy" "spanner_disk_utilization_warning" {
+  # In the absence of data, incident will auto-close in 7 days
+  alert_strategy {
+    auto_close = "604800s"
+  }
+  combiner = "OR"
+
+  conditions {
+    condition_threshold {
+      aggregations {
+        alignment_period     = "600s"
+        per_series_aligner   = "ALIGN_MAX"
+        cross_series_reducer = "REDUCE_SUM"
+      }
+      comparison      = "COMPARISON_GT"
+      duration        = "0s"
+      filter          = "metric.type=\"spanner.googleapis.com/instance/storage/utilization\" resource.type=\"spanner_instance\""
+      threshold_value = "0.80"
+      trigger {
+        count = "1"
+      }
+    }
+    display_name = "Spanner Instance Disk Usage > 80%"
+  }
+  display_name = "Spanner Instance Disk Usage > 80%"
+  documentation {
+    content   = "Spanner instance disk usage is reaching maximum capacity (https://cloud.google.com/spanner/docs/storage-utilization#reduce)."
+    mime_type = "text/markdown"
+  }
+  enabled               = "true"
+  notification_channels = local.notification_channels
+  project               = var.project_id
+
+  user_labels = {
+    severity = "warning"
+  }
+}
