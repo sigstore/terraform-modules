@@ -244,7 +244,7 @@ resource "google_compute_url_map" "url_map" {
   }
 
   lifecycle {
-    prevent_destroy = true
+    create_before_destroy = true
   }
 }
 
