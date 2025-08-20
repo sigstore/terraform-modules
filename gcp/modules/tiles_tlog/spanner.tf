@@ -21,6 +21,7 @@ resource "google_spanner_instance" "tessera" {
   config           = "regional-${var.region}"
   display_name     = "${var.shard_name}-${var.spanner_instance_display_name_suffix}"
   processing_units = var.spanner_processing_units
+  force_destroy    = true # When deleting the instance, delete backups as well
 
   depends_on = [google_project_service.service]
 }
