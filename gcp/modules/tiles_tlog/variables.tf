@@ -47,8 +47,16 @@ variable "shard_name" {
   type        = string
 }
 
+# Backend services must be removed from the load balancer before attempting to delete the backend services,
+# otherwise a resource-in-use error is thrown. Terraform isn't able to order operations, so the backend services must be removed first.
+variable "lb_backend_turndown" {
+  description = "whether to remove the K8s backends from the load balancer, when the shard is being turned down"
+  type        = bool
+  default     = false
+}
+
 variable "freeze_shard" {
-  description = "whether the shard is frozen. Spanner instances will be scaled down and KMS keys will be destroyed."
+  description = "whether the shard is frozen. Spanner, KMS and Compute resources will be deleted."
   type        = bool
   default     = false
 }

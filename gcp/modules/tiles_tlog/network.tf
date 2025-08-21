@@ -208,7 +208,7 @@ resource "google_compute_url_map" "url_map" {
     name            = var.shard_name
     default_service = google_compute_backend_bucket.tessera_backend_bucket.id
     dynamic "route_rules" {
-      for_each = var.freeze_shard ? [] : [1]
+      for_each = var.lb_backend_turndown ? [] : [1]
 
       content {
         priority = 1
@@ -219,7 +219,7 @@ resource "google_compute_url_map" "url_map" {
       }
     }
     dynamic "route_rules" {
-      for_each = var.freeze_shard ? [] : [1]
+      for_each = var.lb_backend_turndown ? [] : [1]
 
       content {
         priority = 2
@@ -244,7 +244,7 @@ resource "google_compute_url_map" "url_map" {
   }
 
   lifecycle {
-    create_before_destroy = true
+    prevent_destroy = true
   }
 }
 
