@@ -19,7 +19,6 @@ resource "google_monitoring_dashboard" "spanner_cpu_dashboard" {
 {
   "displayName": "Spanner CPU Alerts",
   "dashboardFilters": [],
-  "labels": {},
   "mosaicLayout": {
     "columns": 48,
     "tiles": [
