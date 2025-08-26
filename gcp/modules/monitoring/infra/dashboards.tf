@@ -25,11 +25,9 @@ resource "google_monitoring_dashboard" "spanner_cpu_dashboard" {
         "height": 16,
         "width": 24,
         "widget": {
-          "title": "",
           "alertChart": {
             "name": "${google_monitoring_alert_policy.spanner_high_priority_cpu_utilization_warning.id}"
           },
-          "id": ""
         }
       },
       {
