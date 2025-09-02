@@ -95,6 +95,12 @@ variable "bucket_name_suffix" {
   type        = string
 }
 
+variable "bucket_id_length" {
+  description = "length of random byte string to append to the bucket name. Appended as hex so ID length will be twice this value. GCS bucket name cannot be longer than 63 characters"
+  type        = number
+  default     = 10
+}
+
 variable "storage_class" {
   description = "storage class for the Tessera bucket"
   type        = string

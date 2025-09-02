@@ -14,9 +14,13 @@
  * limitations under the License.
  */
 
+resource "random_id" "tessera_bucket_random_suffix" {
+  byte_length = var.bucket_id_length
+}
+
 resource "google_storage_bucket" "tessera_store" {
   project                     = var.project_id
-  name                        = "${var.shard_name}-${var.bucket_name_suffix}"
+  name                        = var.bucket_id_length == 0 ? format("%s-%s", var.shard_name, var.bucket_name_suffix) : format("%s-%s-%s", var.shard_name, var.bucket_name_suffix, random_id.tessera_bucket_random_suffix.hex)
   location                    = var.region
   storage_class               = var.storage_class
   uniform_bucket_level_access = true
