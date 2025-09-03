@@ -162,6 +162,11 @@ variable "cluster_network_tag" {
   default = ""
 }
 
+variable "cluster_autoscaling_enabled" {
+  type    = bool
+  default = true
+}
+
 variable "tunnel_accessor_sa" {
   type        = list(string)
   description = "Email of group to give access to the bastion tunnel to"

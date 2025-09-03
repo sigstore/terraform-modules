@@ -73,6 +73,12 @@ resource "google_container_cluster" "cluster" {
     }
   }
 
+  node_pool_auto_config {
+    network_tags {
+      tags = [local.cluster_network_tag]
+    }
+  }
+
   resource_labels = {
     "env" = var.cluster_name
   }
