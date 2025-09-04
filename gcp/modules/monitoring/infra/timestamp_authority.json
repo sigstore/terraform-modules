@@ -1,0 +1,60 @@
+{
+  "displayName": "Timestamp Authority",
+  "mosaicLayout": {
+    "columns": 48,
+    "tiles": [
+      {
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Mean API Latency over 1 minute",
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "prometheusQuery": "(sum by (path) (rate(timestamp_authority_api_latency_sum[1m])) / sum by (path) (rate(timestamp_authority_api_latency_count[1m]))) / 1000000",
+                  "unitOverride": "ms"
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Traffic",
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (\"path\")(rate({\"__name__\"=\"timestamp_authority_api_latency_summary_count\"}[${__interval}]))",
+                  "unitOverride": "1/s"
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "yPos": 16,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "/api/v1/timestamp response codes",
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "prometheusQuery": "sum by (\"code\")(rate({\"__name__\"=\"timestamp_authority_api_latency_summary_count\",\"path\"=\"/api/v1/timestamp\"}[${__interval}]))"
+                }
+              }
+            ]
+          }
+        }
+      }
+    ]
+  }
+}
