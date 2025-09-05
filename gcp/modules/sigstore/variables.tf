@@ -128,6 +128,7 @@ variable "monitoring" {
     rekor_url                = string
     timestamp_url            = string
     dex_url                  = string
+    tuf_url                  = string
     ctlog_url                = string
     notification_channel_ids = list(string)
     timestamp_enabled        = bool
@@ -138,6 +139,7 @@ variable "monitoring" {
     rekor_url                = "rekor.example.com"
     timestamp_url            = "timestamp.example.com"
     dex_url                  = "oauth2.example.com"
+    tuf_url                  = "tuf.example.com"
     ctlog_url                = "ctlog.example.com"
     notification_channel_ids = []
     timestamp_enabled        = false
