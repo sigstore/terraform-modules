@@ -71,6 +71,11 @@ variable "timestamp_url" {
   default     = "timestamp.sigstore.dev"
 }
 
+variable "tuf_url" {
+  description = "TUF repository URL"
+  default     = "tuf-repo-cdn.sigstore.dev"
+}
+
 // Prober variables
 variable "prober_rekor_url" {
   type    = string
