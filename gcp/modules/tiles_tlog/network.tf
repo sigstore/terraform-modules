@@ -167,6 +167,9 @@ resource "google_compute_security_policy" "k8s_http_grpc_security_policy" {
 
   advanced_options_config {
     json_parsing = "STANDARD"
+    json_custom_config {
+      content_types = ["application/json", "application/json; charset=utf-8"]
+    }
   }
 
   adaptive_protection_config {
@@ -244,18 +247,6 @@ resource "google_compute_security_policy" "bucket_security_policy" {
   name    = "${var.shard_name}-bucket-security-policy"
   project = var.project_id
   type    = "CLOUD_ARMOR_EDGE"
-
-  rule {
-    action   = "deny(502)"
-    priority = "1"
-
-    match {
-      expr {
-        expression = "int(request.headers['content-length']) > 1024"
-      }
-    }
-    description = "Block all incoming read requests > 1KiB"
-  }
 
   rule {
     action   = "throttle"
