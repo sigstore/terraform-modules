@@ -173,7 +173,7 @@ resource "google_monitoring_alert_policy" "signing_cert_expiration_alert" {
       }
     }
 
-    display_name = "Signing certificate expiration [MIN]"
+    display_name = "Timestamp Authority signing certificate expiration"
   }
 
   display_name = "Signing Cert Expiration"

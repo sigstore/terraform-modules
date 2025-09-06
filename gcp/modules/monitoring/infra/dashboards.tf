@@ -52,3 +52,9 @@ EOF
     google_monitoring_alert_policy.spanner_smoothed_cpu_utilization_warning
   ]
 }
+
+resource "google_monitoring_dashboard" "timestamp_authority_dashboard" {
+  project = var.project_id
+
+  dashboard_json = file("${path.module}/timestamp_authority.json")
+}
