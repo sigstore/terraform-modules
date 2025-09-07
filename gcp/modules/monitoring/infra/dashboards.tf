@@ -58,3 +58,9 @@ resource "google_monitoring_dashboard" "timestamp_authority_dashboard" {
 
   dashboard_json = file("${path.module}/timestamp_authority.json")
 }
+
+resource "google_monitoring_dashboard" "clients_dashboard" {
+  project = var.project_id
+
+  dashboard_json = file("${path.module}/clients.json")
+}
