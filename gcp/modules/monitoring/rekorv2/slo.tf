@@ -34,7 +34,7 @@ module "slos" {
       slos = {
         api-v2-log-entries-post = {
           display_suffix = "/api/v2/log/entries - POST"
-          label_filter   = "metric.labels.method=\"POST\""
+          label_filter   = "metric.labels.method=\"post\""
           goal           = 0.995
         },
       },
