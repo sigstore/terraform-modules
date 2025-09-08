@@ -216,6 +216,9 @@ resource "google_compute_url_map" "url_map" {
         match_rules {
           full_path_match = "/api/v2/log/entries"
         }
+        match_rules {
+          full_path_match = "/healthz"
+        }
       }
     }
     dynamic "route_rules" {
