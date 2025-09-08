@@ -105,6 +105,18 @@ module "dex" {
   ]
 }
 
+// TUF
+module "tuf" {
+  source = "./tuf"
+
+  project_id = var.project_id
+  tuf_url    = var.tuf_url
+
+  depends_on = [
+    google_project_service.service
+  ]
+}
+
 // Prober
 module "prober" {
   source = "./prober"
