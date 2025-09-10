@@ -40,10 +40,10 @@ resource "google_logging_metric" "client_user_agents" {
 
   label_extractors = {
     "version" = <<-EOT
-      REGEXP_EXTRACT(httpRequest.userAgent, "[^\/s]+[/ ]v?(\d+\.\d+(?:\.\d+)?)")
+      REGEXP_EXTRACT(httpRequest.userAgent, "[^/\\s]+[/ ]v?(\\d+\\.\\d+(?:\\.\\d+)?)")
     EOT
     "client"  = <<-EOT
-      REGEXP_EXTRACT(httpRequest.userAgent, "^([^\/\s]+)")
+      REGEXP_EXTRACT(httpRequest.userAgent, "^([^/\\s]+)")
     EOT
   }
 }
