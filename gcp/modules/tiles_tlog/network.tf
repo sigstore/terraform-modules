@@ -168,7 +168,7 @@ resource "google_compute_security_policy" "k8s_http_grpc_security_policy" {
   advanced_options_config {
     json_parsing = "STANDARD"
     json_custom_config {
-      content_types = ["application/json", "application/json; charset=utf-8"]
+      content_types = ["application/json"]
     }
   }
 
