@@ -148,6 +148,7 @@ resource "google_container_cluster" "cluster" {
     enabled             = var.cluster_autoscaling_enabled
 
     auto_provisioning_defaults {
+      machine_type    = var.node_config_machine_type
       service_account = google_service_account.gke-sa.email
       shielded_instance_config {
         enable_integrity_monitoring = true
