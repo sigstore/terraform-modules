@@ -1,0 +1,144 @@
+{
+  "displayName": "Rekor",
+  "mosaicLayout": {
+    "columns": 48,
+    "tiles": [
+      {
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Mean of Rekor API Latency over 1 minute",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "timeSeriesQueryLanguage": "fetch prometheus_target\n| metric 'prometheus.googleapis.com/rekor_api_latency/histogram'\n| align delta(1m)\n| every 1m\n| group_by [metric.path], [mean_latency_ns: mean(value.rekor_api_latency)]\n| value [mean_latency_ms: mean_latency_ns / 1000000]"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "latency (ms)",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Max of Rekor API Latency Summary ",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "prometheusQuery": "max by (\"path\")(rate({\"__name__\"=\"rekor_api_latency_summary_sum\"}[${__interval}]))/ 1000000\n",
+                  "unitOverride": "ms"
+                }
+              }
+            ],
+            "timeshiftDuration": "0s",
+            "yAxis": {
+              "label": "y1Axis",
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 16,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "prometheus/rekor_latency_by_api/histogram (filtered) [SUM]",
+          "xyChart": {
+            "chartOptions": {
+              "displayHorizontal": false,
+              "mode": "COLOR",
+              "showLegend": false
+            },
+            "dataSets": [
+              {
+                "minAlignmentPeriod": "60s",
+                "plotType": "HEATMAP",
+                "targetAxis": "Y1",
+                "timeSeriesQuery": {
+                  "outputFullDuration": false,
+                  "timeSeriesFilter": {
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "perSeriesAligner": "ALIGN_DELTA"
+                    },
+                    "filter": "metric.type=\"prometheus.googleapis.com/rekor_latency_by_api/histogram\" resource.type=\"prometheus_target\" metric.label.\"path\"=\"/api/v1/log/entries/{entryUUID}\""
+                  }
+                }
+              }
+            ],
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      },
+      {
+        "yPos": 16,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Requests per second by method and path",
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"prometheus.googleapis.com/rekor_qps_by_api/counter\" resource.type=\"prometheus_target\"",
+                    "aggregation": {
+                      "perSeriesAligner": "ALIGN_RATE",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "metric.label.\"method\"",
+                        "metric.label.\"path\""
+                      ],
+                      "alignmentPeriod": "60s"
+                    }
+                  }
+                },
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "minAlignmentPeriod": "60s"
+              }
+            ],
+            "chartOptions": {
+              "mode": "COLOR",
+              "displayHorizontal": false
+            },
+            "thresholds": [],
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
+      }
+    ]
+  }
+}
