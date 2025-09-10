@@ -250,27 +250,6 @@ resource "google_compute_security_policy" "bucket_security_policy" {
   type    = "CLOUD_ARMOR_EDGE"
 
   rule {
-    action   = "throttle"
-    priority = "10"
-    match {
-      versioned_expr = "SRC_IPS_V1"
-      config {
-        src_ip_ranges = ["*"]
-      }
-    }
-    rate_limit_options {
-      enforce_on_key = "IP"
-      conform_action = "allow"
-      exceed_action  = "deny(429)"
-      rate_limit_threshold {
-        count        = var.bucket_qpm_rate_limit
-        interval_sec = "60"
-      }
-    }
-    description = "Rate limit all read traffic by client IP"
-  }
-
-  rule {
     action   = "allow"
     priority = "2147483647"
     match {
@@ -280,12 +259,6 @@ resource "google_compute_security_policy" "bucket_security_policy" {
       }
     }
     description = "default rule"
-  }
-
-  adaptive_protection_config {
-    layer_7_ddos_defense_config {
-      enable = var.enable_adaptive_protection
-    }
   }
 }
 
