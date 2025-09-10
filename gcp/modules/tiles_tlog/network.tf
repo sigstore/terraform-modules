@@ -116,6 +116,7 @@ data "google_compute_network_endpoint_group" "k8s_grpc_neg" {
 }
 
 resource "google_compute_security_policy" "k8s_http_grpc_security_policy" {
+  count   = var.freeze_shard ? 0 : 1
   name    = "${var.shard_name}-k8s-http-grpc-security-policy"
   project = var.project_id
   type    = "CLOUD_ARMOR"
@@ -202,9 +203,9 @@ resource "google_compute_backend_service" "k8s_http_backend_service" {
     }
   }
 
-  depends_on = [google_compute_security_policy.k8s_http_grpc_security_policy]
+  depends_on = [google_compute_security_policy.k8s_http_grpc_security_policy[0]]
 
-  security_policy = google_compute_security_policy.k8s_http_grpc_security_policy.self_link
+  security_policy = google_compute_security_policy.k8s_http_grpc_security_policy[0].self_link
 
   log_config {
     enable = var.enable_backend_service_logging
@@ -234,9 +235,9 @@ resource "google_compute_backend_service" "k8s_grpc_backend_service" {
     }
   }
 
-  depends_on = [google_compute_security_policy.k8s_http_grpc_security_policy]
+  depends_on = [google_compute_security_policy.k8s_http_grpc_security_policy[0]]
 
-  security_policy = google_compute_security_policy.k8s_http_grpc_security_policy.self_link
+  security_policy = google_compute_security_policy.k8s_http_grpc_security_policy[0].self_link
 
   log_config {
     enable = var.enable_backend_service_logging
