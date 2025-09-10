@@ -98,6 +98,46 @@
             }
           }
         }
+      },
+      {
+        "yPos": 16,
+        "xPos": 24,
+        "height": 16,
+        "width": 24,
+        "widget": {
+          "title": "Requests per second by method and path",
+          "xyChart": {
+            "dataSets": [
+              {
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"prometheus.googleapis.com/rekor_qps_by_api/counter\" resource.type=\"prometheus_target\"",
+                    "aggregation": {
+                      "perSeriesAligner": "ALIGN_RATE",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "metric.label.\"method\"",
+                        "metric.label.\"path\""
+                      ],
+                      "alignmentPeriod": "60s"
+                    }
+                  }
+                },
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "minAlignmentPeriod": "60s"
+              }
+            ],
+            "chartOptions": {
+              "mode": "COLOR",
+              "displayHorizontal": false
+            },
+            "thresholds": [],
+            "yAxis": {
+              "scale": "LINEAR"
+            }
+          }
+        }
       }
     ]
   }
