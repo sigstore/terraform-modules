@@ -93,6 +93,7 @@ module "monitoring" {
   rekor_url                = var.monitoring.rekor_url
   timestamp_url            = var.monitoring.timestamp_url
   dex_url                  = var.monitoring.dex_url
+  tuf_url                  = var.monitoring.tuf_url
   ctlog_url                = var.monitoring.ctlog_url
   notification_channel_ids = var.monitoring.notification_channel_ids
   create_slos              = var.create_slos
