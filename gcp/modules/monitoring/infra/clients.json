@@ -1,114 +1,81 @@
 {
   "displayName": "Clients",
-  "mosaicLayout": {
-    "columns": 48,
-    "tiles": [
+  "gridLayout": {
+    "columns": "2",
+    "widgets": [
       {
-        "height": 20,
-        "width": 28,
-        "widget": {
-          "title": "Clients",
-          "pieChart": {
-            "chartType": "PIE",
-            "dataSets": [
-              {
-                "timeSeriesQuery": {
-                  "prometheusQuery": "sum by (client) (increase({__name__=\"logging.googleapis.com/user/tuf/client_user_agents\"}[7d]))"
-                }
+        "title": "Clients",
+        "pieChart": {
+          "chartType": "PIE",
+          "dataSets": [
+            {
+              "timeSeriesQuery": {
+                "prometheusQuery": "sum by (client) (increase({__name__=\"logging.googleapis.com/user/tuf/client_user_agents\"}[7d]))"
               }
-            ],
-            "sliceAggregatedThreshold": 0.5
-          }
-        }
-      },
-      {
-        "xPos": 28,
-        "height": 20,
-        "width": 13,
-        "widget": {
-          "text": {
-            "content": "These \"client marketshare\" numbers are based on parsing the user-agent header from requests to `timestamp.json` in the TUF repository. The assumption here is that clients -- whether they are signing or verifying -- make that request when starting up.\n",
-            "format": "MARKDOWN",
-            "style": {
-              "fontSize": "FS_LARGE",
-              "padding": "P_EXTRA_SMALL"
             }
+          ]
+        }
+      },
+      {
+        "text": {
+          "content": "These \"client marketshare\" numbers are based on parsing the user-agent header from requests to `timestamp.json` in the TUF repository. The assumption here is that clients -- whether they are signing or verifying -- make that request when starting up.\n",
+          "format": "MARKDOWN",
+          "style": {
+            "fontSize": "FS_LARGE",
+            "padding": "P_EXTRA_SMALL"
           }
         }
       },
       {
-        "yPos": 20,
-        "height": 14,
-        "width": 8,
-        "widget": {
-          "title": "sigstore-python versions",
-          "pieChart": {
-            "chartType": "PIE",
-            "dataSets": [
-              {
-                "timeSeriesQuery": {
-                  "prometheusQuery": "label_replace(\n  sum by (version) (increase({__name__=\"logging.googleapis.com/user/tuf/client_user_agents\", client=\"sigstore-python\"}[7d])),\n  \"version\",\n  \"unknown\",\n  \"version\",\n  \"^$\"\n)"
-                }
+        "title": "sigstore-python versions",
+        "pieChart": {
+          "chartType": "PIE",
+          "dataSets": [
+            {
+              "timeSeriesQuery": {
+                "prometheusQuery": "label_replace(\n  sum by (version) (increase({__name__=\"logging.googleapis.com/user/tuf/client_user_agents\", client=\"sigstore-python\"}[7d])),\n  \"version\",\n  \"unknown\",\n  \"version\",\n  \"^$\"\n)"
               }
-            ]
-          }
+            }
+          ]
         }
       },
       {
-        "yPos": 20,
-        "xPos": 8,
-        "height": 14,
-        "width": 8,
-        "widget": {
-          "title": "sigstore-go versions",
-          "pieChart": {
-            "chartType": "PIE",
-            "dataSets": [
-              {
-                "timeSeriesQuery": {
-                  "prometheusQuery": "label_replace(\n  sum by (version) (increase({__name__=\"logging.googleapis.com/user/tuf/client_user_agents\", client=\"sigstore-go\"}[7d])),\n  \"version\",\n  \"unknown\",\n  \"version\",\n  \"^$\"\n)"
-                }
+        "title": "sigstore-go versions",
+        "pieChart": {
+          "chartType": "PIE",
+          "dataSets": [
+            {
+              "timeSeriesQuery": {
+                "prometheusQuery": "label_replace(\n  sum by (version) (increase({__name__=\"logging.googleapis.com/user/tuf/client_user_agents\", client=\"sigstore-go\"}[7d])),\n  \"version\",\n  \"unknown\",\n  \"version\",\n  \"^$\"\n)"
               }
-            ]
-          }
+            }
+          ]
         }
       },
       {
-        "yPos": 20,
-        "xPos": 16,
-        "height": 14,
-        "width": 8,
-        "widget": {
-          "title": "cosign versions",
-          "pieChart": {
-            "chartType": "PIE",
-            "dataSets": [
-              {
-                "timeSeriesQuery": {
-                  "prometheusQuery": "label_replace(\n  sum by (version) (increase({__name__=\"logging.googleapis.com/user/tuf/client_user_agents\", client=\"cosign\"}[7d])),\n  \"version\",\n  \"unknown\",\n  \"version\",\n  \"^$\"\n)"
-                }
+        "title": "cosign versions",
+        "pieChart": {
+          "chartType": "PIE",
+          "dataSets": [
+            {
+              "timeSeriesQuery": {
+                "prometheusQuery": "label_replace(\n  sum by (version) (increase({__name__=\"logging.googleapis.com/user/tuf/client_user_agents\", client=\"cosign\"}[7d])),\n  \"version\",\n  \"unknown\",\n  \"version\",\n  \"^$\"\n)"
               }
-            ]
-          }
+            }
+          ]
         }
       },
       {
-        "yPos": 20,
-        "xPos": 24,
-        "height": 14,
-        "width": 8,
-        "widget": {
-          "title": "sigstore-java versions",
-          "pieChart": {
-            "chartType": "PIE",
-            "dataSets": [
-              {
-                "timeSeriesQuery": {
-                  "prometheusQuery": "label_replace(\n  sum by (version) (increase({__name__=\"logging.googleapis.com/user/tuf/client_user_agents\", client=\"sigstoreJavaClient\"}[7d])),\n  \"version\",\n  \"unknown\",\n  \"version\",\n  \"^$\"\n)"
-                }
+        "title": "sigstore-java versions",
+        "pieChart": {
+          "chartType": "PIE",
+          "dataSets": [
+            {
+              "timeSeriesQuery": {
+                "prometheusQuery": "label_replace(\n  sum by (version) (increase({__name__=\"logging.googleapis.com/user/tuf/client_user_agents\", client=\"sigstoreJavaClient\"}[7d])),\n  \"version\",\n  \"unknown\",\n  \"version\",\n  \"^$\"\n)"
               }
-            ]
-          }
+            }
+          ]
         }
       }
     ]
