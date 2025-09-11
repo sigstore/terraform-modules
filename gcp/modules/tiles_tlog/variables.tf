@@ -232,12 +232,6 @@ variable "http_grpc_qpm_rate_limit" {
   default     = 600 // 10 QPS
 }
 
-variable "bucket_qpm_rate_limit" {
-  description = "count of read requests per minute allowed to the GCS bucket"
-  type        = number
-  default     = 30000 // 500 QPS
-}
-
 variable "enable_adaptive_protection" {
   description = "whether to enable layer 7 DDoS adaptive protection"
   type        = bool
