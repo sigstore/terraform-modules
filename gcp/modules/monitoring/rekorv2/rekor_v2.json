@@ -1,0 +1,219 @@
+{
+  "displayName": "Rekor v2",
+  "gridLayout": {
+    "columns": "2",
+    "widgets": [
+      {
+        "title": "Tree Size",
+        "scorecard": {
+          "gaugeView": {
+            "upperBound": 1
+          },
+          "timeSeriesQuery": {
+            "outputFullDuration": true,
+            "timeSeriesFilter": {
+              "aggregation": {
+                "alignmentPeriod": "60s",
+                "crossSeriesReducer": "REDUCE_MAX",
+                "perSeriesAligner": "ALIGN_MAX"
+              },
+              "filter": "metric.type=\"workload.googleapis.com/tessera.appender.integrated.size\" resource.type=\"k8s_cluster\""
+            }
+          }
+        }
+      },
+      {
+        "title": "HTTP requests by method",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "targetAxis": "Y1",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "alignmentPeriod": "60s",
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "groupByFields": [
+                      "metric.label.\"method\""
+                    ],
+                    "perSeriesAligner": "ALIGN_RATE"
+                  },
+                  "filter": "metric.type=\"prometheus.googleapis.com/rekor_v2_http_requests_total/counter\" resource.type=\"prometheus_target\""
+                }
+              }
+            }
+          ],
+          "yAxis": {
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "Rekor V2 HTTP Latency",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "plotType": "LINE",
+              "targetAxis": "Y1",
+              "timeSeriesQuery": {
+                "timeSeriesQueryLanguage": "fetch prometheus_target\n| metric 'prometheus.googleapis.com/rekor_v2_http_api_latency/histogram'\n| align delta(1m)\n| every 1m\n| group_by [],\n    [mean_latency_s:\n       mean(value.rekor_v2_http_api_latency)]\n"
+              }
+            }
+          ],
+          "yAxis": {
+            "label": "latency (s)",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "Tessera appender duration",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "HEATMAP",
+              "targetAxis": "Y1",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "alignmentPeriod": "60s",
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "perSeriesAligner": "ALIGN_DELTA"
+                  },
+                  "filter": "metric.type=\"workload.googleapis.com/tessera.appender.add.duration\" resource.type=\"k8s_cluster\""
+                }
+              }
+            }
+          ],
+          "yAxis": {
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "SLO Health: 99.5% Availability (gRPC Server) : Create Entry",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "plotType": "LINE",
+              "targetAxis": "Y1",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "perSeriesAligner": "ALIGN_MEAN"
+                  },
+                  "filter": "select_slo_health(\"${grpc_slo_id}\")"
+                },
+                "unitOverride": "10^2.%"
+              }
+            }
+          ],
+          "thresholds": [
+            {
+              "value": 0.995
+            }
+          ]
+        }
+      },
+      {
+        "title": "SLO Health: 99.5% Availability (HTTP Server) : /api/v2/log/entries - POST",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "plotType": "LINE",
+              "targetAxis": "Y1",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "perSeriesAligner": "ALIGN_MEAN"
+                  },
+                  "filter": "select_slo_health(\"${http_slo_id}\")"
+                },
+                "unitOverride": "10^2.%"
+              }
+            }
+          ],
+          "thresholds": [
+            {
+              "value": 0.995
+            }
+          ]
+        }
+      },
+      {
+        "title": "gRPC Panics",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "targetAxis": "Y1",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "alignmentPeriod": "60s",
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "perSeriesAligner": "ALIGN_RATE"
+                  },
+                  "filter": "metric.type=\"prometheus.googleapis.com/rekor_v2_grpc_req_panics_recovered_total/counter\" resource.type=\"prometheus_target\""
+                }
+              }
+            }
+          ],
+          "yAxis": {
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "Inclusion Proof Failures",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "targetAxis": "Y1",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "alignmentPeriod": "60s",
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "perSeriesAligner": "ALIGN_RATE"
+                  },
+                  "filter": "metric.type=\"prometheus.googleapis.com/rekor_v2_inclusion_proof_failure_total/counter\" resource.type=\"prometheus_target\""
+                }
+              }
+            }
+          ],
+          "yAxis": {
+            "scale": "LINEAR"
+          }
+        }
+      }
+    ]
+  }
+}
