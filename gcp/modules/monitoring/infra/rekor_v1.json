@@ -4,6 +4,186 @@
     "columns": "2",
     "widgets": [
       {
+        "title": "Rekor API Response Codes",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "targetAxis": "Y1",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "alignmentPeriod": "60s",
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "groupByFields": [
+                      "metric.label.\"code\""
+                    ],
+                    "perSeriesAligner": "ALIGN_RATE"
+                  },
+                  "filter": "metric.type=\"prometheus.googleapis.com/rekor_api_latency_summary_count/summary\" resource.type=\"prometheus_target\""
+                }
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "New Log Entries",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "targetAxis": "Y1",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "alignmentPeriod": "60s",
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "groupByFields": [
+                      "resource.label.\"namespace\""
+                    ],
+                    "perSeriesAligner": "ALIGN_RATE"
+                  },
+                  "filter": "metric.type=\"prometheus.googleapis.com/rekor_new_entries/counter\" resource.type=\"prometheus_target\"",
+                  "secondaryAggregation": {
+                    "alignmentPeriod": "60s",
+                    "perSeriesAligner": "ALIGN_MEAN"
+                  }
+                }
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "API traffic by endpoint",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "targetAxis": "Y1",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "alignmentPeriod": "60s",
+                    "perSeriesAligner": "ALIGN_RATE"
+                  },
+                  "filter": "metric.type=\"prometheus.googleapis.com/rekor_api_latency_summary_count/summary\" resource.type=\"prometheus_target\"",
+                  "secondaryAggregation": {
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "groupByFields": [
+                      "metric.label.\"path\""
+                    ],
+                    "perSeriesAligner": "ALIGN_MEAN"
+                  }
+                }
+              }
+            }
+          ],
+          "timeshiftDuration": "0s",
+          "yAxis": {
+            "label": "y1Axis",
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "SQL Connection vs Load",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "targetAxis": "Y1",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "alignmentPeriod": "60s",
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "perSeriesAligner": "ALIGN_MEAN"
+                  },
+                  "filter": "metric.type=\"custom.googleapis.com/opencensus/trillian-cloudsql/cloudsqlconn/open_connections\" resource.type=\"global\""
+                }
+              }
+            },
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "targetAxis": "Y1",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "alignmentPeriod": "60s",
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "perSeriesAligner": "ALIGN_MEAN"
+                  },
+                  "filter": "metric.type=\"custom.googleapis.com/opencensus/rekor-cloudsql/cloudsqlconn/open_connections\" resource.type=\"global\""
+                }
+              }
+            },
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "targetAxis": "Y2",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "alignmentPeriod": "60s",
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "perSeriesAligner": "ALIGN_RATE"
+                  },
+                  "filter": "metric.type=\"prometheus.googleapis.com/rekor_new_entries/counter\" resource.type=\"prometheus_target\""
+                }
+              }
+            },
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "LINE",
+              "targetAxis": "Y2",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "alignmentPeriod": "60s",
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "perSeriesAligner": "ALIGN_RATE"
+                  },
+                  "filter": "metric.type=\"prometheus.googleapis.com/rekor_qps_by_api/counter\" resource.type=\"prometheus_target\" metric.label.\"path\"=\"/api/v1/index/retrieve\""
+                }
+              }
+            }
+          ],
+          "y2Axis": {
+            "scale": "LINEAR"
+          },
+          "yAxis": {
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
         "title": "Mean of Rekor API Latency over 1 minute",
         "xyChart": {
           "chartOptions": {
@@ -36,7 +216,7 @@
               "plotType": "LINE",
               "targetAxis": "Y1",
               "timeSeriesQuery": {
-                "prometheusQuery": "max by (\"path\")(rate({\"__name__\"=\"rekor_api_latency_summary_sum\"}[${__interval}]))/ 1000000\n",
+                "prometheusQuery": "max by (\"path\")(rate({\"__name__\"=\"rekor_api_latency_summary_sum\"}[$${__interval}]))/ 1000000\n",
                 "unitOverride": "ms"
               }
             }
@@ -44,34 +224,6 @@
           "timeshiftDuration": "0s",
           "yAxis": {
             "label": "y1Axis",
-            "scale": "LINEAR"
-          }
-        }
-      },
-      {
-        "title": "prometheus/rekor_latency_by_api/histogram (filtered) [SUM]",
-        "xyChart": {
-          "chartOptions": {
-            "mode": "COLOR"
-          },
-          "dataSets": [
-            {
-              "minAlignmentPeriod": "60s",
-              "plotType": "HEATMAP",
-              "targetAxis": "Y1",
-              "timeSeriesQuery": {
-                "timeSeriesFilter": {
-                  "aggregation": {
-                    "alignmentPeriod": "60s",
-                    "crossSeriesReducer": "REDUCE_SUM",
-                    "perSeriesAligner": "ALIGN_DELTA"
-                  },
-                  "filter": "metric.type=\"prometheus.googleapis.com/rekor_latency_by_api/histogram\" resource.type=\"prometheus_target\" metric.label.\"path\"=\"/api/v1/log/entries/{entryUUID}\""
-                }
-              }
-            }
-          ],
-          "yAxis": {
             "scale": "LINEAR"
           }
         }
@@ -99,6 +251,44 @@
                     "perSeriesAligner": "ALIGN_RATE"
                   },
                   "filter": "metric.type=\"prometheus.googleapis.com/rekor_qps_by_api/counter\" resource.type=\"prometheus_target\""
+                }
+              }
+            }
+          ],
+          "yAxis": {
+            "scale": "LINEAR"
+          }
+        }
+      },
+      {
+        "title": "Rekor traffic by user agent",
+        "xyChart": {
+          "chartOptions": {
+            "mode": "COLOR"
+          },
+          "dataSets": [
+            {
+              "minAlignmentPeriod": "60s",
+              "plotType": "STACKED_BAR",
+              "targetAxis": "Y1",
+              "timeSeriesQuery": {
+                "timeSeriesFilter": {
+                  "aggregation": {
+                    "alignmentPeriod": "60s",
+                    "crossSeriesReducer": "REDUCE_SUM",
+                    "groupByFields": [
+                      "metric.label.\"userAgent\""
+                    ],
+                    "perSeriesAligner": "ALIGN_RATE"
+                  },
+                  "filter": "metric.type=\"logging.googleapis.com/user/Rekor-Traffic\" resource.type=\"l7_lb_rule\" metric.label.\"URL\"=monitoring.regex.full_match(\"http[s?]://${rekor_url}/api/v1/log/entries\")",
+                  "secondaryAggregation": {
+                    "crossSeriesReducer": "REDUCE_MEAN",
+                    "groupByFields": [
+                      "metric.label.\"userAgent\""
+                    ],
+                    "perSeriesAligner": "ALIGN_MEAN"
+                  }
                 }
               }
             }
