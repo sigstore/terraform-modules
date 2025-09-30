@@ -44,3 +44,41 @@ resource "google_logging_metric" "k8s_pod_unschedulable" {
   name    = "rekor/k8s_pod/unschedulable"
   project = var.project_id
 }
+
+resource "google_logging_metric" "rekor_traffic" {
+  description = "Load balancer traffic for Rekor"
+  filter      = "resource.type=\"http_load_balancer\"\nhttpRequest.requestUrl=~\"^https://${var.rekor_url}/"
+
+  metric_descriptor {
+    metric_kind = "DELTA"
+    unit        = "1"
+    value_type  = "INT64"
+    labels {
+      key = "userAgent"
+    }
+    labels {
+      key = "kind"
+    }
+    labels {
+      key = "method"
+    }
+    labels {
+      key = "URL"
+    }
+    labels {
+      key        = "code"
+      value_type = "INT64"
+    }
+  }
+
+  label_extractors = {
+    "URL"       = "EXTRACT(httpRequest.requestUrl)"
+    "code"      = "EXTRACT(httpRequest.status)"
+    "kind"      = "EXTRACT(protoPayload.request.kind)"
+    "method"    = "EXTRACT(httpRequest.requestMethod)"
+    "userAgent" = "EXTRACT(httpRequest.userAgent)"
+  }
+
+  name    = "Rekor-Traffic"
+  project = var.project_id
+}
