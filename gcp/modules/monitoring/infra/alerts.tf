@@ -453,7 +453,7 @@ resource "google_monitoring_alert_policy" "k8s_container_cpu_allocatable_utiliza
     mime_type = "text/markdown"
   }
 
-  enabled               = "true"
+  enabled               = var.enable_k8s_cpu_utilization_alert
   notification_channels = local.notification_channels
   project               = var.project_id
 }

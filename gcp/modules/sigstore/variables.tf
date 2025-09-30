@@ -146,6 +146,12 @@ variable "monitoring" {
   }
 }
 
+variable "enable_k8s_cpu_utilization_alert" {
+  type        = string
+  description = "whether to enable or disable the K8s CPU utilization alert"
+  default     = "true"
+}
+
 variable "create_slos" {
   description = "Creates SLOs when true. (Monitoring must be enabled.)"
   type        = bool
