@@ -40,6 +40,12 @@ variable "notification_channel_ids" {
   description = "List of notification channel IDs which alerts should be sent to. You can find this by running `gcloud alpha monitoring channels list`."
 }
 
+variable "enable_k8s_cpu_utilization_alert" {
+  type        = string
+  description = "whether to enable or disable the K8s CPU utilization alert"
+  default     = "true"
+}
+
 locals {
   notification_channels = toset([for nc in var.notification_channel_ids : format("projects/%v/notificationChannels/%v", var.project_id, nc)])
 }

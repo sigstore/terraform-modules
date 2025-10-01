@@ -122,3 +122,9 @@ variable "timestamp_enabled" {
   type        = bool
   default     = false
 }
+
+variable "enable_k8s_cpu_utilization_alert" {
+  type        = string
+  description = "whether to enable or disable the K8s CPU utilization alert"
+  default     = "true"
+}

@@ -135,10 +135,11 @@ module "prober" {
 module "infra" {
   source = "./infra"
 
-  project_id               = var.project_id
-  notification_channel_ids = var.notification_channel_ids
-  rekor_url                = local.qualified_rekor_url
-  fulcio_url               = local.qualified_fulcio_url
+  project_id                       = var.project_id
+  notification_channel_ids         = var.notification_channel_ids
+  enable_k8s_cpu_utilization_alert = var.enable_k8s_cpu_utilization_alert
+  rekor_url                        = local.qualified_rekor_url
+  fulcio_url                       = local.qualified_fulcio_url
 
   depends_on = [
     google_project_service.service
