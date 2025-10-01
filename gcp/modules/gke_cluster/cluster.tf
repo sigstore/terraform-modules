@@ -147,24 +147,33 @@ resource "google_container_cluster" "cluster" {
     autoscaling_profile = var.cluster_autoscaling_profile
     enabled             = var.cluster_autoscaling_enabled
 
-    auto_provisioning_defaults {
-      service_account = google_service_account.gke-sa.email
-      shielded_instance_config {
-        enable_integrity_monitoring = true
-        enable_secure_boot          = var.enable_secure_boot
+    dynamic "auto_provisioning_defaults" {
+      for_each = var.cluster_autoscaling_enabled == true ? [1] : []
+      content {
+        service_account = google_service_account.gke-sa.email
+        shielded_instance_config {
+          enable_integrity_monitoring = true
+          enable_secure_boot          = var.enable_secure_boot
+        }
       }
     }
 
-    resource_limits {
-      resource_type = "cpu"
-      minimum       = var.resource_limits_resource_cpu_min
-      maximum       = var.resource_limits_resource_cpu_max
+    dynamic "resource_limits" {
+      for_each = var.cluster_autoscaling_enabled == true ? [1] : []
+      content {
+        resource_type = "cpu"
+        minimum       = var.resource_limits_resource_cpu_min
+        maximum       = var.resource_limits_resource_cpu_max
+      }
     }
 
-    resource_limits {
-      resource_type = "memory"
-      minimum       = var.resource_limits_resource_mem_min
-      maximum       = var.resource_limits_resource_mem_max
+    dynamic "resource_limits" {
+      for_each = var.cluster_autoscaling_enabled == true ? [1] : []
+      content {
+        resource_type = "memory"
+        minimum       = var.resource_limits_resource_mem_min
+        maximum       = var.resource_limits_resource_mem_max
+      }
     }
   }
 
