@@ -79,6 +79,6 @@ resource "google_logging_metric" "rekor_traffic" {
     "userAgent" = "EXTRACT(httpRequest.userAgent)"
   }
 
-  name    = "Rekor-Traffic"
+  name    = "rekor-traffic"
   project = var.project_id
 }
