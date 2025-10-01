@@ -47,7 +47,7 @@ resource "google_logging_metric" "k8s_pod_unschedulable" {
 
 resource "google_logging_metric" "rekor_traffic" {
   description = "Load balancer traffic for Rekor"
-  filter      = "resource.type=\"http_load_balancer\"\nhttpRequest.requestUrl=~\"^https://${var.rekor_url}/"
+  filter      = "resource.type=\"http_load_balancer\"\nhttpRequest.requestUrl=~\"^https://${var.rekor_url}/\""
 
   metric_descriptor {
     metric_kind = "DELTA"
