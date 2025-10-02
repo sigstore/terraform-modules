@@ -281,7 +281,7 @@
                     ],
                     "perSeriesAligner": "ALIGN_RATE"
                   },
-                  "filter": "metric.type=\"logging.googleapis.com/user/Rekor-Traffic\" resource.type=\"l7_lb_rule\" metric.label.\"URL\"=monitoring.regex.full_match(\"http[s?]://${rekor_url}/api/v1/log/entries\")",
+                  "filter": "metric.type=\"logging.googleapis.com/user/rekor-traffic\" resource.type=\"l7_lb_rule\" metric.label.\"URL\"=monitoring.regex.full_match(\"${rekor_url}/api/v1/log/entries\")",
                   "secondaryAggregation": {
                     "crossSeriesReducer": "REDUCE_MEAN",
                     "groupByFields": [
