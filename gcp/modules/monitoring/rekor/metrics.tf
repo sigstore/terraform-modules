@@ -54,10 +54,14 @@ resource "google_logging_metric" "rekor_traffic" {
     unit        = "1"
     value_type  = "INT64"
     labels {
-      key = "userAgent"
+      key         = "client"
+      value_type  = "STRING"
+      description = "Application name extracted from user agent string."
     }
     labels {
-      key = "kind"
+      key         = "version"
+      value_type  = "STRING"
+      description = "Version extracted from user agent string."
     }
     labels {
       key = "method"
@@ -72,11 +76,15 @@ resource "google_logging_metric" "rekor_traffic" {
   }
 
   label_extractors = {
-    "URL"       = "EXTRACT(httpRequest.requestUrl)"
-    "code"      = "EXTRACT(httpRequest.status)"
-    "kind"      = "EXTRACT(protoPayload.request.kind)"
-    "method"    = "EXTRACT(httpRequest.requestMethod)"
-    "userAgent" = "EXTRACT(httpRequest.userAgent)"
+    "URL"     = "EXTRACT(httpRequest.requestUrl)"
+    "code"    = "EXTRACT(httpRequest.status)"
+    "method"  = "EXTRACT(httpRequest.requestMethod)"
+    "version" = <<-EOT
+      REGEXP_EXTRACT(httpRequest.userAgent, "[^/]+/v?(\\d+\\.\\d+(?:\\.\\d+)?)")
+    EOT
+    "client"  = <<-EOT
+      REGEXP_EXTRACT(httpRequest.userAgent, "^([^/]+)")
+    EOT
   }
 
   name    = "rekor-traffic"
