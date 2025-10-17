@@ -1,6 +1,5 @@
 {
   "displayName": "Rekor v2 Requests",
-  "labels": {},
   "gridLayout": {
     "columns": 2,
     "widgets": [
@@ -9,9 +8,7 @@
         "title": "${shard} writes",
         "xyChart": {
           "chartOptions": {
-            "displayHorizontal": false,
-            "mode": "COLOR",
-            "showLegend": false
+            "mode": "COLOR"
           },
           "dataSets": [
           {
@@ -19,7 +16,6 @@
             "plotType": "STACKED_BAR",
             "targetAxis": "Y1",
             "timeSeriesQuery": {
-              "outputFullDuration": false,
               "timeSeriesFilter": {
                 "aggregation": {
                   "alignmentPeriod": "60s",
@@ -45,9 +41,7 @@
         "title": "${shard} reads",
         "xyChart": {
           "chartOptions": {
-            "displayHorizontal": false,
-            "mode": "COLOR",
-            "showLegend": false
+            "mode": "COLOR"
           },
           "dataSets": [
           {
@@ -55,7 +49,6 @@
             "plotType": "STACKED_BAR",
             "targetAxis": "Y1",
             "timeSeriesQuery": {
-              "outputFullDuration": false,
               "timeSeriesFilter": {
                 "aggregation": {
                   "alignmentPeriod": "60s",
