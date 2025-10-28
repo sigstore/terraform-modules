@@ -277,7 +277,7 @@
                     "alignmentPeriod": "60s",
                     "crossSeriesReducer": "REDUCE_SUM",
                     "groupByFields": [
-                      "metric.label.\"userAgent\""
+                      "metric.label.\"client\""
                     ],
                     "perSeriesAligner": "ALIGN_RATE"
                   },
@@ -285,7 +285,7 @@
                   "secondaryAggregation": {
                     "crossSeriesReducer": "REDUCE_MEAN",
                     "groupByFields": [
-                      "metric.label.\"userAgent\""
+                      "metric.label.\"client\""
                     ],
                     "perSeriesAligner": "ALIGN_MEAN"
                   }
