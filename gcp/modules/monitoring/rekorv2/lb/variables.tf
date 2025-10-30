@@ -41,3 +41,9 @@ variable "frozen_shards" {
   type    = list(string)
   default = []
 }
+
+variable "create_slos" {
+  description = "True to enable SLO creation"
+  type        = bool
+  default     = false
+}
