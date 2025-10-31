@@ -109,7 +109,10 @@ resource "google_monitoring_alert_policy" "availability_burn_alert" {
     for alert in concat(local.slow_burn_alerts, local.medium_burn_alerts, local.fast_burn_alerts) :
     "${alert.alert_id}" => alert
   }
-  project = var.project_id
+
+  user_labels = {
+    severity = var.severity
+  }
 
   display_name = each.value.display_name
   combiner     = "AND"

@@ -62,6 +62,12 @@ variable "notification_channels" {
   default     = []
 }
 
+variable "severity" {
+  description = "The user_label.severity to be displayed on the incident detail page and in notifications."
+  type        = string
+  default     = null
+}
+
 /* availability_slos define 30-day window, request based availability SLOs, grouped by category.
  *
  * Example usage:
