@@ -1,7 +1,7 @@
 {
   "displayName": "Rekor v2 Requests",
   "gridLayout": {
-    "columns": 2,
+    "columns": "2",
     "widgets": [
 %{ for shard in active_shards ~}
       {
@@ -73,7 +73,8 @@
       {
         "title": "End",
         "text": {
-          "content": "End"
+          "content": "End",
+          "format": "MARKDOWN"
         }
       }
     ]
