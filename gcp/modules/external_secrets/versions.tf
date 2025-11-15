@@ -15,11 +15,11 @@
  */
 
 terraform {
-  required_version = "1.13.4"
+  required_version = "1.13.5"
 
   required_providers {
     google = {
-      version = "7.5.0"
+      version = "7.9.0"
       source  = "hashicorp/google"
     }
     kubectl = {
@@ -28,7 +28,7 @@ terraform {
     }
     helm = {
       source  = "hashicorp/helm"
-      version = "3.0.2"
+      version = "3.1.0"
     }
   }
 }

@@ -15,7 +15,7 @@
  */
 
 terraform {
-  required_version = "1.13.4"
+  required_version = "1.13.5"
 
   required_providers {
     kubectl = {
@@ -24,7 +24,7 @@ terraform {
     }
     helm = {
       source  = "hashicorp/helm"
-      version = "3.0.2"
+      version = "3.1.0"
     }
   }
 }
