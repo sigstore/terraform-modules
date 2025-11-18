@@ -10,15 +10,8 @@
             "upperBound": 1
           },
           "timeSeriesQuery": {
-            "outputFullDuration": true,
-            "timeSeriesFilter": {
-              "aggregation": {
-                "alignmentPeriod": "60s",
-                "crossSeriesReducer": "REDUCE_MAX",
-                "perSeriesAligner": "ALIGN_MAX"
-              },
-              "filter": "metric.type=\"workload.googleapis.com/tessera.appender.integrated.size\" resource.type=\"k8s_cluster\""
-            }
+            "outputFullDuration": false,
+            "prometheusQuery": "max(tessera_appender_integrated_size)"
           }
         }
       },
@@ -92,7 +85,7 @@
                     "crossSeriesReducer": "REDUCE_SUM",
                     "perSeriesAligner": "ALIGN_DELTA"
                   },
-                  "filter": "metric.type=\"workload.googleapis.com/tessera.appender.add.duration\" resource.type=\"k8s_cluster\""
+                  "filter": "metric.type=\"prometheus.googleapis.com/tessera_appender_add_duration_milliseconds/histogram\" resource.type=\"prometheus_target\""
                 }
               }
             }
