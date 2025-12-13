@@ -21,9 +21,10 @@ locals {
 
 resource "google_project_service" "service" {
   for_each = toset([
-    "spanner.googleapis.com",  // For Spanner database. roles/spanner.admin
-    "storage.googleapis.com",  // For GCS bucket. roles/storage.admin
-    "cloudkms.googleapis.com", // For KMS keyring and crypto key. roles/cloudkms.admin
+    "spanner.googleapis.com",       // For Spanner database. roles/spanner.admin
+    "storage.googleapis.com",       // For GCS bucket. roles/storage.admin
+    "cloudkms.googleapis.com",      // For KMS keyring and crypto key. roles/cloudkms.admin
+    "secretmanager.googleapis.com", // For Secret manager if log is using Secret Manager instead of KMS. roles/secretmanager.admin
   ])
   project = var.project_id
   service = each.key
