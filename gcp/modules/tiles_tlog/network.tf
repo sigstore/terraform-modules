@@ -56,7 +56,7 @@ resource "google_compute_firewall" "backend_service_health_check" {
   target_tags   = [local.cluster_network_tag]
   allow {
     protocol = "tcp"
-    ports    = [var.http_service_port, var.grpc_service_port]
+    ports    = var.network_endpoint_group_grpc_name_suffix == "" ? [var.http_service_port] : [var.http_service_port, var.grpc_service_port]
   }
 }
 
@@ -81,7 +81,7 @@ resource "google_compute_health_check" "http_health_check" {
 }
 
 resource "google_compute_health_check" "grpc_health_check" {
-  count   = var.freeze_shard ? 0 : 1
+  count   = var.freeze_shard || var.network_endpoint_group_grpc_name_suffix == "" ? 0 : 1
   name    = "${var.shard_name}-${var.dns_subdomain_name}-grpc-health-check"
   project = var.project_id
 
@@ -108,7 +108,7 @@ data "google_compute_network_endpoint_group" "k8s_http_neg" {
 }
 
 data "google_compute_network_endpoint_group" "k8s_grpc_neg" {
-  for_each = var.freeze_shard ? [] : toset(var.network_endpoint_group_zones)
+  for_each = var.freeze_shard || var.network_endpoint_group_grpc_name_suffix == "" ? [] : toset(var.network_endpoint_group_zones)
 
   name    = "${var.shard_name}-${var.network_endpoint_group_grpc_name_suffix}"
   project = var.project_id
@@ -117,7 +117,7 @@ data "google_compute_network_endpoint_group" "k8s_grpc_neg" {
 
 resource "google_compute_security_policy" "k8s_http_grpc_security_policy" {
   count   = var.freeze_shard ? 0 : 1
-  name    = "${var.shard_name}-k8s-http-grpc-security-policy"
+  name    = "${var.shard_name}-${var.dns_subdomain_name}-k8s-http-grpc-security-policy"
   project = var.project_id
   type    = "CLOUD_ARMOR"
 
@@ -213,7 +213,7 @@ resource "google_compute_backend_service" "k8s_http_backend_service" {
 }
 
 resource "google_compute_backend_service" "k8s_grpc_backend_service" {
-  count   = var.freeze_shard ? 0 : 1
+  count   = var.freeze_shard || var.network_endpoint_group_grpc_name_suffix == "" ? 0 : 1
   name    = "${var.shard_name}-${var.dns_subdomain_name}-k8s-grpc-neg-backend-service"
   project = var.project_id
 
@@ -245,7 +245,7 @@ resource "google_compute_backend_service" "k8s_grpc_backend_service" {
 }
 
 resource "google_compute_security_policy" "bucket_security_policy" {
-  name    = "${var.shard_name}-bucket-security-policy"
+  name    = "${var.shard_name}-${var.dns_subdomain_name}-bucket-security-policy"
   project = var.project_id
   type    = "CLOUD_ARMOR_EDGE"
 
@@ -263,7 +263,7 @@ resource "google_compute_security_policy" "bucket_security_policy" {
 }
 
 resource "google_compute_backend_bucket" "tessera_backend_bucket" {
-  name    = "${var.shard_name}-${var.bucket_name_suffix}"
+  name    = "${var.shard_name}-${var.dns_subdomain_name}-${var.bucket_name_suffix}"
   project = var.project_id
 
   depends_on = [google_storage_bucket.tessera_store, google_compute_security_policy.bucket_security_policy]
@@ -307,7 +307,7 @@ resource "google_compute_url_map" "url_map" {
         priority = 1
         service  = google_compute_backend_service.k8s_http_backend_service[0].id
         match_rules {
-          full_path_match = "/api/v2/log/entries"
+          path_template_match = var.http_write_path
         }
         match_rules {
           full_path_match = "/healthz"
@@ -315,13 +315,13 @@ resource "google_compute_url_map" "url_map" {
       }
     }
     dynamic "route_rules" {
-      for_each = var.lb_backend_turndown ? [] : [1]
+      for_each = var.lb_backend_turndown || var.grpc_write_path == "" ? [] : [1]
 
       content {
         priority = 2
         service  = google_compute_backend_service.k8s_grpc_backend_service[0].id
         match_rules {
-          full_path_match = "/dev.sigstore.rekor.v2.Rekor/CreateEntry"
+          path_template_match = var.grpc_write_path
         }
       }
     }
@@ -329,11 +329,14 @@ resource "google_compute_url_map" "url_map" {
       priority = 3
       service  = google_compute_backend_bucket.tessera_backend_bucket.id
       match_rules {
-        path_template_match = "/api/v2/{path=**}"
+        path_template_match = var.http_read_path
       }
-      route_action {
-        url_rewrite {
-          path_template_rewrite = "/{path}"
+      dynamic "route_action" {
+        for_each = var.http_read_rewrite_path == "" ? [] : [1]
+        content {
+          url_rewrite {
+            path_template_rewrite = var.http_read_rewrite_path
+          }
         }
       }
     }

@@ -186,6 +186,28 @@ variable "service_health_check_path" {
   default     = "/healthz"
 }
 
+variable "http_write_path" {
+  description = "the template or full path to match for HTTP log write requests"
+  type        = string
+}
+
+variable "grpc_write_path" {
+  description = "the template or full path to match for gRPC log write requests"
+  type        = string
+  default     = ""
+}
+
+variable "http_read_path" {
+  description = "the template or full path for the patch to match for HTTP log read requests"
+  type        = string
+}
+
+variable "http_read_rewrite_path" {
+  description = "the template for the path to rewrite read requests to"
+  type        = string
+  default     = ""
+}
+
 variable "cluster_network_tag" {
   type        = string
   description = "GKE cluster network tag for firewall"
@@ -200,6 +222,7 @@ variable "network_endpoint_group_http_name_suffix" {
 variable "network_endpoint_group_grpc_name_suffix" {
   type        = string
   description = "suffix of the name of the network endpoint group that will be created for the gRPC service by the tiles Kubernetes service"
+  default     = ""
 }
 
 variable "network_endpoint_group_zones" {
@@ -246,4 +269,10 @@ variable "spanner_timeseries_role_id" {
 variable "monitoring_role_id" {
   description = "name of the project role for managing metrics - role must include permissions `monitoring.metricDescriptors.create`"
   type        = string
+}
+
+variable "enable_secrets" {
+  description = "whether to use GCP Secret Manager for the transparency log's public and private keys"
+  type        = bool
+  default     = false
 }
