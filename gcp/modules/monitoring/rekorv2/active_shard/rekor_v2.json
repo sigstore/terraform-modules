@@ -10,7 +10,6 @@
             "upperBound": 1
           },
           "timeSeriesQuery": {
-            "outputFullDuration": false,
             "prometheusQuery": "max(tessera_appender_integrated_size)"
           }
         }
