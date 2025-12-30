@@ -42,6 +42,16 @@ variable "frozen_shards" {
   default = []
 }
 
+// Set-up for notification channel for alerting
+variable "notification_channel_ids" {
+  type        = list(string)
+  description = "List of notification channel IDs which alerts should be sent to. You can find this by running `gcloud alpha monitoring channels list`."
+}
+
+locals {
+  notification_channels = toset([for nc in var.notification_channel_ids : format("projects/%v/notificationChannels/%v", var.project_id, nc)])
+}
+
 variable "create_slos" {
   description = "True to enable SLO creation"
   type        = bool
