@@ -15,7 +15,7 @@
  */
 
 module "slos" {
-  source = "../slo"
+  source = "../../slo"
   count  = var.create_slos ? 1 : 0
 
   project_id            = var.project_id
