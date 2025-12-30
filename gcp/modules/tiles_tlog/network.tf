@@ -263,7 +263,7 @@ resource "google_compute_security_policy" "bucket_security_policy" {
 }
 
 resource "google_compute_backend_bucket" "tessera_backend_bucket" {
-  name    = "${var.shard_name}-${var.dns_subdomain_name}-${var.bucket_name_suffix}"
+  name    = "${var.shard_name}-${var.bucket_name_suffix}"
   project = var.project_id
 
   depends_on = [google_storage_bucket.tessera_store, google_compute_security_policy.bucket_security_policy]
