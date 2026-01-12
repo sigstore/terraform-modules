@@ -367,25 +367,6 @@ resource "google_compute_security_policy" "bucket_security_policy_renamed" {
   }
 }
 
-resource "google_compute_backend_bucket" "tessera_backend_bucket" {
-  name    = "${var.shard_name}-${var.bucket_name_suffix}"
-  project = var.project_id
-
-  depends_on = [google_storage_bucket.tessera_store, google_compute_security_policy.bucket_security_policy]
-
-  bucket_name = google_storage_bucket.tessera_store.name
-
-  enable_cdn = var.enable_cdn
-  cdn_policy {
-    cache_mode = "USE_ORIGIN_HEADERS"
-  }
-
-  edge_security_policy = google_compute_security_policy.bucket_security_policy.self_link
-
-  lifecycle {
-    prevent_destroy = true
-  }
-}
 locals {
   hostname = var.dns_domain_name == "" ? "*" : trimsuffix("${var.shard_name}.${var.dns_subdomain_name}.${var.dns_domain_name}", ".")
 }
