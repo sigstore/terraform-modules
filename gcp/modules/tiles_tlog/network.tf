@@ -115,72 +115,6 @@ data "google_compute_network_endpoint_group" "k8s_grpc_neg" {
   zone    = each.key
 }
 
-// TODO: delete this resource
-resource "google_compute_security_policy" "k8s_http_grpc_security_policy" {
-  count   = var.freeze_shard ? 0 : 1
-  name    = "${var.shard_name}-k8s-http-grpc-security-policy"
-  project = var.project_id
-  type    = "CLOUD_ARMOR"
-
-  rule {
-    action   = "deny(502)"
-    priority = "1"
-
-    match {
-      expr {
-        expression = "int(request.headers['content-length']) > 8388608"
-      }
-    }
-    description = "Block all incoming write requests > 8MB"
-  }
-
-  rule {
-    action   = "throttle"
-    priority = "10"
-    match {
-      versioned_expr = "SRC_IPS_V1"
-      config {
-        src_ip_ranges = ["*"]
-      }
-    }
-    rate_limit_options {
-      enforce_on_key = "IP"
-      conform_action = "allow"
-      exceed_action  = "deny(429)"
-      rate_limit_threshold {
-        count        = var.http_grpc_qpm_rate_limit
-        interval_sec = "60"
-      }
-    }
-    description = "Rate limit all HTTP write traffic by client IP"
-  }
-
-  rule {
-    action   = "allow"
-    priority = "2147483647"
-    match {
-      versioned_expr = "SRC_IPS_V1"
-      config {
-        src_ip_ranges = ["*"]
-      }
-    }
-    description = "default rule"
-  }
-
-  advanced_options_config {
-    json_parsing = "STANDARD"
-    json_custom_config {
-      content_types = ["application/json"]
-    }
-  }
-
-  adaptive_protection_config {
-    layer_7_ddos_defense_config {
-      enable = var.enable_adaptive_protection
-    }
-  }
-}
-
 resource "google_compute_security_policy" "k8s_http_grpc_security_policy_renamed" {
   count   = var.freeze_shard ? 0 : 1
   name    = "${var.shard_name}-${var.dns_subdomain_name}-k8s-http-grpc-security-policy"
@@ -269,9 +203,9 @@ resource "google_compute_backend_service" "k8s_http_backend_service" {
     }
   }
 
-  depends_on = [google_compute_security_policy.k8s_http_grpc_security_policy[0]]
+  depends_on = [google_compute_security_policy.k8s_http_grpc_security_policy_renamed[0]]
 
-  security_policy = google_compute_security_policy.k8s_http_grpc_security_policy[0].self_link
+  security_policy = google_compute_security_policy.k8s_http_grpc_security_policy_renamed[0].self_link
 
   log_config {
     enable = var.enable_backend_service_logging
@@ -301,31 +235,12 @@ resource "google_compute_backend_service" "k8s_grpc_backend_service" {
     }
   }
 
-  depends_on = [google_compute_security_policy.k8s_http_grpc_security_policy[0]]
+  depends_on = [google_compute_security_policy.k8s_http_grpc_security_policy_renamed[0]]
 
-  security_policy = google_compute_security_policy.k8s_http_grpc_security_policy[0].self_link
+  security_policy = google_compute_security_policy.k8s_http_grpc_security_policy_renamed[0].self_link
 
   log_config {
     enable = var.enable_backend_service_logging
-  }
-}
-
-// TODO: delete this resource
-resource "google_compute_security_policy" "bucket_security_policy" {
-  name    = "${var.shard_name}-bucket-security-policy"
-  project = var.project_id
-  type    = "CLOUD_ARMOR_EDGE"
-
-  rule {
-    action   = "allow"
-    priority = "2147483647"
-    match {
-      versioned_expr = "SRC_IPS_V1"
-      config {
-        src_ip_ranges = ["*"]
-      }
-    }
-    description = "default rule"
   }
 }
 
@@ -333,7 +248,7 @@ resource "google_compute_backend_bucket" "tessera_backend_bucket" {
   name    = "${var.shard_name}-${var.bucket_name_suffix}"
   project = var.project_id
 
-  depends_on = [google_storage_bucket.tessera_store, google_compute_security_policy.bucket_security_policy]
+  depends_on = [google_storage_bucket.tessera_store, google_compute_security_policy.bucket_security_policy_renamed]
 
   bucket_name = google_storage_bucket.tessera_store.name
 
@@ -342,7 +257,7 @@ resource "google_compute_backend_bucket" "tessera_backend_bucket" {
     cache_mode = "USE_ORIGIN_HEADERS"
   }
 
-  edge_security_policy = google_compute_security_policy.bucket_security_policy.self_link
+  edge_security_policy = google_compute_security_policy.bucket_security_policy_renamed.self_link
 
   lifecycle {
     prevent_destroy = true
