@@ -68,6 +68,11 @@ resource "google_storage_bucket" "tuf" {
   website {
     main_page_suffix = var.main_page_suffix
   }
+
+  cors {
+    origin = ["*"]
+    method = ["GET", "HEAD"]
+  }
 }
 
 resource "google_storage_bucket_iam_member" "public_tuf_member" {
