@@ -70,8 +70,8 @@ resource "google_storage_bucket" "tuf" {
   }
 
   cors {
-    origin            = ["*"]
-    method            = ["GET", "HEAD"]
+    origin = ["*"]
+    method = ["GET", "HEAD"]
   }
 }
 
