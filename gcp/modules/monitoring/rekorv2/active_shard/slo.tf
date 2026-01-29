@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+locals {
+  prober_url = var.prober_url != "" ? var.prober_url : format("http://rekor-tiles-%s.%s-rekor-tiles-system.svc", var.shard_name, var.shard_name)
+}
+
 module "slos" {
   source = "../../slo"
   count  = var.create_slos ? 1 : 0
@@ -50,12 +54,10 @@ module "slos" {
           goal           = 0.995
         },
       },
-    }
-    /* TODO(https://github.com/sigstore/rekor-tiles/issues/46)
     },
     prober-availability = {
       display_prefix            = "Availability (Prober)"
-      base_total_service_filter = format("metric.type=\"prometheus.googleapis.com/api_endpoint_latency_count/summary\" resource.type=\"prometheus_target\" metric.labels.host=\"%s\"", var.prober_url)
+      base_total_service_filter = format("metric.type=\"prometheus.googleapis.com/api_endpoint_latency_count/summary\" resource.type=\"prometheus_target\" metric.labels.host=\"%s\"", local.prober_url)
       bad_filter                = "metric.labels.status_code!=monitoring.regex.full_match(\"20[0-1]\")"
       slos = {
         api-v2-log-entries-post = {
@@ -64,6 +66,6 @@ module "slos" {
           goal           = 0.995
         },
       }
-    */
+    }
   }
 }
