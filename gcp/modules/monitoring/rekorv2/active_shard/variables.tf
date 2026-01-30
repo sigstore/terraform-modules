@@ -43,6 +43,11 @@ variable "shard_name" {
   default = ""
 }
 
+variable "dns_domain_name" {
+  type    = string
+  default = "sigstore.dev"
+}
+
 // Optional values that can be overridden or appended to if desired.
 variable "cluster_name" {
   description = "The name of the Kubernetes cluster."
