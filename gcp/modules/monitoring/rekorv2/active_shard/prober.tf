@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-locals {
-  rekor_url = "${var.shard_name}.rekor.${var.dns_domain_name}"
-}
-
 resource "google_monitoring_alert_policy" "prober_rekorv2_endpoint_latency" {
   alert_strategy {
     auto_close = "604800s"
@@ -36,7 +32,7 @@ resource "google_monitoring_alert_policy" "prober_rekorv2_endpoint_latency" {
 
       comparison      = "COMPARISON_GT"
       duration        = "300s"
-      filter          = format("resource.type = \"prometheus_target\" AND metric.type = \"prometheus.googleapis.com/api_endpoint_latency/summary\" AND metric.labels.host = \"%s\" AND %s", local.rekor_url, "metric.labels.endpoint = \"/api/v2/log/entries\"")
+      filter          = format("resource.type = \"prometheus_target\" AND metric.type = \"prometheus.googleapis.com/api_endpoint_latency/summary\" AND metric.labels.host = \"%s\" AND %s", local.prober_url, "metric.labels.endpoint = \"/api/v2/log/entries\"")
       threshold_value = "10000"
 
       trigger {
@@ -77,7 +73,7 @@ resource "google_monitoring_alert_policy" "prober_data_absent_alert" {
       }
 
       duration = "300s"
-      filter   = format("resource.type = \"prometheus_target\" AND metric.type = \"prometheus.googleapis.com/api_endpoint_latency/summary\" AND metric.labels.host = \"%s\" AND %s", local.rekor_url, "metric.labels.endpoint = \"/api/v2/log/entries\"")
+      filter   = format("resource.type = \"prometheus_target\" AND metric.type = \"prometheus.googleapis.com/api_endpoint_latency/summary\" AND metric.labels.host = \"%s\" AND %s", local.prober_url, "metric.labels.endpoint = \"/api/v2/log/entries\"")
 
       trigger {
         count   = "1"
@@ -85,13 +81,13 @@ resource "google_monitoring_alert_policy" "prober_data_absent_alert" {
       }
     }
 
-    display_name = format("API Prober: Latency Data Absent for 5 minutes: %s", local.rekor_url)
+    display_name = format("API Prober: Latency Data Absent for 5 minutes: %s", local.prober_url)
   }
 
-  display_name = format("API Prober: Latency Data Absent for 5 minutes: %s", local.rekor_url)
+  display_name = format("API Prober: Latency Data Absent for 5 minutes: %s", local.prober_url)
 
   documentation {
-    content   = format("API Endpoint Latency Data Absent for 5 minutes: %s. Check playbook for more details.", local.rekor_url)
+    content   = format("API Endpoint Latency Data Absent for 5 minutes: %s. Check playbook for more details.", local.prober_url)
     mime_type = "text/markdown"
   }
 
