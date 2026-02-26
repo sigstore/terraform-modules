@@ -127,10 +127,10 @@ resource "google_compute_security_policy" "k8s_http_grpc_security_policy_renamed
 
     match {
       expr {
-        expression = "int(request.headers['content-length']) > 8388608"
+        expression = "int(request.headers['content-length']) > ${var.max_req_content_length}"
       }
     }
-    description = "Block all incoming write requests > 8MB"
+    description = "Block all incoming write requests > ${var.max_req_content_length_description}"
   }
 
   rule {
