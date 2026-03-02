@@ -237,6 +237,18 @@ variable "enable_cdn" {
   default     = true
 }
 
+variable "max_req_content_length" {
+  description = "maximum request content length in bytes for the write path"
+  type        = number
+  default     = 8388608 // 8 MB
+}
+
+variable "max_req_content_length_description" {
+  description = "maximum request content length, used only for security policy description"
+  type        = string
+  default     = "8MB"
+}
+
 variable "enable_healthcheck_logging" {
   description = "whether to enable logging for the HTTP and gRPC health checks"
   type        = bool
