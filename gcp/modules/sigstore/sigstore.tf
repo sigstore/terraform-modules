@@ -179,6 +179,8 @@ module "gke-cluster" {
 module "mysql" {
   source = "../mysql"
 
+  count = var.enable_mysql ? 1 : 0
+
   region     = var.region
   project_id = var.project_id
 
@@ -216,13 +218,15 @@ module "mysql" {
 }
 
 moved {
-  from = module.mysql.google_sql_database.searchindexes
+  from = module.mysql[0].google_sql_database.searchindexes
   to   = module.rekor.google_sql_database.searchindexes
 }
 
 // Rekor
 module "rekor" {
   source = "../rekor"
+
+  count = var.enable_legacy_rekor ? 1 : 0
 
   region       = var.region
   project_id   = var.project_id
@@ -245,7 +249,7 @@ module "rekor" {
 
   new_entry_pubsub_consumers = var.rekor_new_entry_pubsub_consumers
 
-  index_database_instance_name = module.mysql.mysql_instance
+  index_database_instance_name = module.mysql[0].mysql_instance
 
   depends_on = [
     module.gke-cluster,
@@ -342,6 +346,8 @@ module "oslogin" {
 module "ctlog" {
   source = "../ctlog"
 
+  count = var.enable_legacy_ctlog ? 1 : 0
+
   project_id   = var.project_id
   cluster_name = var.cluster_name
 
@@ -378,7 +384,7 @@ module "ctlog_shards" {
   // We want to use consistent password across mysql DB instances, because
   // this is access only at the DB level and access to the DB instance is gated
   // by the IAM as well as private network.
-  password = module.mysql.mysql_pass
+  password = module.mysql[0].mysql_pass
 
   network = module.network.network_self_link
 
@@ -390,7 +396,7 @@ module "ctlog_shards" {
   binary_log_backup_enabled = var.mysql_binary_log_backup_enabled
   collation                 = var.mysql_collation
 
-  cloud_sql_iam_service_account = module.mysql.trillian_serviceaccount
+  cloud_sql_iam_service_account = module.mysql[0].trillian_serviceaccount
   breakglass_iam_group          = var.breakglass_sql_iam_group
 
   database_flags = try(each.value["mysql_database_flags"], {})
@@ -436,7 +442,7 @@ module "standalone_mysqls" {
   // We want to use consistent password across mysql DB instances, because
   // this is access only at the DB level and access to the DB instance is gated
   // by the IAM as well as private network.
-  password = module.mysql.mysql_pass
+  password = module.mysql[0].mysql_pass
 
   network = module.network.network_self_link
 
@@ -448,7 +454,7 @@ module "standalone_mysqls" {
   binary_log_backup_enabled = var.mysql_binary_log_backup_enabled
   collation                 = var.mysql_collation
 
-  cloud_sql_iam_service_account = module.mysql.trillian_serviceaccount
+  cloud_sql_iam_service_account = module.mysql[0].trillian_serviceaccount
   breakglass_iam_group          = var.breakglass_sql_iam_group
 
   database_flags = var.mysql_database_flags

@@ -22,13 +22,13 @@ output "cluster_name" {
 
 output "trillian_serviceaccount" {
   description = "The email/name of the GCP service account"
-  value       = module.mysql.trillian_serviceaccount
+  value       = length(module.mysql) > 0 ? module.mysql[0].trillian_serviceaccount : ""
 }
 
 // Used when setting up the GKE cluster to talk to MySQL.
 output "mysql_instance" {
   description = "The generated name of the Cloud SQL instance"
-  value       = module.mysql.mysql_instance
+  value       = length(module.mysql) > 0 ? module.mysql[0].mysql_instance : ""
 }
 
 // Outputs a list of strings for each CTLog Cloud SQL instance.
@@ -58,20 +58,20 @@ output "standalone_mysql_connections" {
 // Full connection string for the MySQL DB>
 output "mysql_connection" {
   description = "The connection string dynamically generated for storage inside the Kubernetes configmap"
-  value       = module.mysql.mysql_connection
+  value       = length(module.mysql) > 0 ? module.mysql[0].mysql_connection : ""
 }
 
 // MySQL DB username.
 output "mysql_user" {
   description = "The Cloud SQL Instance User name"
-  value       = module.mysql.mysql_user
+  value       = length(module.mysql) > 0 ? module.mysql[0].mysql_user : ""
 }
 
 // MySQL DB password.
 output "mysql_pass" {
   sensitive   = true
   description = "The Cloud SQL Instance Password (Generated)"
-  value       = module.mysql.mysql_pass
+  value       = length(module.mysql) > 0 ? module.mysql[0].mysql_pass : ""
 }
 
 // CTLog MySQL DB name.
