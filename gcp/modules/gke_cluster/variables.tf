@@ -99,7 +99,10 @@ variable "display_name" {
   default = "bastion"
 }
 // module.bastion.ip_address
-variable "bastion_ip_address" {}
+variable "bastion_ip_address" {
+  type    = string
+  default = ""
+}
 
 // private_cluster_config
 variable "enable_private_endpoint" {

@@ -38,6 +38,12 @@ variable "bastion_zone" {
   default     = ""
 }
 
+variable "enable_bastion" {
+  description = "Whether to create a bastion VM"
+  type        = bool
+  default     = true
+}
+
 variable "tuf_region" {
   description = "The region in which to create the TUF bucket"
   type        = string
@@ -183,6 +189,24 @@ variable "tunnel_accessor_sa" {
 variable "github_repo" {
   description = "Github repo for running Github Actions from."
   type        = string
+}
+
+variable "enable_mysql" {
+  description = "Whether to set up MySQL. Must be true if enable_legacy_ctlog or enable_legacy_rekor are true."
+  type        = bool
+  default     = true
+}
+
+variable "enable_legacy_ctlog" {
+  description = "Whether to set up the legacy CT log."
+  type        = bool
+  default     = true
+}
+
+variable "enable_legacy_rekor" {
+  description = "Whether to set up Rekor v1."
+  type        = bool
+  default     = true
 }
 
 variable "mysql_instance_name" {
@@ -494,4 +518,37 @@ variable "audit_log_types" {
   type        = list(string)
   description = "list of audit log types to apply against allServices"
   default     = ["ADMIN_READ", "DATA_READ", "DATA_WRITE"]
+}
+
+locals {
+  validate_rekor_mysql      = (var.enable_legacy_rekor && var.enable_mysql) || !(var.enable_legacy_rekor || var.enable_mysql)
+  validate_ctlog_mysql      = length(var.ctlog_shards) == 0 || (var.enable_legacy_ctlog && var.enable_mysql)
+  validate_standalone_mysql = length(var.standalone_mysqls) == 0 || var.enable_mysql
+}
+
+resource "null_resource" "check_rekor_requires_mysql" {
+  lifecycle {
+    precondition {
+      condition     = local.validate_rekor_mysql
+      error_message = "enable_legacy_rekor=true is only compatible with enable_mysql=true."
+    }
+  }
+}
+
+resource "null_resource" "check_ctlog_requires_mysql" {
+  lifecycle {
+    precondition {
+      condition     = local.validate_ctlog_mysql
+      error_message = "ctlog_shards is only compatible with enable_legacy_ctlog=true and enable_mysql=true"
+    }
+  }
+}
+
+resource "null_resource" "check_standalone_mysqls_require_mysql" {
+  lifecycle {
+    precondition {
+      condition     = local.validate_standalone_mysql
+      error_message = "standalone_mysqls is only compatible with enable_mysql=true"
+    }
+  }
 }
