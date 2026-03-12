@@ -38,6 +38,12 @@ variable "bastion_zone" {
   default     = ""
 }
 
+variable "enable_bastion" {
+  description = "Whether to create a bastion VM"
+  type        = bool
+  default     = true
+}
+
 variable "tuf_region" {
   description = "The region in which to create the TUF bucket"
   type        = string

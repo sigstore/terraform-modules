@@ -39,6 +39,8 @@ module "network" {
 module "bastion" {
   source = "../bastion"
 
+  count = var.enable_bastion ? 1 : 0
+
   project_id         = var.project_id
   region             = var.region
   zone               = var.bastion_zone
@@ -107,6 +109,8 @@ module "monitoring" {
 }
 
 resource "google_compute_firewall" "bastion-egress" {
+  count = var.enable_bastion ? 1 : 0
+
   // Egress to Kubernetes API is the only allowed traffic
   name      = "bastion-egress"
   network   = module.network.network_name
@@ -151,7 +155,7 @@ module "gke-cluster" {
   resource_limits_resource_cpu_max = var.gke_autoscaling_resource_limits_resource_cpu_max
   resource_limits_resource_mem_max = var.gke_autoscaling_resource_limits_resource_mem_max
 
-  bastion_ip_address = module.bastion.ip_address
+  bastion_ip_address = var.enable_bastion ? module.bastion[0].ip_address : ""
 
   monitoring_components = var.cluster_monitoring_components
 
@@ -320,13 +324,13 @@ module "oslogin" {
 
   // Grant OSLogin access to the bastion instance to the GHA
   // SA for terraform access and to tunnel accessors.
-  instance_os_login_members = {
+  instance_os_login_members = var.enable_bastion ? {
     bastion = {
-      instance_name = module.bastion.name
-      zone          = module.bastion.zone
+      instance_name = module.bastion[0].name
+      zone          = module.bastion[0].zone
       members       = var.tunnel_accessor_sa
     }
-  }
+  } : {}
   depends_on = [
     module.bastion,
     module.project_roles

@@ -115,9 +115,12 @@ resource "google_container_cluster" "cluster" {
 
   // Specify the list of CIDRs which can access the master's API
   master_authorized_networks_config {
-    cidr_blocks {
-      display_name = var.display_name
-      cidr_block   = format("%s/32", var.bastion_ip_address)
+    dynamic "cidr_blocks" {
+      for_each = var.bastion_ip_address == "" ? [] : [1]
+      content {
+        display_name = var.display_name
+        cidr_block   = format("%s/32", var.bastion_ip_address)
+      }
     }
     private_endpoint_enforcement_enabled = var.enable_private_endpoint
   }

@@ -103,22 +103,22 @@ output "get_credentials" {
 
 output "bastion_socks_proxy_setup" {
   description = "Gcloud compute ssh to the bastion host command"
-  value       = "${module.bastion.ssh_cmd} -- -N -D 8118"
+  value       = length(module.bastion) > 0 ? "${module.bastion[0].ssh_cmd} -- -N -D 8118" : ""
 }
 
 output "bastion_ssh_cmd" {
   description = "Instructions to connect to bastion"
-  value       = "gcloud compute ssh --zone ${module.bastion.zone} ${module.bastion.name} --tunnel-through-iap --project ${module.bastion.project}"
+  value       = length(module.bastion) > 0 ? "gcloud compute ssh --zone ${module.bastion[0].zone} ${module.bastion[0].name} --tunnel-through-iap --project ${module.bastion[0].project}" : ""
 }
 
 output "bastion_name" {
   description = "Name of the Bastion."
-  value       = module.bastion.name
+  value       = length(module.bastion) > 0 ? module.bastion[0].name : ""
 }
 
 output "bastion_zone" {
   description = "GCP zone that the Bastion is in."
-  value       = module.bastion.zone
+  value       = length(module.bastion) > 0 ? module.bastion[0].zone : ""
 }
 
 output "bastion_kubectl" {
