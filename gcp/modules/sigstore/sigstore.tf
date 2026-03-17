@@ -385,6 +385,7 @@ module "ctlog_shards" {
 
   db_name = var.ctlog_mysql_db_name
 
+  availability_type              = var.mysql_availability_type
   ipv4_enabled                   = var.mysql_ipv4_enabled
   require_ssl                    = var.mysql_require_ssl
   backup_enabled                 = var.mysql_backup_enabled
@@ -445,6 +446,7 @@ module "standalone_mysqls" {
 
   db_name = var.mysql_db_name
 
+  availability_type              = var.mysql_availability_type
   ipv4_enabled                   = var.mysql_ipv4_enabled
   require_ssl                    = var.standalone_mysql_ssl
   backup_enabled                 = var.mysql_backup_enabled
