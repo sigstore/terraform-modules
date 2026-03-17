@@ -39,7 +39,7 @@ resource "google_monitoring_uptime_check_config" "rekor_uptime_alerts_get" {
     type = "uptime_url"
   }
 
-  period  = "60s"
+  period  = var.uptime_check_period
   project = var.project_id
   timeout = "10s"
 }

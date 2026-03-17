@@ -42,6 +42,7 @@ module "rekor" {
   cluster_location         = var.cluster_location
   prober_url               = var.prober_rekor_url
   create_slos              = var.create_slos
+  uptime_check_period      = var.uptime_check_period
 
   depends_on = [
     google_project_service.service
@@ -61,6 +62,7 @@ module "fulcio" {
   cluster_location         = var.cluster_location
   prober_url               = var.prober_fulcio_url
   create_slos              = var.create_slos
+  uptime_check_period      = var.uptime_check_period
 
   depends_on = [
     google_project_service.service
@@ -81,6 +83,7 @@ module "timestamp" {
   cluster_location         = var.cluster_location
   prober_url               = var.prober_timestamp_url
   create_slos              = var.create_slos
+  uptime_check_period      = var.uptime_check_period
 
   depends_on = [
     google_project_service.service
@@ -98,7 +101,8 @@ module "dex" {
   cluster_location         = var.cluster_location
   create_slos              = var.create_slos
 
-  dex_url = var.dex_url
+  dex_url             = var.dex_url
+  uptime_check_period = var.uptime_check_period
 
   depends_on = [
     google_project_service.service
