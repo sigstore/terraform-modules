@@ -35,7 +35,7 @@ resource "google_monitoring_uptime_check_config" "uptime_fulcio" {
     type = "uptime_url"
   }
 
-  period  = "60s"
+  period  = var.uptime_check_period
   project = var.project_id
   timeout = "10s"
 }
@@ -61,7 +61,7 @@ resource "google_monitoring_uptime_check_config" "uptime_ct_log" {
     type = "uptime_url"
   }
 
-  period  = "60s"
+  period  = var.uptime_check_period
   project = var.project_id
   timeout = "10s"
 }

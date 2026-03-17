@@ -100,3 +100,8 @@ variable "create_slos" {
   type        = bool
   default     = false
 }
+
+variable "uptime_check_period" {
+  type    = string
+  default = "60s"
+}

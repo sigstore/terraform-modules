@@ -82,6 +82,18 @@ variable "binary_log_backup_enabled" {
   default     = true
 }
 
+variable "retained_backups" {
+  type        = number
+  description = "Number of days of backups to retain."
+  default     = 7
+}
+
+variable "transaction_log_retention_days" {
+  type        = number
+  description = "Number of days to retain transaction logs for point-in-time recovery."
+  default     = 7
+}
+
 variable "network" {
   type    = string
   default = "default"

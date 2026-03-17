@@ -77,3 +77,8 @@ variable "ctlog_url" {
   description = "CT Log URL"
   default     = ""
 }
+
+variable "uptime_check_period" {
+  type    = string
+  default = "60s"
+}

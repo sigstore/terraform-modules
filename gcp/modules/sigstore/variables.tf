@@ -132,6 +132,7 @@ variable "monitoring" {
     ctlog_url                = string
     notification_channel_ids = list(string)
     timestamp_enabled        = bool
+    uptime_check_period      = optional(string, "60s")
   })
   default = {
     enabled                  = false
@@ -143,6 +144,7 @@ variable "monitoring" {
     ctlog_url                = "ctlog.example.com"
     notification_channel_ids = []
     timestamp_enabled        = false
+    uptime_check_period      = "60s"
   }
 }
 
@@ -249,6 +251,18 @@ variable "mysql_backup_enabled" {
   type        = bool
   description = "Whether to enable backup configuration for MySQL instance."
   default     = true
+}
+
+variable "mysql_retained_backups" {
+  type        = number
+  description = "Number of days of backups to retain."
+  default     = 7
+}
+
+variable "mysql_transaction_log_retention_days" {
+  type        = number
+  description = "Number of days to retain transaction logs for point-in-time recovery."
+  default     = 7
 }
 
 variable "mysql_binary_log_backup_enabled" {
@@ -405,6 +419,11 @@ variable "gke_autoscaling_resource_limits_resource_cpu_max" {
 variable "gke_autoscaling_resource_limits_resource_mem_max" {
   type    = number
   default = 16
+}
+
+variable "gke_node_config_machine_type" {
+  type    = string
+  default = "n2-standard-4"
 }
 
 variable "gcs_logging_enabled" {

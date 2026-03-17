@@ -99,6 +99,7 @@ module "monitoring" {
   create_slos                      = var.create_slos
   timestamp_enabled                = var.monitoring.timestamp_enabled
   enable_k8s_cpu_utilization_alert = var.enable_k8s_cpu_utilization_alert
+  uptime_check_period              = var.monitoring.uptime_check_period
 
   depends_on = [
     module.gke-cluster,
@@ -148,6 +149,8 @@ module "gke-cluster" {
   autoscaling_min_node = var.autoscaling_min_node
   autoscaling_max_node = var.autoscaling_max_node
 
+  node_config_machine_type = var.gke_node_config_machine_type
+
   resource_limits_resource_cpu_max = var.gke_autoscaling_resource_limits_resource_cpu_max
   resource_limits_resource_mem_max = var.gke_autoscaling_resource_limits_resource_mem_max
 
@@ -192,10 +195,12 @@ module "mysql" {
   instance_name = var.mysql_instance_name
   db_name       = var.mysql_db_name
 
-  ipv4_enabled              = var.mysql_ipv4_enabled
-  require_ssl               = var.mysql_require_ssl
-  backup_enabled            = var.mysql_backup_enabled
-  binary_log_backup_enabled = var.mysql_binary_log_backup_enabled
+  ipv4_enabled                   = var.mysql_ipv4_enabled
+  require_ssl                    = var.mysql_require_ssl
+  backup_enabled                 = var.mysql_backup_enabled
+  binary_log_backup_enabled      = var.mysql_binary_log_backup_enabled
+  retained_backups               = var.mysql_retained_backups
+  transaction_log_retention_days = var.mysql_transaction_log_retention_days
 
   breakglass_iam_group = var.breakglass_sql_iam_group
 
@@ -380,11 +385,13 @@ module "ctlog_shards" {
 
   db_name = var.ctlog_mysql_db_name
 
-  ipv4_enabled              = var.mysql_ipv4_enabled
-  require_ssl               = var.mysql_require_ssl
-  backup_enabled            = var.mysql_backup_enabled
-  binary_log_backup_enabled = var.mysql_binary_log_backup_enabled
-  collation                 = var.mysql_collation
+  ipv4_enabled                   = var.mysql_ipv4_enabled
+  require_ssl                    = var.mysql_require_ssl
+  backup_enabled                 = var.mysql_backup_enabled
+  binary_log_backup_enabled      = var.mysql_binary_log_backup_enabled
+  retained_backups               = var.mysql_retained_backups
+  transaction_log_retention_days = var.mysql_transaction_log_retention_days
+  collation                      = var.mysql_collation
 
   cloud_sql_iam_service_account = module.mysql.trillian_serviceaccount
   breakglass_iam_group          = var.breakglass_sql_iam_group
@@ -438,11 +445,13 @@ module "standalone_mysqls" {
 
   db_name = var.mysql_db_name
 
-  ipv4_enabled              = var.mysql_ipv4_enabled
-  require_ssl               = var.standalone_mysql_ssl
-  backup_enabled            = var.mysql_backup_enabled
-  binary_log_backup_enabled = var.mysql_binary_log_backup_enabled
-  collation                 = var.mysql_collation
+  ipv4_enabled                   = var.mysql_ipv4_enabled
+  require_ssl                    = var.standalone_mysql_ssl
+  backup_enabled                 = var.mysql_backup_enabled
+  binary_log_backup_enabled      = var.mysql_binary_log_backup_enabled
+  retained_backups               = var.mysql_retained_backups
+  transaction_log_retention_days = var.mysql_transaction_log_retention_days
+  collation                      = var.mysql_collation
 
   cloud_sql_iam_service_account = module.mysql.trillian_serviceaccount
   breakglass_iam_group          = var.breakglass_sql_iam_group

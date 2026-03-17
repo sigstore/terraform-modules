@@ -65,8 +65,13 @@ resource "google_sql_database_instance" "trillian" {
     }
 
     backup_configuration {
-      enabled            = var.backup_enabled
-      binary_log_enabled = var.binary_log_backup_enabled
+      enabled                        = var.backup_enabled
+      binary_log_enabled             = var.binary_log_backup_enabled
+      transaction_log_retention_days = var.transaction_log_retention_days
+      backup_retention_settings {
+        retained_backups = var.retained_backups
+        retention_unit   = "COUNT"
+      }
     }
   }
 

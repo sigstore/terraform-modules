@@ -128,3 +128,9 @@ variable "enable_k8s_cpu_utilization_alert" {
   description = "whether to enable or disable the K8s CPU utilization alert"
   default     = "true"
 }
+
+variable "uptime_check_period" {
+  type        = string
+  description = "The period (in seconds) between uptime checks"
+  default     = "60s"
+}
