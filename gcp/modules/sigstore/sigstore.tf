@@ -39,6 +39,8 @@ module "network" {
 module "bastion" {
   source = "../bastion"
 
+  count = var.enable_bastion ? 1 : 0
+
   project_id         = var.project_id
   region             = var.region
   zone               = var.bastion_zone
@@ -108,6 +110,8 @@ module "monitoring" {
 }
 
 resource "google_compute_firewall" "bastion-egress" {
+  count = var.enable_bastion ? 1 : 0
+
   // Egress to Kubernetes API is the only allowed traffic
   name      = "bastion-egress"
   network   = module.network.network_name
@@ -154,7 +158,7 @@ module "gke-cluster" {
   resource_limits_resource_cpu_max = var.gke_autoscaling_resource_limits_resource_cpu_max
   resource_limits_resource_mem_max = var.gke_autoscaling_resource_limits_resource_mem_max
 
-  bastion_ip_address = module.bastion.ip_address
+  bastion_ip_address = var.enable_bastion ? module.bastion[0].ip_address : ""
 
   monitoring_components = var.cluster_monitoring_components
 
@@ -177,6 +181,8 @@ module "gke-cluster" {
 // one database instance to a single ctlog shard.
 module "mysql" {
   source = "../mysql"
+
+  count = var.enable_mysql ? 1 : 0
 
   region     = var.region
   project_id = var.project_id
@@ -217,13 +223,15 @@ module "mysql" {
 }
 
 moved {
-  from = module.mysql.google_sql_database.searchindexes
+  from = module.mysql[0].google_sql_database.searchindexes
   to   = module.rekor.google_sql_database.searchindexes
 }
 
 // Rekor
 module "rekor" {
   source = "../rekor"
+
+  count = var.enable_legacy_rekor ? 1 : 0
 
   region       = var.region
   project_id   = var.project_id
@@ -246,7 +254,7 @@ module "rekor" {
 
   new_entry_pubsub_consumers = var.rekor_new_entry_pubsub_consumers
 
-  index_database_instance_name = module.mysql.mysql_instance
+  index_database_instance_name = module.mysql[0].mysql_instance
 
   depends_on = [
     module.gke-cluster,
@@ -325,13 +333,13 @@ module "oslogin" {
 
   // Grant OSLogin access to the bastion instance to the GHA
   // SA for terraform access and to tunnel accessors.
-  instance_os_login_members = {
+  instance_os_login_members = var.enable_bastion ? {
     bastion = {
-      instance_name = module.bastion.name
-      zone          = module.bastion.zone
+      instance_name = module.bastion[0].name
+      zone          = module.bastion[0].zone
       members       = var.tunnel_accessor_sa
     }
-  }
+  } : {}
   depends_on = [
     module.bastion,
     module.project_roles
@@ -342,6 +350,8 @@ module "oslogin" {
 // with Rekor.
 module "ctlog" {
   source = "../ctlog"
+
+  count = var.enable_legacy_ctlog ? 1 : 0
 
   project_id   = var.project_id
   cluster_name = var.cluster_name
@@ -379,7 +389,7 @@ module "ctlog_shards" {
   // We want to use consistent password across mysql DB instances, because
   // this is access only at the DB level and access to the DB instance is gated
   // by the IAM as well as private network.
-  password = module.mysql.mysql_pass
+  password = module.mysql[0].mysql_pass
 
   network = module.network.network_self_link
 
@@ -394,7 +404,7 @@ module "ctlog_shards" {
   transaction_log_retention_days = var.mysql_transaction_log_retention_days
   collation                      = var.mysql_collation
 
-  cloud_sql_iam_service_account = module.mysql.trillian_serviceaccount
+  cloud_sql_iam_service_account = module.mysql[0].trillian_serviceaccount
   breakglass_iam_group          = var.breakglass_sql_iam_group
 
   database_flags = try(each.value["mysql_database_flags"], {})
@@ -440,7 +450,7 @@ module "standalone_mysqls" {
   // We want to use consistent password across mysql DB instances, because
   // this is access only at the DB level and access to the DB instance is gated
   // by the IAM as well as private network.
-  password = module.mysql.mysql_pass
+  password = module.mysql[0].mysql_pass
 
   network = module.network.network_self_link
 
@@ -455,7 +465,7 @@ module "standalone_mysqls" {
   transaction_log_retention_days = var.mysql_transaction_log_retention_days
   collation                      = var.mysql_collation
 
-  cloud_sql_iam_service_account = module.mysql.trillian_serviceaccount
+  cloud_sql_iam_service_account = module.mysql[0].trillian_serviceaccount
   breakglass_iam_group          = var.breakglass_sql_iam_group
 
   database_flags = var.mysql_database_flags
