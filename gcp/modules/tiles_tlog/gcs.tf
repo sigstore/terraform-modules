@@ -29,6 +29,11 @@ resource "google_storage_bucket" "tessera_store" {
   lifecycle {
     prevent_destroy = true
   }
+
+  cors {
+    origin = ["*"]
+    method = ["GET", "HEAD"]
+  }
 }
 
 resource "google_storage_bucket_iam_member" "gcs_user" {
