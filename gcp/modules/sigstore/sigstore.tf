@@ -36,6 +36,10 @@ module "network" {
 }
 
 // Bastion
+moved {
+  from = module.bastion
+  to   = module.bastion[0]
+}
 module "bastion" {
   source = "../bastion"
 
@@ -179,6 +183,10 @@ module "gke-cluster" {
 // MYSQL. This is the original DB that was used for both Rekor and CTLog.
 // Newer versions of CTLog create their own database instance, so there's
 // one database instance to a single ctlog shard.
+moved {
+  from = module.mysql
+  to   = module.mysql[0]
+}
 module "mysql" {
   source = "../mysql"
 
@@ -228,6 +236,10 @@ moved {
 }
 
 // Rekor
+moved {
+  from = module.rekor
+  to   = module.rekor[0]
+}
 module "rekor" {
   source = "../rekor"
 
@@ -348,6 +360,10 @@ module "oslogin" {
 
 // ctlog. This was the original (pre-ga) ctlog that shared the DB instance
 // with Rekor.
+moved {
+  from = module.ctlog
+  to   = module.ctlog[0]
+}
 module "ctlog" {
   source = "../ctlog"
 
