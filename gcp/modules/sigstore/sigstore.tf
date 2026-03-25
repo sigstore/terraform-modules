@@ -54,8 +54,14 @@ module "bastion" {
   ]
 }
 
+moved {
+  from = module.tuf
+  to   = module.tuf[0]
+}
 module "tuf" {
   source = "../tuf"
+
+  count = var.enable_tuf ? 1 : 0
 
   region     = var.tuf_region == "" ? var.region : var.tuf_region
   project_id = var.project_id

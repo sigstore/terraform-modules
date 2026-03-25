@@ -44,6 +44,12 @@ variable "enable_bastion" {
   default     = true
 }
 
+variable "enable_tuf" {
+  description = "Whether to create resources for TUF. Set to false if TUF is using a global bucket and already created by another sigstore module instance."
+  type        = bool
+  default     = true
+}
+
 variable "tuf_region" {
   description = "The region in which to create the TUF bucket"
   type        = string
@@ -70,6 +76,7 @@ variable "attestation_storage_class" {
 variable "tuf_bucket" {
   type        = string
   description = "Name of GCS bucket for TUF root."
+  default     = ""
 }
 
 variable "tuf_bucket_member" {
