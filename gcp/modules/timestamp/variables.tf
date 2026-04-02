@@ -67,3 +67,57 @@ variable "dns_domain_name" {
   description = "Name of DNS domain name in Google Cloud DNS"
   type        = string
 }
+
+// Network
+variable "enable_cloud_armor" {
+  description = "Whether to create a Cloud Armor security policy."
+  type        = bool
+  default     = false
+}
+
+variable "cloud_armor_rules" {
+  description = "Cloud Armor security policy rules."
+  type = list(object({
+    action      = string
+    priority    = number
+    description = optional(string)
+
+    match = object({
+      versioned_expr = optional(string)
+
+      config = optional(object({
+        src_ip_ranges = list(string)
+      }))
+
+      expr = optional(object({
+        expression = string
+      }))
+    })
+
+    rate_limit_options = optional(object({
+      enforce_on_key = string
+      conform_action = string
+      exceed_action  = string
+      qpm_rate_limit = number
+      interval_sec   = number
+    }))
+
+    redirect_options = optional(object({
+      type   = string
+      target = string
+    }))
+  }))
+  default = []
+}
+
+variable "enable_adaptive_protection" {
+  description = "Whether to enable layer 7 DDoS adaptive protection in Cloud Armor."
+  type        = bool
+  default     = true
+}
+
+variable "enable_ssl_policy" {
+  description = "Whether to create a SSL policy."
+  type        = bool
+  default     = false
+}
