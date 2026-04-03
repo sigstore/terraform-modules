@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 The Sigstore Authors
+ * Copyright 2026 The Sigstore Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,69 +23,22 @@ variable "project_id" {
   }
 }
 
-variable "region" {
-  type        = string
-  description = "GCP region"
-}
-
 variable "single_region" {
   description = "Whether this module instance is only deployed in one region, and therefore in charge of managing its own IP address and DNS record but not other load balancer resources."
   type        = bool
-  default     = true
+  default     = false
+}
+
+variable "lb_address_name" {
+  description = "Name of the global address of the load balancer. If not specified, defaults to 'fulcio-CLUSTER_NAME-gce-ext-lb'."
+  type        = string
+  default     = ""
 }
 
 variable "cluster_name" {
   description = "The name to give the new Kubernetes cluster."
   type        = string
-}
-
-// Certificate authority
-variable "ca_pool_name" {
-  description = "Certificate authority pool name"
-  type        = string
-}
-
-variable "ca_name" {
-  description = "Certificate authority name"
-  type        = string
-  default     = "sigstore-authority"
-}
-
-variable "enable_ca" {
-  description = "Enable a certificate authority via GCP CA Service"
-  type        = bool
-  default     = true
-}
-
-// KMS
-variable "fulcio_keyring_name" {
-  type        = string
-  description = "Name of KMS keyring for Fulcio"
-  default     = "fulcio-keyring"
-}
-
-variable "fulcio_key_name" {
-  type        = string
-  description = "Name of KMS key for Fulcio"
-  default     = "fulcio-intermediate-key"
-}
-
-variable "fulcio_encryption_key_name" {
-  type        = string
-  description = "Name of KMS key for encrypting Tink private key for Fulcio"
-  default     = "fulcio-key-encryption-key"
-}
-
-variable "ca_type" {
-  description = "What kind of CA Fulcio is running and therefore what kind of key to create. Possible values are 'kmsca' or 'tinkca'. Defaults to 'kmsca' which creates an asymmetric signing key. Use 'tinkca' to create a symmetric encryption/decryption key."
-  type        = string
-  default     = "kmsca"
-}
-
-variable "kms_location" {
-  type        = string
-  description = "Location of KMS keyring"
-  default     = "global"
+  default     = ""
 }
 
 variable "dns_zone_name" {
@@ -104,11 +57,16 @@ variable "manage_dns_a_record" {
   default     = true
 }
 
-// Network
 variable "enable_cloud_armor" {
   description = "Whether to create a Cloud Armor security policy."
   type        = bool
   default     = false
+}
+
+variable "cloud_armor_policy_name" {
+  description = "Name of the Cloud Armor policy."
+  type        = string
+  default     = "fulcio-service-security-policy"
 }
 
 variable "cloud_armor_rules" {
@@ -156,4 +114,58 @@ variable "enable_ssl_policy" {
   description = "Whether to create a SSL policy."
   type        = bool
   default     = false
+}
+
+variable "ssl_policy_name" {
+  description = "Name of the SSL policy."
+  type        = string
+  default     = "fulcio-ingress-ssl-policy"
+}
+
+variable "http_service_port" {
+  description = "The internal HTTP port for the service pod"
+  type        = string
+  default     = "5555"
+}
+
+variable "grpc_service_port" {
+  description = "The internal HTTP port for the service pod"
+  type        = string
+  default     = "5554"
+}
+
+variable "enable_healthcheck_logging" {
+  description = "Whether to enable logging for the HTTP health check"
+  type        = bool
+  default     = true
+}
+
+variable "network_endpoint_group_zones" {
+  type        = list(string)
+  description = "zones where the NEGs live. NEGs will not exist until the Kubernetes service they belong to exists and creates them. This value must be set to empty if NEGs are not expected to exist yet, and then can later be updated."
+  default     = []
+}
+
+variable "network_endpoint_group_name" {
+  description = "Name of the NEG that will be created for the HTTP service by the Fulcio Kubernetes service."
+  type        = string
+  default     = ""
+}
+
+variable "network_endpoint_group_name_grpc" {
+  description = "Name of the NEG that will be created for the gRPC service by the Fulcio Kubernetes service."
+  type        = string
+  default     = ""
+}
+
+variable "backend_service_max_rps" {
+  description = "Max requests per second that a single backend instance can handle."
+  type        = number
+  default     = 100
+}
+
+variable "enable_backend_service_logging" {
+  description = "Whether to enable logging for the HTTP backend service."
+  type        = bool
+  default     = true
 }

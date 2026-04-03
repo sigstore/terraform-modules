@@ -307,6 +307,10 @@ module "fulcio" {
   enable_cloud_armor         = var.fulcio_enable_cloud_armor
   enable_ssl_policy          = var.fulcio_enable_ssl_policy
 
+  // Load balancing
+  single_region       = var.single_region
+  manage_dns_a_record = var.fulcio_manage_dns_a_record
+
   depends_on = [
     module.gke-cluster,
     module.network,
@@ -339,6 +343,10 @@ module "timestamp" {
   enable_adaptive_protection = var.timestamp_enable_adaptive_protection
   enable_cloud_armor         = var.timestamp_enable_cloud_armor
   enable_ssl_policy          = var.timestamp_enable_ssl_policy
+
+  // Load balancing
+  single_region       = var.single_region
+  manage_dns_a_record = var.timestamp_manage_dns_a_record
 
   depends_on = [
     module.gke-cluster,
