@@ -23,6 +23,17 @@ variable "project_id" {
   }
 }
 
+variable "region" {
+  type        = string
+  description = "GCP region"
+}
+
+variable "single_region" {
+  description = "Whether this module instance is only deployed in one region, and therefore in charge of managing its own IP address and DNS record but not other load balancer resources."
+  type        = bool
+  default     = true
+}
+
 variable "dns_zone_name" {
   description = "Name of DNS Zone object in Google Cloud DNS"
   type        = string
@@ -31,6 +42,12 @@ variable "dns_zone_name" {
 variable "dns_domain_name" {
   description = "Name of DNS domain name in Google Cloud DNS"
   type        = string
+}
+
+variable "manage_dns_a_record" {
+  description = "Whether this module is in charge of managing the DNS A record. This is to enable transitioning from having DNS managed in a single region to managing the same record globally for all regions."
+  type        = bool
+  default     = true
 }
 
 variable "cluster_name" {
