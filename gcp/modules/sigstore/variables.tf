@@ -14,6 +14,10 @@
  * limitations under the License.
  */
 
+/********************************/
+/************ GENERAL ***********/
+/********************************/
+
 variable "project_id" {
   type = string
   validation {
@@ -32,6 +36,26 @@ variable "region" {
   type        = string
 }
 
+/********************************/
+/************** DNS *************/
+/********************************/
+
+variable "dns_zone_name" {
+  description = "Name of DNS Zone object in Google Cloud DNS"
+  type        = string
+  default     = ""
+}
+
+variable "dns_domain_name" {
+  description = "Name of DNS domain name in Google Cloud DNS"
+  type        = string
+  default     = ""
+}
+
+/********************************/
+/************ BASTION ***********/
+/********************************/
+
 variable "bastion_zone" {
   description = "Bastion zone"
   type        = string
@@ -44,6 +68,10 @@ variable "enable_bastion" {
   default     = true
 }
 
+/********************************/
+/************** TUF *************/
+/********************************/
+
 variable "enable_tuf" {
   description = "Whether to create resources for TUF. Set to false if TUF is using a global bucket and already created by another sigstore module instance."
   type        = bool
@@ -54,23 +82,6 @@ variable "tuf_region" {
   description = "The region in which to create the TUF bucket"
   type        = string
   default     = ""
-}
-
-variable "attestation_region" {
-  description = "The region in which to create the attestation bucket"
-  type        = string
-  default     = ""
-}
-
-variable "attestation_bucket" {
-  type        = string
-  description = "Name of GCS bucket for attestation."
-}
-
-variable "attestation_storage_class" {
-  type        = string
-  description = "Storage class for attestation bucket."
-  default     = "REGIONAL"
 }
 
 variable "tuf_bucket" {
@@ -121,17 +132,9 @@ variable "tuf_main_page_suffix" {
   default     = "index.html"
 }
 
-variable "ca_pool_name" {
-  description = "Certificate authority pool name"
-  type        = string
-  default     = "sigstore"
-}
-
-variable "ca_name" {
-  description = "Certificate authority name"
-  type        = string
-  default     = "sigstore-authority"
-}
+/********************************/
+/********** MONITORING **********/
+/********************************/
 
 variable "monitoring" {
   description = "Monitoring and alerting"
@@ -173,6 +176,10 @@ variable "create_slos" {
   default     = false
 }
 
+/********************************/
+/************ CLUSTER ***********/
+/********************************/
+
 // Optional values that can be overridden or appended to if desired.
 variable "cluster_name" {
   description = "The name to give the new Kubernetes cluster."
@@ -190,30 +197,108 @@ variable "cluster_autoscaling_enabled" {
   default = true
 }
 
+//  Cluster node pool
+variable "initial_node_count" {
+  type    = number
+  default = 3
+}
+
+variable "autoscaling_min_node" {
+  type    = number
+  default = 1
+}
+
+variable "autoscaling_max_node" {
+  type    = number
+  default = 10
+}
+
+variable "gke_autoscaling_resource_limits_resource_cpu_max" {
+  type    = number
+  default = 4
+}
+
+variable "gke_autoscaling_resource_limits_resource_mem_max" {
+  type    = number
+  default = 16
+}
+
+variable "gke_node_config_machine_type" {
+  type    = string
+  default = "n2-standard-4"
+}
+
+variable "cluster_monitoring_components" {
+  description = "The GKE components exposing metrics. Supported values include: SYSTEM_COMPONENTS, APISERVER, CONTROLLER_MANAGER, and SCHEDULER."
+  type        = list(string)
+  default     = ["SYSTEM_COMPONENTS"]
+}
+
+variable "gke_cluster_security_group" {
+  description = "name of Google Group used for GKE Group RBAC; must be gke-security-groups@<yourdomain>"
+  type        = string
+}
+
+variable "gke_oauth_scopes" {
+  description = "OAuth scopes to assign to the cluster node config"
+  type        = list(string)
+  default     = ["https://www.googleapis.com/auth/cloud-platform"]
+}
+
+variable "gke_use_dns_endpoint" {
+  description = "Use DNS-based control plane endpoint for GKE cluster"
+  type        = bool
+  default     = false
+}
+
+variable "gke_use_ip_endpoint" {
+  description = "Use IP-based control plane endpoint for GKE cluster"
+  type        = bool
+  default     = true
+}
+
+/********************************/
+/************ ACCESS ************/
+/********************************/
+
 variable "tunnel_accessor_sa" {
   type        = list(string)
   description = "Email of group to give access to the bastion tunnel to"
 }
+
+variable "iam_members_to_roles" {
+  description = "Map of IAM member (e.g. group:foo@sigstore.dev) to a set of IAM roles (e.g. roles/viewer)"
+  type        = map(set(string))
+  default     = {}
+}
+
+variable "oslogin" {
+  type = object({
+    enabled          = bool
+    enabled_with_2fa = bool
+  })
+  default = {
+    enabled          = false
+    enabled_with_2fa = false
+  }
+  description = "oslogin settings for access to VMs"
+}
+
+/********************************/
+/************ ARGOCD ************/
+/********************************/
 
 variable "github_repo" {
   description = "Github repo for running Github Actions from."
   type        = string
 }
 
+/********************************/
+/************* MYSQL ************/
+/********************************/
+
 variable "enable_mysql" {
   description = "Whether to set up MySQL. Must be true if enable_legacy_ctlog or enable_legacy_rekor are true."
-  type        = bool
-  default     = true
-}
-
-variable "enable_legacy_ctlog" {
-  description = "Whether to set up the legacy CT log."
-  type        = bool
-  default     = true
-}
-
-variable "enable_legacy_rekor" {
-  description = "Whether to set up Rekor v1."
   type        = bool
   default     = true
 }
@@ -308,6 +393,82 @@ variable "mysql_collation" {
   default     = "utf8_general_ci"
 }
 
+variable "standalone_mysqls" {
+  type        = list(string)
+  description = "Array of Standalone mysql instances to create. Entry should be something like [postfix-1, postfix-2], which would then have 2 independent mysql instances created like <projectid>-<environment>-postfix-1 and  <projectid>-<environment>-postfix-2 Cloud SQL instances. For example running in staging with [rekor-ctlog-2022] would create sigstore-staging-standalone-rekor-ctlog-2022"
+  default     = []
+}
+
+variable "standalone_mysql_tier" {
+  type        = string
+  description = "Machine tier for Standalone MySQL instance."
+  default     = "db-n1-standard-4"
+}
+
+variable "standalone_mysql_ssl" {
+  type        = bool
+  description = "force connections to the database to use SSL"
+  default     = true
+}
+
+variable "breakglass_sql_iam_group" {
+  description = "Cloud IAM Group that should have database access in case of emergency"
+  type        = string
+  default     = ""
+}
+
+variable "mysql_database_flags" {
+  type        = map(string)
+  description = "configuration flags to set on the MySQL instance"
+  default     = {}
+}
+
+variable "mysql_rekor_tier" {
+  type        = string
+  description = "Machine tier for Rekor MySQL instance."
+  default     = "db-perf-optimized-N-4"
+}
+
+variable "mysql_edition_rekor" {
+  type        = string
+  description = "The edition of the instance, currently either ENTERPRISE or ENTERPRISE_PLUS"
+  default     = "ENTERPRISE"
+}
+
+variable "mysql_edition_ctlog" {
+  type        = string
+  description = "The edition of the instance, currently either ENTERPRISE or ENTERPRISE_PLUS"
+  default     = "ENTERPRISE"
+}
+
+variable "mysql_data_cache_enabled_rekor" {
+  type        = bool
+  description = "Whether the data cache is enabled for the instance"
+  default     = false
+}
+
+variable "mysql_data_cache_enabled_ctlog" {
+  type        = bool
+  description = "Whether the data cache is enabled for the instance"
+  default     = false
+}
+
+/********************************/
+/************ FULCIO ************/
+/********************************/
+
+variable "ca_pool_name" {
+  description = "Certificate authority pool name"
+  type        = string
+  default     = "sigstore"
+}
+
+variable "ca_name" {
+  description = "Certificate authority name"
+  type        = string
+  default     = "sigstore-authority"
+}
+
 variable "fulcio_keyring_name" {
   type        = string
   description = "Name of Fulcio keyring."
@@ -373,6 +534,33 @@ variable "fulcio_enable_ssl_policy" {
   default     = false
 }
 
+/********************************/
+/*********** REKOR v1 ***********/
+/********************************/
+
+variable "enable_legacy_rekor" {
+  description = "Whether to set up Rekor v1."
+  type        = bool
+  default     = true
+}
+
+variable "attestation_region" {
+  description = "The region in which to create the attestation bucket"
+  type        = string
+  default     = ""
+}
+
+variable "attestation_bucket" {
+  type        = string
+  description = "Name of GCS bucket for attestation."
+}
+
+variable "attestation_storage_class" {
+  type        = string
+  description = "Storage class for attestation bucket."
+  default     = "REGIONAL"
+}
+
 variable "rekor_keyring_name" {
   type        = string
   description = "Name of Rekor keyring."
@@ -390,6 +578,10 @@ variable "rekor_new_entry_pubsub_consumers" {
   description = "List of IAM principals that can subscribe to events about new entries in the log"
   default     = []
 }
+
+/********************************/
+/*********** TIMESTAMP **********/
+/********************************/
 
 variable "timestamp" {
   type = object({
@@ -472,34 +664,14 @@ variable "timestamp_enable_ssl_policy" {
   default     = false
 }
 
-variable "iam_members_to_roles" {
-  description = "Map of IAM member (e.g. group:foo@sigstore.dev) to a set of IAM roles (e.g. roles/viewer)"
-  type        = map(set(string))
-  default     = {}
-}
+/********************************/
+/************* CTLOG ************/
+/********************************/
 
-variable "oslogin" {
-  type = object({
-    enabled          = bool
-    enabled_with_2fa = bool
-  })
-  default = {
-    enabled          = false
-    enabled_with_2fa = false
-  }
-  description = "oslogin settings for access to VMs"
-}
-
-variable "dns_zone_name" {
-  description = "Name of DNS Zone object in Google Cloud DNS"
-  type        = string
-  default     = ""
-}
-
-variable "dns_domain_name" {
-  description = "Name of DNS domain name in Google Cloud DNS"
-  type        = string
-  default     = ""
+variable "enable_legacy_ctlog" {
+  description = "Whether to set up the legacy CT log."
+  type        = bool
+  default     = true
 }
 
 variable "ctlog_shards" {
@@ -514,54 +686,9 @@ variable "ctlog_shards" {
   default     = {}
 }
 
-variable "standalone_mysqls" {
-  type        = list(string)
-  description = "Array of Standalone mysql instances to create. Entry should be something like [postfix-1, postfix-2], which would then have 2 independent mysql instances created like <projectid>-<environment>-postfix-1 and  <projectid>-<environment>-postfix-2 Cloud SQL instances. For example running in staging with [rekor-ctlog-2022] would create sigstore-staging-standalone-rekor-ctlog-2022"
-  default     = []
-}
-
-variable "standalone_mysql_tier" {
-  type        = string
-  description = "Machine tier for Standalone MySQL instance."
-  default     = "db-n1-standard-4"
-}
-
-variable "standalone_mysql_ssl" {
-  type        = bool
-  description = "force connections to the database to use SSL"
-  default     = true
-}
-
-//  Cluster node pool
-variable "initial_node_count" {
-  type    = number
-  default = 3
-}
-
-variable "autoscaling_min_node" {
-  type    = number
-  default = 1
-}
-
-variable "autoscaling_max_node" {
-  type    = number
-  default = 10
-}
-
-variable "gke_autoscaling_resource_limits_resource_cpu_max" {
-  type    = number
-  default = 4
-}
-
-variable "gke_autoscaling_resource_limits_resource_mem_max" {
-  type    = number
-  default = 16
-}
-
-variable "gke_node_config_machine_type" {
-  type    = string
-  default = "n2-standard-4"
-}
+/********************************/
+/************ LOGGING ***********/
+/********************************/
 
 variable "gcs_logging_enabled" {
   type        = bool
@@ -575,82 +702,19 @@ variable "gcs_logging_bucket" {
   default     = ""
 }
 
-variable "cluster_monitoring_components" {
-  description = "The GKE components exposing metrics. Supported values include: SYSTEM_COMPONENTS, APISERVER, CONTROLLER_MANAGER, and SCHEDULER."
-  type        = list(string)
-  default     = ["SYSTEM_COMPONENTS"]
-}
-
-variable "gke_cluster_security_group" {
-  description = "name of Google Group used for GKE Group RBAC; must be gke-security-groups@<yourdomain>"
-  type        = string
-}
-
-variable "gke_oauth_scopes" {
-  description = "OAuth scopes to assign to the cluster node config"
-  type        = list(string)
-  default     = ["https://www.googleapis.com/auth/cloud-platform"]
-}
-
-variable "gke_use_dns_endpoint" {
-  description = "Use DNS-based control plane endpoint for GKE cluster"
-  type        = bool
-  default     = false
-}
-
-variable "gke_use_ip_endpoint" {
-  description = "Use IP-based control plane endpoint for GKE cluster"
-  type        = bool
-  default     = true
-}
-
-variable "breakglass_sql_iam_group" {
-  description = "Cloud IAM Group that should have database access in case of emergency"
-  type        = string
-  default     = ""
-}
-
-variable "mysql_database_flags" {
-  type        = map(string)
-  description = "configuration flags to set on the MySQL instance"
-  default     = {}
-}
-
-variable "mysql_rekor_tier" {
-  type        = string
-  description = "Machine tier for Rekor MySQL instance."
-  default     = "db-perf-optimized-N-4"
-}
-
-variable "mysql_edition_rekor" {
-  type        = string
-  description = "The edition of the instance, currently either ENTERPRISE or ENTERPRISE_PLUS"
-  default     = "ENTERPRISE"
-}
-
-variable "mysql_edition_ctlog" {
-  type        = string
-  description = "The edition of the instance, currently either ENTERPRISE or ENTERPRISE_PLUS"
-  default     = "ENTERPRISE"
-}
-
-variable "mysql_data_cache_enabled_rekor" {
-  type        = bool
-  description = "Whether the data cache is enabled for the instance"
-  default     = false
-}
-
-variable "mysql_data_cache_enabled_ctlog" {
-  type        = bool
-  description = "Whether the data cache is enabled for the instance"
-  default     = false
-}
+/********************************/
+/************* AUDIT ************/
+/********************************/
 
 variable "audit_log_types" {
   type        = list(string)
   description = "list of audit log types to apply against allServices"
   default     = ["ADMIN_READ", "DATA_READ", "DATA_WRITE"]
 }
+
+/********************************/
+/************** DEX *************/
+/********************************/
 
 variable "dex_enable_cloud_armor" {
   description = "Whether to create a Cloud Armor security policy for Dex."
@@ -704,6 +768,10 @@ variable "dex_enable_ssl_policy" {
   type        = bool
   default     = false
 }
+
+/********************************/
+/********** VALIDATION **********/
+/********************************/
 
 locals {
   validate_rekor_mysql      = (var.enable_legacy_rekor && var.enable_mysql) || !(var.enable_legacy_rekor || var.enable_mysql)
