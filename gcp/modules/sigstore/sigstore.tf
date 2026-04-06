@@ -296,8 +296,15 @@ module "fulcio" {
   fulcio_keyring_name = var.fulcio_keyring_name
   fulcio_key_name     = var.fulcio_intermediate_key_name
 
+  // DNS
   dns_zone_name   = var.dns_zone_name
   dns_domain_name = var.dns_domain_name
+
+  // Policies
+  cloud_armor_rules          = var.fulcio_cloud_armor_rules
+  enable_adaptive_protection = var.fulcio_enable_adaptive_protection
+  enable_cloud_armor         = var.fulcio_enable_cloud_armor
+  enable_ssl_policy          = var.fulcio_enable_ssl_policy
 
   depends_on = [
     module.gke-cluster,
@@ -322,8 +329,15 @@ module "timestamp" {
   timestamp_encryption_key_name = var.timestamp_encryption_key_name
   timestamp_ca_key_name         = var.timestamp_ca_key_name
 
+  // DNS
   dns_zone_name   = var.dns_zone_name
   dns_domain_name = var.dns_domain_name
+
+  // Policies
+  cloud_armor_rules          = var.timestamp_cloud_armor_rules
+  enable_adaptive_protection = var.timestamp_enable_adaptive_protection
+  enable_cloud_armor         = var.timestamp_enable_cloud_armor
+  enable_ssl_policy          = var.timestamp_enable_ssl_policy
 
   depends_on = [
     module.gke-cluster,
@@ -509,8 +523,15 @@ module "dex" {
 
   cluster_name = var.cluster_name
 
+  // DNS
   dns_zone_name   = var.dns_zone_name
   dns_domain_name = var.dns_domain_name
+
+  // Policies
+  cloud_armor_rules          = var.dex_cloud_armor_rules
+  enable_adaptive_protection = var.dex_enable_adaptive_protection
+  enable_cloud_armor         = var.dex_enable_cloud_armor
+  enable_ssl_policy          = var.dex_enable_ssl_policy
 
   depends_on = [
     module.gke-cluster,

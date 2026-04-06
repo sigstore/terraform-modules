@@ -320,6 +320,59 @@ variable "fulcio_intermediate_key_name" {
   default     = "fulcio-intermediate-key"
 }
 
+variable "fulcio_enable_cloud_armor" {
+  description = "Whether to create a Cloud Armor security policy for Fulcio."
+  type        = bool
+  default     = false
+}
+
+variable "fulcio_cloud_armor_rules" {
+  description = "Cloud Armor security policy rules for Fulcio."
+  type = list(object({
+    action      = string
+    priority    = number
+    description = optional(string)
+
+    match = object({
+      versioned_expr = optional(string)
+
+      config = optional(object({
+        src_ip_ranges = list(string)
+      }))
+
+      expr = optional(object({
+        expression = string
+      }))
+    })
+
+    rate_limit_options = optional(object({
+      enforce_on_key = string
+      conform_action = string
+      exceed_action  = string
+      qpm_rate_limit = number
+      interval_sec   = number
+    }))
+
+    redirect_options = optional(object({
+      type   = string
+      target = string
+    }))
+  }))
+  default = []
+}
+
+variable "fulcio_enable_adaptive_protection" {
+  description = "Whether to enable layer 7 DDoS adaptive protection for Fulcio."
+  type        = bool
+  default     = true
+}
+
+variable "fulcio_enable_ssl_policy" {
+  description = "Whether to create a SSL policy for Fulcio."
+  type        = bool
+  default     = false
+}
+
 variable "rekor_keyring_name" {
   type        = string
   description = "Name of Rekor keyring."
@@ -364,6 +417,59 @@ variable "timestamp_ca_key_name" {
   type        = string
   description = "Name of KMS key for self-signed CA for Timestamp Authority"
   default     = "timestamp-ca-key"
+}
+
+variable "timestamp_enable_cloud_armor" {
+  description = "Whether to create a Cloud Armor security policy for TSA."
+  type        = bool
+  default     = false
+}
+
+variable "timestamp_cloud_armor_rules" {
+  description = "Cloud Armor security policy rules for TSA."
+  type = list(object({
+    action      = string
+    priority    = number
+    description = optional(string)
+
+    match = object({
+      versioned_expr = optional(string)
+
+      config = optional(object({
+        src_ip_ranges = list(string)
+      }))
+
+      expr = optional(object({
+        expression = string
+      }))
+    })
+
+    rate_limit_options = optional(object({
+      enforce_on_key = string
+      conform_action = string
+      exceed_action  = string
+      qpm_rate_limit = number
+      interval_sec   = number
+    }))
+
+    redirect_options = optional(object({
+      type   = string
+      target = string
+    }))
+  }))
+  default = []
+}
+
+variable "timestamp_enable_adaptive_protection" {
+  description = "Whether to enable layer 7 DDoS adaptive protection for TSA."
+  type        = bool
+  default     = true
+}
+
+variable "timestamp_enable_ssl_policy" {
+  description = "Whether to create a SSL policy for TSA."
+  type        = bool
+  default     = false
 }
 
 variable "iam_members_to_roles" {
@@ -544,6 +650,59 @@ variable "audit_log_types" {
   type        = list(string)
   description = "list of audit log types to apply against allServices"
   default     = ["ADMIN_READ", "DATA_READ", "DATA_WRITE"]
+}
+
+variable "dex_enable_cloud_armor" {
+  description = "Whether to create a Cloud Armor security policy for Dex."
+  type        = bool
+  default     = false
+}
+
+variable "dex_cloud_armor_rules" {
+  description = "Cloud Armor security policy rules for Dex."
+  type = list(object({
+    action      = string
+    priority    = number
+    description = optional(string)
+
+    match = object({
+      versioned_expr = optional(string)
+
+      config = optional(object({
+        src_ip_ranges = list(string)
+      }))
+
+      expr = optional(object({
+        expression = string
+      }))
+    })
+
+    rate_limit_options = optional(object({
+      enforce_on_key = string
+      conform_action = string
+      exceed_action  = string
+      qpm_rate_limit = number
+      interval_sec   = number
+    }))
+
+    redirect_options = optional(object({
+      type   = string
+      target = string
+    }))
+  }))
+  default = []
+}
+
+variable "dex_enable_adaptive_protection" {
+  description = "Whether to enable layer 7 DDoS adaptive protection for Dex."
+  type        = bool
+  default     = true
+}
+
+variable "dex_enable_ssl_policy" {
+  description = "Whether to create a SSL policy for Dex."
+  type        = bool
+  default     = false
 }
 
 locals {

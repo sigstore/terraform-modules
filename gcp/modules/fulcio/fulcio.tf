@@ -26,22 +26,3 @@ module "ca" {
   ca_pool_name = var.ca_pool_name
   ca_name      = var.ca_name
 }
-
-resource "google_dns_record_set" "A_fulcio" {
-  count = var.dns_domain_name == "" ? 0 : 1
-  name  = "fulcio.${var.dns_domain_name}"
-  type  = "A"
-  ttl   = 60
-
-  project      = var.project_id
-  managed_zone = var.dns_zone_name
-
-  rrdatas = [google_compute_global_address.gce_lb_ipv4.address]
-}
-
-// Create a static global IP for the external IPV4 GCE L7 load balancer
-resource "google_compute_global_address" "gce_lb_ipv4" {
-  name         = format("fulcio-%s-gce-ext-lb", var.cluster_name)
-  address_type = "EXTERNAL"
-  project      = var.project_id
-}
