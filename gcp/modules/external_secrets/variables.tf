@@ -31,15 +31,3 @@ variable "project_id" {
     error_message = "Must specify project_id variable."
   }
 }
-
-variable "mysql_dbname" {
-  type        = string
-  description = "Name of MySQL database."
-  default     = "trillian"
-}
-
-variable "rekor_mysql_dbname" {
-  type        = string
-  description = "Name of the MySQL database for Rekor search indexes."
-  default     = "searchindexes"
-}
