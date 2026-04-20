@@ -168,18 +168,6 @@ variable "network" {
   default     = "default"
 }
 
-variable "http_service_port" {
-  description = "internal HTTP port for the transparency log service pod"
-  type        = string
-  default     = "3000"
-}
-
-variable "grpc_service_port" {
-  description = "internal gRPC port for the transparency log service pod"
-  type        = string
-  default     = "3001"
-}
-
 variable "service_health_check_path" {
   description = "HTTP URL request path for the service health check"
   type        = string
@@ -205,12 +193,6 @@ variable "http_read_path" {
 variable "http_read_rewrite_path" {
   description = "the template for the path to rewrite read requests to"
   type        = string
-  default     = ""
-}
-
-variable "cluster_network_tag" {
-  type        = string
-  description = "GKE cluster network tag for firewall"
   default     = ""
 }
 
