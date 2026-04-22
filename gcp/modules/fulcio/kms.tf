@@ -37,12 +37,27 @@ resource "google_kms_key_ring" "fulcio-keyring" {
 }
 
 resource "google_kms_crypto_key" "fulcio-intermediate-key" {
+  count = var.ca_type == "kmsca" ? 1 : 0
+
   name     = var.fulcio_key_name
   key_ring = google_kms_key_ring.fulcio-keyring.id
   purpose  = "ASYMMETRIC_SIGN"
   version_template {
     algorithm        = "EC_SIGN_P384_SHA384"
     protection_level = "SOFTWARE"
+  }
+
+  depends_on = [google_kms_key_ring.fulcio-keyring]
+}
+
+resource "google_kms_crypto_key" "fulcio-key-encryption-key" {
+  count = var.ca_type == "tinkca" ? 1 : 0
+
+  name     = var.fulcio_encryption_key_name
+  key_ring = google_kms_key_ring.fulcio-keyring.id
+  # purpose defaults to symmetric encryption/decryption
+  lifecycle {
+    prevent_destroy = true
   }
 
   depends_on = [google_kms_key_ring.fulcio-keyring]
