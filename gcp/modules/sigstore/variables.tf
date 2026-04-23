@@ -469,6 +469,12 @@ variable "ca_name" {
   default     = "sigstore-authority"
 }
 
+variable "ca_type" {
+  description = "What kind of CA Fulcio is running and therefore what kind of key to create. Possible values are 'kmsca' or 'tinkca'. Defaults to 'kmsca' which creates an asymmetric signing key. Use 'tinkca' to create a symmetric encryption/decryption key."
+  type        = string
+  default     = "kmsca"
+}
+
 variable "fulcio_keyring_name" {
   type        = string
   description = "Name of Fulcio keyring."
