@@ -291,6 +291,7 @@ module "fulcio" {
   // Certificate authority
   ca_pool_name = var.ca_pool_name
   ca_name      = var.ca_name
+  ca_type      = var.ca_type
 
   // KMS
   fulcio_keyring_name = var.fulcio_keyring_name
