@@ -64,6 +64,18 @@ variable "fulcio_key_name" {
   default     = "fulcio-intermediate-key"
 }
 
+variable "fulcio_encryption_key_name" {
+  type        = string
+  description = "Name of KMS key for encrypting Tink private key for Fulcio"
+  default     = "fulcio-key-encryption-key"
+}
+
+variable "ca_type" {
+  description = "What kind of CA Fulcio is running and therefore what kind of key to create. Possible values are 'kmsca' or 'tinkca'. Defaults to 'kmsca' which creates an asymmetric signing key. Use 'tinkca' to create a symmetric encryption/decryption key."
+  type        = string
+  default     = "kmsca"
+}
+
 variable "kms_location" {
   type        = string
   description = "Location of KMS keyring"
