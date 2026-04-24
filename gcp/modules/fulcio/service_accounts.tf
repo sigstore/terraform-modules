@@ -48,3 +48,11 @@ resource "google_project_iam_member" "fulcio_kms_viewer_member" {
   member     = "serviceAccount:${google_service_account.fulcio-sa.email}"
   depends_on = [google_service_account.fulcio-sa]
 }
+
+// Decrypt encrypted Tink keyset to get signing key
+resource "google_project_iam_member" "fulcio_kms_decrypter_member" {
+  project    = var.project_id
+  role       = "roles/cloudkms.cryptoKeyDecrypter"
+  member     = "serviceAccount:${google_service_account.fulcio-sa.email}"
+  depends_on = [google_service_account.fulcio-sa]
+}
