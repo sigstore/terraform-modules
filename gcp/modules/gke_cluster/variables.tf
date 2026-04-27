@@ -240,3 +240,9 @@ variable "dns_control_plane_endpoint" {
   type        = bool
   default     = false
 }
+
+variable "healthcheck_ports" {
+  description = "List of ports that a healthcheck must be able to access through the firewall on the cluster."
+  type        = list(number)
+  default     = []
+}

@@ -158,6 +158,7 @@ module "gke-cluster" {
   services_secondary_range_name = module.network.secondary_ip_range.1.range_name
   cluster_network_tag           = var.cluster_network_tag
   cluster_autoscaling_enabled   = var.cluster_autoscaling_enabled
+  healthcheck_ports             = var.healthcheck_ports
 
   initial_node_count   = var.initial_node_count
   autoscaling_min_node = var.autoscaling_min_node

@@ -14,10 +14,6 @@
  * limitations under the License.
  */
 
-locals {
-  cluster_network_tag = var.cluster_network_tag != "" ? var.cluster_network_tag : "gke-${var.cluster_name}"
-}
-
 resource "google_compute_global_address" "gce_lb_ipv4" {
   name         = "${var.shard_name}-${var.dns_subdomain_name}-${var.cluster_name}-gce-ext-lb"
   address_type = "EXTERNAL"
@@ -42,21 +38,6 @@ resource "google_dns_record_set" "A_tlog" {
 
   lifecycle {
     prevent_destroy = true
-  }
-}
-
-resource "google_compute_firewall" "backend_service_health_check" {
-  count   = var.freeze_shard ? 0 : 1
-  name    = "${var.shard_name}-${var.dns_subdomain_name}-fw-allow-health-check-and-proxy"
-  project = var.project_id
-
-  network       = var.network
-  direction     = "INGRESS"
-  source_ranges = ["130.211.0.0/22", "35.191.0.0/16"]
-  target_tags   = [local.cluster_network_tag]
-  allow {
-    protocol = "tcp"
-    ports    = var.network_endpoint_group_grpc_name_suffix == "" ? [var.http_service_port] : [var.http_service_port, var.grpc_service_port]
   }
 }
 

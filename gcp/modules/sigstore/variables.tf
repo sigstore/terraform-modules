@@ -257,6 +257,12 @@ variable "gke_use_ip_endpoint" {
   default     = true
 }
 
+variable "healthcheck_ports" {
+  description = "List of ports that a healthcheck must be able to access through the firewall on the cluster."
+  type        = list(number)
+  default     = []
+}
+
 /********************************/
 /************ ACCESS ************/
 /********************************/
