@@ -38,9 +38,18 @@ resource "google_secret_manager_secret" "public-key" {
   depends_on = [google_project_service.service]
 }
 
-resource "google_project_iam_member" "secret-getter" {
-  count   = var.enable_secrets ? 1 : 0
-  project = var.project_id
-  role    = "roles/secretmanager.secretAccessor"
-  member  = local.workload_iam_member_id
+resource "google_secret_manager_secret_iam_member" "private-secret-getter" {
+  count     = var.enable_secrets ? 1 : 0
+  project   = var.project_id
+  secret_id = google_secret_manager_secret.private-key[count.index].secret_id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = local.workload_iam_member_id
+}
+
+resource "google_secret_manager_secret_iam_member" "public-secret-getter" {
+  count     = var.enable_secrets ? 1 : 0
+  project   = var.project_id
+  secret_id = google_secret_manager_secret.public-key[count.index].secret_id
+  role      = "roles/secretmanager.secretAccessor"
+  member    = local.workload_iam_member_id
 }
