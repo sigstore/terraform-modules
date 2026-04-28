@@ -32,6 +32,12 @@ variable "project_number" {
   }
 }
 
+variable "single_region" {
+  description = "Whether this module instance is only deployed in one region."
+  type        = bool
+  default     = true
+}
+
 variable "region" {
   description = "GCP region"
   type        = string
@@ -287,4 +293,34 @@ variable "enable_secrets" {
   description = "whether to use GCP Secret Manager for the transparency log's public and private keys"
   type        = bool
   default     = false
+}
+
+variable "http_health_check_id" {
+  description = "ID of the shared HTTP health check"
+  type        = string
+  default     = ""
+}
+
+variable "grpc_health_check_id" {
+  description = "ID of the shared gRPC health check"
+  type        = string
+  default     = ""
+}
+
+variable "security_policy_id" {
+  description = "ID of the shared Cloud Armor security policy"
+  type        = string
+  default     = ""
+}
+
+variable "bucket_security_policy_id" {
+  description = "ID of the shared Cloud Armor security policy for the bucket"
+  type        = string
+  default     = ""
+}
+
+variable "ssl_policy_id" {
+  description = "ID of the shared SSL policy"
+  type        = string
+  default     = ""
 }

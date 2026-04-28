@@ -18,8 +18,60 @@ locals {
   cluster_network_tag = var.cluster_network_tag != "" ? var.cluster_network_tag : "gke-${var.cluster_name}"
 }
 
+module "shared" {
+  source = "./shared"
+  count  = var.single_region ? 1 : 0
+
+  project_id                         = var.project_id
+  dns_subdomain_name                 = var.dns_subdomain_name
+  service_health_check_path          = var.service_health_check_path
+  max_req_content_length             = var.max_req_content_length
+  max_req_content_length_description = var.max_req_content_length_description
+  enable_healthcheck_logging         = var.enable_healthcheck_logging
+  http_grpc_qpm_rate_limit           = var.http_grpc_qpm_rate_limit
+  enable_adaptive_protection         = var.enable_adaptive_protection
+  create_grpc_health_check           = var.network_endpoint_group_grpc_name_suffix != ""
+  freeze_shard                       = var.freeze_shard
+
+  http_health_check_name      = "${var.shard_name}-${var.dns_subdomain_name}-http-health-check"
+  grpc_health_check_name      = "${var.shard_name}-${var.dns_subdomain_name}-grpc-health-check"
+  security_policy_name        = "${var.shard_name}-${var.dns_subdomain_name}-k8s-http-grpc-security-policy"
+  bucket_security_policy_name = "${var.shard_name}-${var.dns_subdomain_name}-bucket-security-policy"
+  ssl_policy_name             = "${var.shard_name}-${var.dns_subdomain_name}-ssl-policy"
+}
+moved {
+  from = google_compute_health_check.http_health_check
+  to   = module.shared[0].google_compute_health_check.http_health_check
+}
+moved {
+  from = google_compute_health_check.grpc_health_check
+  to   = module.shared[0].google_compute_health_check.grpc_health_check
+}
+moved {
+  from = google_compute_security_policy.k8s_http_grpc_security_policy_renamed
+  to   = module.shared[0].google_compute_security_policy.k8s_http_grpc_security_policy_renamed
+}
+moved {
+  from = google_compute_security_policy.bucket_security_policy_renamed
+  to   = module.shared[0].google_compute_security_policy.bucket_security_policy_renamed
+}
+moved {
+  from = google_compute_ssl_policy.ssl_policy
+  to   = module.shared[0].google_compute_ssl_policy.ssl_policy
+}
+
+locals {
+  http_health_check_id      = var.single_region && !var.freeze_shard ? module.shared[0].http_health_check_id : var.http_health_check_id
+  grpc_health_check_id      = var.single_region && !var.freeze_shard && var.network_endpoint_group_grpc_name_suffix != "" ? module.shared[0].grpc_health_check_id : var.grpc_health_check_id
+  security_policy_id        = var.single_region && !var.freeze_shard ? module.shared[0].security_policy_id : var.security_policy_id
+  bucket_security_policy_id = var.single_region ? module.shared[0].bucket_security_policy_id : var.bucket_security_policy_id
+  ssl_policy_id             = var.single_region ? module.shared[0].ssl_policy_id : var.ssl_policy_id
+  hostname                  = trimsuffix("${var.shard_name}.${var.dns_subdomain_name}.${var.dns_domain_name}", ".")
+  prefix                    = replace("${var.shard_name}-${var.dns_subdomain_name}", ".", "-")
+}
+
 resource "google_compute_global_address" "gce_lb_ipv4" {
-  name         = "${var.shard_name}-${var.dns_subdomain_name}-${var.cluster_name}-gce-ext-lb"
+  name         = "${local.prefix}-${var.cluster_name}-gce-ext-lb"
   address_type = "EXTERNAL"
   project      = var.project_id
 
@@ -60,45 +112,6 @@ resource "google_compute_firewall" "backend_service_health_check" {
   }
 }
 
-resource "google_compute_health_check" "http_health_check" {
-  count   = var.freeze_shard ? 0 : 1
-  name    = "${var.shard_name}-${var.dns_subdomain_name}-http-health-check"
-  project = var.project_id
-
-  timeout_sec         = 5
-  check_interval_sec  = 5
-  healthy_threshold   = 2
-  unhealthy_threshold = 2
-
-  http_health_check {
-    request_path       = var.service_health_check_path
-    port_specification = "USE_SERVING_PORT"
-  }
-
-  log_config {
-    enable = var.enable_healthcheck_logging
-  }
-}
-
-resource "google_compute_health_check" "grpc_health_check" {
-  count   = var.freeze_shard || var.network_endpoint_group_grpc_name_suffix == "" ? 0 : 1
-  name    = "${var.shard_name}-${var.dns_subdomain_name}-grpc-health-check"
-  project = var.project_id
-
-  timeout_sec         = 5
-  check_interval_sec  = 5
-  healthy_threshold   = 2
-  unhealthy_threshold = 2
-
-  tcp_health_check {
-    port_specification = "USE_SERVING_PORT"
-  }
-
-  log_config {
-    enable = var.enable_healthcheck_logging
-  }
-}
-
 data "google_compute_network_endpoint_group" "k8s_http_neg" {
   for_each = var.freeze_shard ? [] : toset(var.network_endpoint_group_zones)
 
@@ -115,74 +128,9 @@ data "google_compute_network_endpoint_group" "k8s_grpc_neg" {
   zone    = each.key
 }
 
-resource "google_compute_security_policy" "k8s_http_grpc_security_policy_renamed" {
-  count   = var.freeze_shard ? 0 : 1
-  name    = "${var.shard_name}-${var.dns_subdomain_name}-k8s-http-grpc-security-policy"
-  project = var.project_id
-  type    = "CLOUD_ARMOR"
-
-  rule {
-    action   = "deny(502)"
-    priority = "1"
-
-    match {
-      expr {
-        expression = "int(request.headers['content-length']) > ${var.max_req_content_length}"
-      }
-    }
-    description = "Block all incoming write requests > ${var.max_req_content_length_description}"
-  }
-
-  rule {
-    action   = "throttle"
-    priority = "10"
-    match {
-      versioned_expr = "SRC_IPS_V1"
-      config {
-        src_ip_ranges = ["*"]
-      }
-    }
-    rate_limit_options {
-      enforce_on_key = "IP"
-      conform_action = "allow"
-      exceed_action  = "deny(429)"
-      rate_limit_threshold {
-        count        = var.http_grpc_qpm_rate_limit
-        interval_sec = "60"
-      }
-    }
-    description = "Rate limit all HTTP write traffic by client IP"
-  }
-
-  rule {
-    action   = "allow"
-    priority = "2147483647"
-    match {
-      versioned_expr = "SRC_IPS_V1"
-      config {
-        src_ip_ranges = ["*"]
-      }
-    }
-    description = "default rule"
-  }
-
-  advanced_options_config {
-    json_parsing = "STANDARD"
-    json_custom_config {
-      content_types = ["application/json"]
-    }
-  }
-
-  adaptive_protection_config {
-    layer_7_ddos_defense_config {
-      enable = var.enable_adaptive_protection
-    }
-  }
-}
-
 resource "google_compute_backend_service" "k8s_http_backend_service" {
   count   = var.freeze_shard ? 0 : 1
-  name    = "${var.shard_name}-${var.dns_subdomain_name}-k8s-neg-backend-service"
+  name    = "${local.prefix}-k8s-neg-backend-service"
   project = var.project_id
 
   load_balancing_scheme = "EXTERNAL_MANAGED"
@@ -190,7 +138,7 @@ resource "google_compute_backend_service" "k8s_http_backend_service" {
   protocol              = "HTTP"
 
   connection_draining_timeout_sec = 15
-  health_checks                   = [google_compute_health_check.http_health_check[count.index].id]
+  health_checks                   = [local.http_health_check_id]
 
   dynamic "backend" {
     for_each = data.google_compute_network_endpoint_group.k8s_http_neg
@@ -203,9 +151,7 @@ resource "google_compute_backend_service" "k8s_http_backend_service" {
     }
   }
 
-  depends_on = [google_compute_security_policy.k8s_http_grpc_security_policy_renamed[0]]
-
-  security_policy = google_compute_security_policy.k8s_http_grpc_security_policy_renamed[0].self_link
+  security_policy = local.security_policy_id
 
   log_config {
     enable = var.enable_backend_service_logging
@@ -214,7 +160,7 @@ resource "google_compute_backend_service" "k8s_http_backend_service" {
 
 resource "google_compute_backend_service" "k8s_grpc_backend_service" {
   count   = var.freeze_shard || var.network_endpoint_group_grpc_name_suffix == "" ? 0 : 1
-  name    = "${var.shard_name}-${var.dns_subdomain_name}-k8s-grpc-neg-backend-service"
+  name    = "${local.prefix}-k8s-grpc-neg-backend-service"
   project = var.project_id
 
   load_balancing_scheme = "EXTERNAL_MANAGED"
@@ -222,7 +168,7 @@ resource "google_compute_backend_service" "k8s_grpc_backend_service" {
   protocol              = "HTTP2"
 
   connection_draining_timeout_sec = 15
-  health_checks                   = [google_compute_health_check.grpc_health_check[count.index].id]
+  health_checks                   = [local.grpc_health_check_id]
 
   dynamic "backend" {
     for_each = data.google_compute_network_endpoint_group.k8s_grpc_neg
@@ -235,9 +181,7 @@ resource "google_compute_backend_service" "k8s_grpc_backend_service" {
     }
   }
 
-  depends_on = [google_compute_security_policy.k8s_http_grpc_security_policy_renamed[0]]
-
-  security_policy = google_compute_security_policy.k8s_http_grpc_security_policy_renamed[0].self_link
+  security_policy = local.security_policy_id
 
   log_config {
     enable = var.enable_backend_service_logging
@@ -248,7 +192,7 @@ resource "google_compute_backend_bucket" "tessera_backend_bucket" {
   name    = "${var.shard_name}-${var.bucket_name_suffix}"
   project = var.project_id
 
-  depends_on = [google_storage_bucket.tessera_store, google_compute_security_policy.bucket_security_policy_renamed]
+  depends_on = [google_storage_bucket.tessera_store]
 
   bucket_name = google_storage_bucket.tessera_store.name
 
@@ -257,43 +201,21 @@ resource "google_compute_backend_bucket" "tessera_backend_bucket" {
     cache_mode = "USE_ORIGIN_HEADERS"
   }
 
-  edge_security_policy = google_compute_security_policy.bucket_security_policy_renamed.self_link
+  edge_security_policy = local.bucket_security_policy_id
 
   lifecycle {
     prevent_destroy = true
   }
 }
 
-resource "google_compute_security_policy" "bucket_security_policy_renamed" {
-  name    = "${var.shard_name}-${var.dns_subdomain_name}-bucket-security-policy"
-  project = var.project_id
-  type    = "CLOUD_ARMOR_EDGE"
-
-  rule {
-    action   = "allow"
-    priority = "2147483647"
-    match {
-      versioned_expr = "SRC_IPS_V1"
-      config {
-        src_ip_ranges = ["*"]
-      }
-    }
-    description = "default rule"
-  }
-}
-
-locals {
-  hostname = var.dns_domain_name == "" ? "*" : trimsuffix("${var.shard_name}.${var.dns_subdomain_name}.${var.dns_domain_name}", ".")
-}
-
 resource "google_compute_url_map" "url_map" {
-  name    = "${var.shard_name}-${var.dns_subdomain_name}-lb"
+  name    = "${local.prefix}-lb"
   project = var.project_id
 
   default_service = google_compute_backend_bucket.tessera_backend_bucket.id
 
   host_rule {
-    hosts        = [local.hostname]
+    hosts        = var.dns_domain_name == "" ? ["*"] : [local.hostname]
     path_matcher = var.shard_name
   }
 
@@ -350,25 +272,13 @@ resource "google_compute_url_map" "url_map" {
 // Create HTTPS certificate and load balancer configuration if managing DNS, otherwise use HTTP.
 // Production instances should ALWAYS set a domain name and use HTTPS. Developers may choose to use HTTP for simpler ephemeral deployments.
 
-resource "google_compute_ssl_policy" "ssl_policy" {
-  name    = "${var.shard_name}-${var.dns_subdomain_name}-ssl-policy"
-  project = var.project_id
-
-  profile         = "MODERN"
-  min_tls_version = "TLS_1_2"
-
-  lifecycle {
-    prevent_destroy = true
-  }
-}
-
 resource "google_compute_managed_ssl_certificate" "ssl_certificate" {
   count   = var.dns_domain_name == "" ? 0 : 1 # Domain validation certificates can only be used if you have a registered domain name
-  name    = "${var.shard_name}-${var.dns_subdomain_name}-ssl-cert"
+  name    = "${local.prefix}-ssl-cert"
   project = var.project_id
 
   managed {
-    domains = ["${var.shard_name}.${var.dns_subdomain_name}.${var.dns_domain_name}"]
+    domains = [local.hostname]
   }
 
   lifecycle {
@@ -378,7 +288,7 @@ resource "google_compute_managed_ssl_certificate" "ssl_certificate" {
 
 resource "google_compute_target_http_proxy" "lb_proxy" {
   count   = var.dns_domain_name == "" ? 1 : 0
-  name    = "${var.shard_name}-${var.dns_subdomain_name}-http-proxy"
+  name    = "${local.prefix}-http-proxy"
   project = var.project_id
 
   url_map = google_compute_url_map.url_map.id
@@ -389,13 +299,13 @@ resource "google_compute_target_http_proxy" "lb_proxy" {
 }
 resource "google_compute_target_https_proxy" "lb_proxy" {
   count   = var.dns_domain_name == "" ? 0 : 1
-  name    = "${var.shard_name}-${var.dns_subdomain_name}-https-proxy"
+  name    = "${local.prefix}-https-proxy"
   project = var.project_id
 
   url_map = google_compute_url_map.url_map.id
 
   ssl_certificates = [google_compute_managed_ssl_certificate.ssl_certificate[count.index].id]
-  ssl_policy       = google_compute_ssl_policy.ssl_policy.id
+  ssl_policy       = local.ssl_policy_id
 
   lifecycle {
     prevent_destroy = true
@@ -404,7 +314,7 @@ resource "google_compute_target_https_proxy" "lb_proxy" {
 
 resource "google_compute_global_forwarding_rule" "http_forwarding_rule" {
   count   = var.dns_domain_name == "" ? 1 : 0
-  name    = "${var.shard_name}-${var.dns_subdomain_name}-http-forwarding-rule"
+  name    = "${local.prefix}-http-forwarding-rule"
   project = var.project_id
 
   ip_address            = google_compute_global_address.gce_lb_ipv4.address
@@ -419,7 +329,7 @@ resource "google_compute_global_forwarding_rule" "http_forwarding_rule" {
 
 resource "google_compute_global_forwarding_rule" "https_forwarding_rule" {
   count   = var.dns_domain_name == "" ? 0 : 1
-  name    = "${var.shard_name}-${var.dns_subdomain_name}-https-forwarding-rule"
+  name    = "${local.prefix}-https-forwarding-rule"
   project = var.project_id
 
   ip_address            = google_compute_global_address.gce_lb_ipv4.address
