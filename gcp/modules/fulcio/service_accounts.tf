@@ -29,9 +29,7 @@ resource "google_service_account_iam_member" "gke_sa_iam_member_fulcio" {
 }
 
 resource "google_privateca_ca_pool_iam_member" "fulcio_member" {
-  project    = var.project_id
-  location   = var.region
-  ca_pool    = var.ca_pool_name
+  ca_pool    = "projects/${var.project_id}/locations/${var.region}/caPools/${var.ca_pool_name}"
   role       = "roles/privateca.certificateManager"
   member     = "serviceAccount:${google_service_account.fulcio-sa.email}"
   depends_on = [google_service_account.fulcio-sa]
