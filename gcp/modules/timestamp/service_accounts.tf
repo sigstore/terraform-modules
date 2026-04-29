@@ -29,16 +29,16 @@ resource "google_service_account_iam_member" "gke_sa_iam_member_timestamp" {
 }
 
 // Decrypt encrypted Tink keyset to get signing key
-resource "google_project_iam_member" "timestamp_kms_decrypter_member" {
-  project    = var.project_id
-  role       = "roles/cloudkms.cryptoKeyDecrypter"
-  member     = "serviceAccount:${google_service_account.timestamp-sa.email}"
-  depends_on = [google_service_account.timestamp-sa]
+resource "google_kms_key_ring_iam_member" "timestamp_kms_decrypter_member" {
+  key_ring_id = google_kms_key_ring.timestamp-keyring.id
+  role        = "roles/cloudkms.cryptoKeyDecrypter"
+  member      = "serviceAccount:${google_service_account.timestamp-sa.email}"
+  depends_on  = [google_service_account.timestamp-sa]
 }
 
-resource "google_project_iam_member" "timestamp_kms_viewer_member" {
-  project    = var.project_id
-  role       = "roles/cloudkms.viewer"
-  member     = "serviceAccount:${google_service_account.timestamp-sa.email}"
-  depends_on = [google_service_account.timestamp-sa]
+resource "google_kms_key_ring_iam_member" "timestamp_kms_viewer_member" {
+  key_ring_id = google_kms_key_ring.timestamp-keyring.id
+  role        = "roles/cloudkms.viewer"
+  member      = "serviceAccount:${google_service_account.timestamp-sa.email}"
+  depends_on  = [google_service_account.timestamp-sa]
 }

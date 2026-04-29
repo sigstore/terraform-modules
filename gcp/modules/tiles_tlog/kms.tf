@@ -35,18 +35,18 @@ resource "google_kms_crypto_key" "key_encryption_key" {
   depends_on = [google_kms_key_ring.keyring]
 }
 
-resource "google_project_iam_member" "decrypter" {
+resource "google_kms_key_ring_iam_member" "decrypter" {
   // Only needed if using KMS signer or when shard is active
-  count   = var.keyring_name_suffix == "" || var.freeze_shard ? 0 : 1
-  project = var.project_id
-  role    = "roles/cloudkms.cryptoKeyDecrypter"
-  member  = local.workload_iam_member_id
+  count       = var.keyring_name_suffix == "" || var.freeze_shard ? 0 : 1
+  key_ring_id = google_kms_key_ring.keyring[count.index].id
+  role        = "roles/cloudkms.cryptoKeyDecrypter"
+  member      = local.workload_iam_member_id
 }
 
-resource "google_project_iam_member" "kms_member" {
+resource "google_kms_key_ring_iam_member" "kms_member" {
   // Only needed if using KMS signer or when shard is active
-  count   = var.keyring_name_suffix == "" || var.freeze_shard ? 0 : 1
-  project = var.project_id
-  role    = "roles/cloudkms.viewer"
-  member  = local.workload_iam_member_id
+  count       = var.keyring_name_suffix == "" || var.freeze_shard ? 0 : 1
+  key_ring_id = google_kms_key_ring.keyring[count.index].id
+  role        = "roles/cloudkms.viewer"
+  member      = local.workload_iam_member_id
 }

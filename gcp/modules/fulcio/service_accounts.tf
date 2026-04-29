@@ -28,31 +28,33 @@ resource "google_service_account_iam_member" "gke_sa_iam_member_fulcio" {
   depends_on         = [google_service_account.fulcio-sa]
 }
 
-resource "google_project_iam_member" "fulcio_member" {
+resource "google_privateca_ca_pool_iam_member" "fulcio_member" {
   project    = var.project_id
+  location   = var.region
+  ca_pool    = var.ca_pool_name
   role       = "roles/privateca.certificateManager"
   member     = "serviceAccount:${google_service_account.fulcio-sa.email}"
   depends_on = [google_service_account.fulcio-sa]
 }
 
-resource "google_project_iam_member" "fulcio_kms_signer_verifier_member" {
-  project    = var.project_id
-  role       = "roles/cloudkms.signerVerifier"
-  member     = "serviceAccount:${google_service_account.fulcio-sa.email}"
-  depends_on = [google_service_account.fulcio-sa]
+resource "google_kms_key_ring_iam_member" "fulcio_kms_signer_verifier_member" {
+  key_ring_id = google_kms_key_ring.fulcio-keyring.id
+  role        = "roles/cloudkms.signerVerifier"
+  member      = "serviceAccount:${google_service_account.fulcio-sa.email}"
+  depends_on  = [google_service_account.fulcio-sa]
 }
 
-resource "google_project_iam_member" "fulcio_kms_viewer_member" {
-  project    = var.project_id
-  role       = "roles/cloudkms.viewer"
-  member     = "serviceAccount:${google_service_account.fulcio-sa.email}"
-  depends_on = [google_service_account.fulcio-sa]
+resource "google_kms_key_ring_iam_member" "fulcio_kms_viewer_member" {
+  key_ring_id = google_kms_key_ring.fulcio-keyring.id
+  role        = "roles/cloudkms.viewer"
+  member      = "serviceAccount:${google_service_account.fulcio-sa.email}"
+  depends_on  = [google_service_account.fulcio-sa]
 }
 
 // Decrypt encrypted Tink keyset to get signing key
-resource "google_project_iam_member" "fulcio_kms_decrypter_member" {
-  project    = var.project_id
-  role       = "roles/cloudkms.cryptoKeyDecrypter"
-  member     = "serviceAccount:${google_service_account.fulcio-sa.email}"
-  depends_on = [google_service_account.fulcio-sa]
+resource "google_kms_key_ring_iam_member" "fulcio_kms_decrypter_member" {
+  key_ring_id = google_kms_key_ring.fulcio-keyring.id
+  role        = "roles/cloudkms.cryptoKeyDecrypter"
+  member      = "serviceAccount:${google_service_account.fulcio-sa.email}"
+  depends_on  = [google_service_account.fulcio-sa]
 }
