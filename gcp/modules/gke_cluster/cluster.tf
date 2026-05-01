@@ -218,3 +218,19 @@ resource "google_compute_firewall" "master-webhooks" {
 
   depends_on = [google_container_cluster.cluster]
 }
+
+// Services with terraform-managed load balancers (as opposed to Kubernetes Ingress-driven load balancers)
+// have health checks that originate from these specific IP ranges that need access to the container ports for the services (not the exposed service port).
+resource "google_compute_firewall" "healthcheck_firewall" {
+  name    = "gke-${var.cluster_name}-fw-allow-health-check-and-proxy"
+  project = var.project_id
+
+  network       = var.network
+  direction     = "INGRESS"
+  source_ranges = ["130.211.0.0/22", "35.191.0.0/16"]
+  target_tags   = [local.cluster_network_tag]
+  allow {
+    protocol = "tcp"
+    ports    = var.healthcheck_ports
+  }
+}
