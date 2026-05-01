@@ -18,7 +18,7 @@ resource "google_secret_manager_secret" "private-key" {
   count   = var.enable_secrets ? 1 : 0
   project = var.project_id
 
-  secret_id = "${var.shard_name}-${var.dns_subdomain_name}-private"
+  secret_id = "${local.prefix}-private"
 
   replication {
     auto {}
@@ -30,7 +30,7 @@ resource "google_secret_manager_secret" "public-key" {
   count   = var.enable_secrets ? 1 : 0
   project = var.project_id
 
-  secret_id = "${var.shard_name}-${var.dns_subdomain_name}-public"
+  secret_id = "${local.prefix}-public"
 
   replication {
     auto {}
