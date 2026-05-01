@@ -803,6 +803,24 @@ variable "dex_manage_dns_a_record" {
   default     = true
 }
 
+variable "dex_bucket_name" {
+  description = "The name of the global bucket for Dex keys."
+  type        = string
+  default     = ""
+}
+
+variable "dex_cluster_namespace" {
+  description = "The name of the Kubernetes namespace where Dex runs."
+  type        = string
+  default     = ""
+}
+
+variable "dex_cluster_service_account" {
+  description = "The name of the Kubernetes service account used for Dex."
+  type        = string
+  default     = ""
+}
+
 /********************************/
 /********** VALIDATION **********/
 /********************************/

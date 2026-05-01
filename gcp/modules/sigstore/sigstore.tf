@@ -528,8 +528,9 @@ module "standalone_mysqls" {
 module "dex" {
   source = "../dex"
 
-  project_id = var.project_id
-  region     = var.region
+  project_id     = var.project_id
+  project_number = var.project_number
+  region         = var.region
 
   cluster_name = var.cluster_name
 
@@ -546,6 +547,11 @@ module "dex" {
   // Load balancing
   single_region       = var.single_region
   manage_dns_a_record = var.dex_manage_dns_a_record
+
+  // Bucket
+  bucket_name             = var.dex_bucket_name
+  cluster_namespace       = var.dex_cluster_namespace
+  cluster_service_account = var.dex_cluster_service_account
 
   depends_on = [
     module.gke-cluster,

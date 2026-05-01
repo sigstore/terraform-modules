@@ -23,7 +23,8 @@ module "project_roles" {
 module "dex" {
   source = "../dex/global"
 
-  project_id = var.project_id
+  project_id     = var.project_id
+  project_number = var.project_number
 
   lb_address_name = "dex-global-ext-lb"
 

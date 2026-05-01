@@ -23,6 +23,12 @@ variable "project_id" {
   }
 }
 
+variable "project_number" {
+  description = "The GCP Project Number"
+  type        = string
+  default     = ""
+}
+
 variable "region" {
   type        = string
   description = "GCP region"
@@ -53,6 +59,18 @@ variable "manage_dns_a_record" {
 variable "cluster_name" {
   type    = string
   default = ""
+}
+
+variable "cluster_namespace" {
+  description = "Kubernetes namespace of the Dex deployment."
+  type        = string
+  default     = "default"
+}
+
+variable "cluster_service_account" {
+  description = "Kubernetes service account name for the Dex deployment."
+  type        = string
+  default     = "default"
 }
 
 // Network
@@ -107,4 +125,10 @@ variable "enable_ssl_policy" {
   description = "Whether to create a SSL policy."
   type        = bool
   default     = false
+}
+
+variable "bucket_name" {
+  description = "The name of the global bucket to attach IAM and Functions to."
+  type        = string
+  default     = ""
 }

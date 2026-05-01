@@ -213,6 +213,15 @@ resource "google_compute_backend_service" "http_backend_service" {
   }
 }
 
+resource "google_compute_backend_bucket" "jwks_backend_bucket" {
+  count = var.single_region ? 0 : 1
+
+  name        = "dex-jwks-backend-bucket"
+  description = "Serves public/keys.json to Fulcio"
+  bucket_name = google_storage_bucket.auth_bucket.name
+  enable_cdn  = true
+}
+
 resource "google_compute_url_map" "url_map" {
   count = var.single_region ? 0 : 1
 
@@ -220,6 +229,29 @@ resource "google_compute_url_map" "url_map" {
   project = var.project_id
 
   default_service = google_compute_backend_service.http_backend_service[count.index].id
+
+  host_rule {
+    hosts        = [local.hostname]
+    path_matcher = "dex-path-matcher"
+  }
+
+  path_matcher {
+    name = "dex-path-matcher"
+    // By default, route to the Dex NEGs
+    default_service = google_compute_backend_service.http_backend_service[count.index].id
+
+    // For Fulcio requesting keys, route to the bucket containing the merged keys from each Dex instance
+    path_rule {
+      paths   = ["/auth/keys", "/auth/keys/"]
+      service = google_compute_backend_bucket.jwks_backend_bucket[count.index].id
+
+      route_action {
+        url_rewrite {
+          path_prefix_rewrite = "/public/keys.json"
+        }
+      }
+    }
+  }
 }
 
 resource "google_certificate_manager_certificate" "ssl_certificate" {

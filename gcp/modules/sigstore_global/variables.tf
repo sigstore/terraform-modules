@@ -23,6 +23,12 @@ variable "project_id" {
   }
 }
 
+variable "project_number" {
+  description = "The GCP project number."
+  type        = string
+  default     = ""
+}
+
 variable "iam_members_to_roles" {
   description = "Map of IAM member (e.g. group:foo@sigstore.dev) to a set of IAM roles (e.g. roles/viewer)"
   type        = map(set(string))
@@ -215,3 +221,10 @@ variable "fulcio_manage_dns_a_record" {
   type        = bool
   default     = true
 }
+
+variable "notification_channel_ids" {
+  description = "List of notification channel IDs which alerts should be sent to. You can find this by running `gcloud alpha monitoring channels list`."
+  type        = list(string)
+  default     = []
+}
+

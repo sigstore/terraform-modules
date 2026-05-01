@@ -23,6 +23,12 @@ variable "project_id" {
   }
 }
 
+variable "project_number" {
+  description = "The GCP project number."
+  type        = string
+  default     = ""
+}
+
 variable "single_region" {
   description = "Whether this module instance is only deployed in one region, and therefore in charge of managing its own IP address and DNS record but not other load balancer resources."
   type        = bool
