@@ -72,3 +72,11 @@ resource "google_monitoring_dashboard" "rekor_v1" {
     rekor_url = var.rekor_url
   })
 }
+
+# Consolidated CPU/memory dashboard for all Sigstore GKE workloads.
+# See https://github.com/sigstore/public-good-instance/issues/1122
+resource "google_monitoring_dashboard" "workloads" {
+  project = var.project_id
+
+  dashboard_json = file("${path.module}/workloads.json")
+}
