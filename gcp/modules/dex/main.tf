@@ -17,7 +17,9 @@
 // Enable required services for this module
 resource "google_project_service" "service" {
   for_each = toset([
-    "dns.googleapis.com", // For configuring DNS records
+    "dns.googleapis.com",            // For configuring DNS records
+    "cloudfunctions.googleapis.com", // For aggregating keys across regions
+    "eventarc.googleapis.com",       // For aggregating keys across regions
   ])
   project = var.project_id
   service = each.key

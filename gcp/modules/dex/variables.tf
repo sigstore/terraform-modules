@@ -23,6 +23,23 @@ variable "project_id" {
   }
 }
 
+variable "project_number" {
+  description = "The GCP Project Number"
+  type        = string
+  default     = ""
+}
+
+variable "region" {
+  type        = string
+  description = "GCP region"
+}
+
+variable "single_region" {
+  description = "Whether this module instance is only deployed in one region, and therefore in charge of managing its own IP address and DNS record but not other load balancer resources."
+  type        = bool
+  default     = true
+}
+
 variable "dns_zone_name" {
   description = "Name of DNS Zone object in Google Cloud DNS"
   type        = string
@@ -33,9 +50,27 @@ variable "dns_domain_name" {
   type        = string
 }
 
+variable "manage_dns_a_record" {
+  description = "Whether this module is in charge of managing the DNS A record. This is to enable transitioning from having DNS managed in a single region to managing the same record globally for all regions."
+  type        = bool
+  default     = true
+}
+
 variable "cluster_name" {
   type    = string
   default = ""
+}
+
+variable "cluster_namespace" {
+  description = "Kubernetes namespace of the Dex deployment."
+  type        = string
+  default     = "default"
+}
+
+variable "cluster_service_account" {
+  description = "Kubernetes service account name for the Dex deployment."
+  type        = string
+  default     = "default"
 }
 
 // Network
@@ -90,4 +125,10 @@ variable "enable_ssl_policy" {
   description = "Whether to create a SSL policy."
   type        = bool
   default     = false
+}
+
+variable "bucket_name" {
+  description = "The name of the global bucket to attach IAM and Functions to."
+  type        = string
+  default     = ""
 }
