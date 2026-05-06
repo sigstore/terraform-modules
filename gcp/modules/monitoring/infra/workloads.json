@@ -108,14 +108,10 @@
             },
             "thresholds": [
               {
-                "value": 0.8,
-                "color": "YELLOW",
-                "direction": "ABOVE"
+                "value": 0.8
               },
               {
-                "value": 0.95,
-                "color": "RED",
-                "direction": "ABOVE"
+                "value": 0.95
               }
             ],
             "dataSets": [
@@ -157,14 +153,10 @@
             },
             "thresholds": [
               {
-                "value": 0.8,
-                "color": "YELLOW",
-                "direction": "ABOVE"
+                "value": 0.8
               },
               {
-                "value": 0.95,
-                "color": "RED",
-                "direction": "ABOVE"
+                "value": 0.95
               }
             ],
             "dataSets": [
@@ -316,9 +308,7 @@
             },
             "thresholds": [
               {
-                "value": 0.9,
-                "color": "RED",
-                "direction": "ABOVE"
+                "value": 0.9
               }
             ],
             "dataSets": [
