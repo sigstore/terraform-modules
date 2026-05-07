@@ -334,6 +334,191 @@
             ]
           }
         }
+      },
+      {
+        "xPos": 0,
+        "yPos": 20,
+        "width": 6,
+        "height": 4,
+        "widget": {
+          "title": "Node memory allocatable utilization",
+          "xyChart": {
+            "yAxis": {
+              "label": "utilization",
+              "scale": "LINEAR"
+            },
+            "thresholds": [
+              {
+                "value": 0.9
+              }
+            ],
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "legendTemplate": "${resource.labels.node_name}",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"kubernetes.io/node/memory/allocatable_utilization\" resource.type=\"k8s_node\" metric.label.\"memory_type\"=\"non-evictable\"",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_MEAN",
+                      "crossSeriesReducer": "REDUCE_MEAN",
+                      "groupByFields": [
+                        "resource.label.node_name"
+                      ]
+                    }
+                  },
+                  "unitOverride": "10^2.%"
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "xPos": 6,
+        "yPos": 20,
+        "width": 6,
+        "height": 4,
+        "widget": {
+          "title": "Ephemeral storage used (bytes) by container",
+          "xyChart": {
+            "yAxis": {
+              "label": "bytes",
+              "scale": "LINEAR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "legendTemplate": "${resource.labels.namespace_name}/${resource.labels.container_name}",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"kubernetes.io/container/ephemeral_storage/used_bytes\" resource.type=\"k8s_container\"",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_MEAN",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "resource.label.namespace_name",
+                        "resource.label.container_name"
+                      ]
+                    }
+                  },
+                  "unitOverride": "By"
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "xPos": 0,
+        "yPos": 24,
+        "width": 6,
+        "height": 4,
+        "widget": {
+          "title": "Pod network received (bytes/s) by namespace",
+          "xyChart": {
+            "yAxis": {
+              "label": "bytes/s",
+              "scale": "LINEAR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "legendTemplate": "${resource.labels.namespace_name}",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"kubernetes.io/pod/network/received_bytes_count\" resource.type=\"k8s_pod\"",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_RATE",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "resource.label.namespace_name"
+                      ]
+                    }
+                  },
+                  "unitOverride": "By/s"
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "xPos": 6,
+        "yPos": 24,
+        "width": 6,
+        "height": 4,
+        "widget": {
+          "title": "Pod network sent (bytes/s) by namespace",
+          "xyChart": {
+            "yAxis": {
+              "label": "bytes/s",
+              "scale": "LINEAR"
+            },
+            "dataSets": [
+              {
+                "plotType": "LINE",
+                "targetAxis": "Y1",
+                "legendTemplate": "${resource.labels.namespace_name}",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"kubernetes.io/pod/network/sent_bytes_count\" resource.type=\"k8s_pod\"",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_RATE",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "resource.label.namespace_name"
+                      ]
+                    }
+                  },
+                  "unitOverride": "By/s"
+                }
+              }
+            ]
+          }
+        }
+      },
+      {
+        "xPos": 0,
+        "yPos": 28,
+        "width": 12,
+        "height": 4,
+        "widget": {
+          "title": "Running containers per namespace (uptime samples)",
+          "xyChart": {
+            "yAxis": {
+              "label": "containers",
+              "scale": "LINEAR"
+            },
+            "dataSets": [
+              {
+                "plotType": "STACKED_AREA",
+                "targetAxis": "Y1",
+                "legendTemplate": "${resource.labels.namespace_name}",
+                "timeSeriesQuery": {
+                  "timeSeriesFilter": {
+                    "filter": "metric.type=\"kubernetes.io/container/uptime\" resource.type=\"k8s_container\"",
+                    "aggregation": {
+                      "alignmentPeriod": "60s",
+                      "perSeriesAligner": "ALIGN_COUNT",
+                      "crossSeriesReducer": "REDUCE_SUM",
+                      "groupByFields": [
+                        "resource.label.namespace_name"
+                      ]
+                    }
+                  }
+                }
+              }
+            ]
+          }
+        }
       }
     ]
   }
