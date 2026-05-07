@@ -491,7 +491,7 @@
         "width": 12,
         "height": 4,
         "widget": {
-          "title": "Running containers per namespace (uptime samples)",
+          "title": "Running containers per namespace",
           "xyChart": {
             "yAxis": {
               "label": "containers",
@@ -507,8 +507,8 @@
                     "filter": "metric.type=\"kubernetes.io/container/uptime\" resource.type=\"k8s_container\"",
                     "aggregation": {
                       "alignmentPeriod": "60s",
-                      "perSeriesAligner": "ALIGN_COUNT",
-                      "crossSeriesReducer": "REDUCE_SUM",
+                      "perSeriesAligner": "ALIGN_MEAN",
+                      "crossSeriesReducer": "REDUCE_COUNT",
                       "groupByFields": [
                         "resource.label.namespace_name"
                       ]
