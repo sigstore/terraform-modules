@@ -77,6 +77,12 @@ variable "ctlog_url" {
   default     = "ctfe.sigstore.dev"
 }
 
+variable "ctlog_enabled" {
+  description = "Enable ctlog monitoring"
+  type        = bool
+  default     = true
+}
+
 // Set-up for notification channel for alerting
 variable "notification_channel_ids" {
   type        = list(string)
