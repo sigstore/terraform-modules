@@ -110,6 +110,8 @@ module "monitoring" {
   notification_channel_ids         = var.monitoring.notification_channel_ids
   create_slos                      = var.create_slos
   timestamp_enabled                = var.monitoring.timestamp_enabled
+  rekor_enabled                    = var.monitoring.rekor_enabled
+  ctlog_enabled                    = var.monitoring.ctlog_enabled
   enable_k8s_cpu_utilization_alert = var.enable_k8s_cpu_utilization_alert
   uptime_check_period              = var.monitoring.uptime_check_period
 

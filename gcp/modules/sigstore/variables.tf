@@ -141,13 +141,15 @@ variable "monitoring" {
   type = object({
     enabled                  = bool
     fulcio_url               = string
-    rekor_url                = string
+    rekor_url                = optional(string, "")
     timestamp_url            = string
     dex_url                  = string
     tuf_url                  = string
-    ctlog_url                = string
+    ctlog_url                = optional(string, "")
     notification_channel_ids = list(string)
     timestamp_enabled        = bool
+    ctlog_enabled            = optional(bool, true)
+    rekor_enabled            = optional(bool, true)
     uptime_check_period      = optional(string, "60s")
   })
   default = {
@@ -160,6 +162,8 @@ variable "monitoring" {
     ctlog_url                = "ctlog.example.com"
     notification_channel_ids = []
     timestamp_enabled        = false
+    ctlog_enabled            = true
+    rekor_enabled            = true
     uptime_check_period      = "60s"
   }
 }

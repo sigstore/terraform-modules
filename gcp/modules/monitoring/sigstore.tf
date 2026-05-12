@@ -34,6 +34,8 @@ resource "google_project_service" "service" {
 module "rekor" {
   source = "./rekor"
 
+  count = var.rekor_enabled ? 1 : 0
+
   project_id               = var.project_id
   project_number           = var.project_number
   notification_channel_ids = var.notification_channel_ids
@@ -57,6 +59,7 @@ module "fulcio" {
   project_number           = var.project_number
   notification_channel_ids = var.notification_channel_ids
   ctlog_url                = var.ctlog_url
+  ctlog_enabled            = var.ctlog_enabled
   fulcio_url               = var.fulcio_url
   cluster_name             = var.cluster_name
   cluster_location         = var.cluster_location

@@ -123,6 +123,18 @@ variable "timestamp_enabled" {
   default     = false
 }
 
+variable "ctlog_enabled" {
+  description = "Enable ctlog monitoring"
+  type        = bool
+  default     = true
+}
+
+variable "rekor_enabled" {
+  description = "Enable rekor v1 monitoring"
+  type        = bool
+  default     = true
+}
+
 variable "enable_k8s_cpu_utilization_alert" {
   type        = string
   description = "whether to enable or disable the K8s CPU utilization alert"

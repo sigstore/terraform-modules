@@ -41,6 +41,8 @@ resource "google_monitoring_uptime_check_config" "uptime_fulcio" {
 }
 
 resource "google_monitoring_uptime_check_config" "uptime_ct_log" {
+  count = var.ctlog_enabled ? 1 : 0
+
   display_name = "CT Log Uptime"
 
   http_check {
