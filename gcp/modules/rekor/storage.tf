@@ -34,6 +34,13 @@ resource "google_storage_bucket" "attestation" {
       log_bucket = var.gcs_logging_bucket
     }
   }
+
+  lifecycle {
+    precondition {
+      condition     = var.attestation_bucket != ""
+      error_message = "Must set attestation_bucket if enable_attestations is true"
+    }
+  }
 }
 
 // GCS Bucket 

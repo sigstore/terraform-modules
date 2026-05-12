@@ -569,6 +569,7 @@ variable "attestation_region" {
 variable "attestation_bucket" {
   type        = string
   description = "Name of GCS bucket for attestation."
+  default     = ""
 }
 
 variable "attestation_storage_class" {
