@@ -41,3 +41,7 @@ variable "ca_name" {
   default     = "sigstore-authority"
 }
 
+variable "service_account_id" {
+  description = "Service account to which to grant CA pool membership to"
+  type        = string
+}
