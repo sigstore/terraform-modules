@@ -30,6 +30,12 @@ resource "google_project_service" "service" {
   disable_on_destroy = false
 }
 
+resource "google_privateca_ca_pool_iam_member" "fulcio_member" {
+  ca_pool = "projects/${var.project_id}/locations/${var.region}/caPools/${var.ca_pool_name}"
+  role    = "roles/privateca.certificateManager"
+  member  = "serviceAccount:${var.service_account_id}"
+}
+
 resource "google_privateca_ca_pool" "sigstore-ca-pool" {
   name = var.ca_pool_name
 

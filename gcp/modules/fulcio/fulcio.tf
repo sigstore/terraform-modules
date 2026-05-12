@@ -25,4 +25,6 @@ module "ca" {
   project_id   = var.project_id
   ca_pool_name = var.ca_pool_name
   ca_name      = var.ca_name
+
+  service_account_id = google_service_account.fulcio-sa.email
 }
