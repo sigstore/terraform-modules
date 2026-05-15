@@ -36,6 +36,5 @@ resource "google_kms_crypto_key" "rekor-key" {
 resource "google_kms_key_ring_iam_member" "rekor_sa_kms_iam" {
   key_ring_id = google_kms_key_ring.rekor-keyring.id
   role        = "roles/cloudkms.viewer"
-  member      = format("serviceAccount:%s-rekor-sa@%s.iam.gserviceaccount.com", var.cluster_name, var.project_id)
-  depends_on  = [google_kms_key_ring.rekor-keyring, google_service_account.rekor-sa]
+  member      = google_service_account.rekor-sa.member
 }

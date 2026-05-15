@@ -29,17 +29,15 @@ resource "google_sql_user" "iam_user" {
 }
 
 resource "google_project_iam_member" "db_admin_member_rekor" {
-  project    = var.project_id
-  role       = "roles/cloudsql.client"
-  member     = "serviceAccount:${google_service_account.rekor-sa.email}"
-  depends_on = [google_service_account.rekor-sa]
+  project = var.project_id
+  role    = "roles/cloudsql.client"
+  member  = google_service_account.rekor-sa.member
 }
 
 resource "google_project_iam_member" "db_iam_auth" {
-  project    = var.project_id
-  role       = "roles/cloudsql.instanceUser"
-  member     = "serviceAccount:${google_service_account.rekor-sa.email}"
-  depends_on = [google_service_account.rekor-sa]
+  project = var.project_id
+  role    = "roles/cloudsql.instanceUser"
+  member  = google_service_account.rekor-sa.member
 }
 
 /*
