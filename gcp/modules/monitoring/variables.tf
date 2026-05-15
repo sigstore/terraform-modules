@@ -146,3 +146,9 @@ variable "uptime_check_period" {
   description = "The period (in seconds) between uptime checks"
   default     = "60s"
 }
+
+variable "cloudsql_enabled" {
+  description = "Enable cloudsql monitoring"
+  type        = bool
+  default     = true
+}

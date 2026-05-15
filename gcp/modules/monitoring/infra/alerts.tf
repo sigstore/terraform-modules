@@ -68,6 +68,7 @@ resource "google_monitoring_alert_policy" "ssl_cert_expiry_alert" {
 
 # Cloud SQL Database CPU Utilization > 80%
 resource "google_monitoring_alert_policy" "cloud_sql_cpu_utilization_warning" {
+  count = var.cloudsql_enabled ? 1 : 0
   # In the absence of data, incident will auto-close in 7 days
   alert_strategy {
     auto_close = "604800s"
@@ -107,6 +108,7 @@ resource "google_monitoring_alert_policy" "cloud_sql_cpu_utilization_warning" {
 
 # Cloud SQL Database CPU Utilization > 90%
 resource "google_monitoring_alert_policy" "cloud_sql_cpu_utilization" {
+  count = var.cloudsql_enabled ? 1 : 0
   # In the absence of data, incident will auto-close in 7 days
   alert_strategy {
     auto_close = "604800s"
@@ -142,6 +144,7 @@ resource "google_monitoring_alert_policy" "cloud_sql_cpu_utilization" {
 
 # Cloud SQL Database Memory Utilization > 95%
 resource "google_monitoring_alert_policy" "cloud_sql_memory_utilization" {
+  count = var.cloudsql_enabled ? 1 : 0
   # In the absence of data, incident will auto-close in 7 days
   alert_strategy {
     auto_close = "604800s"
@@ -184,6 +187,7 @@ resource "google_monitoring_alert_policy" "cloud_sql_memory_utilization" {
 
 # Cloud SQL Database Disk has < 20GiB Free
 resource "google_monitoring_alert_policy" "cloud_sql_disk_utilization" {
+  count = var.cloudsql_enabled ? 1 : 0
   # In the absence of data, incident will auto-close in 7 days
   alert_strategy {
     auto_close = "604800s"
@@ -233,6 +237,7 @@ resource "google_monitoring_alert_policy" "cloud_sql_disk_utilization" {
 
 # Cloud SQL Proxy Connection Failures
 resource "google_monitoring_alert_policy" "cloudsqlconn_connection_failure" {
+  count = var.cloudsql_enabled ? 1 : 0
   # In the absence of data, incident will auto-close in 7 days
   alert_strategy {
     auto_close = "604800s"

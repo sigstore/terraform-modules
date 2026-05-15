@@ -147,6 +147,7 @@ module "infra" {
   enable_k8s_cpu_utilization_alert = var.enable_k8s_cpu_utilization_alert
   rekor_url                        = local.qualified_rekor_url
   fulcio_url                       = local.qualified_fulcio_url
+  cloudsql_enabled                 = var.cloudsql_enabled
 
   depends_on = [
     google_project_service.service

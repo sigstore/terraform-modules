@@ -46,6 +46,12 @@ variable "enable_k8s_cpu_utilization_alert" {
   default     = "true"
 }
 
+variable "cloudsql_enabled" {
+  description = "Enable cloudsql monitoring"
+  type        = bool
+  default     = true
+}
+
 locals {
   notification_channels = toset([for nc in var.notification_channel_ids : format("projects/%v/notificationChannels/%v", var.project_id, nc)])
 }
