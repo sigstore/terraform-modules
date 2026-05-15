@@ -151,6 +151,7 @@ variable "monitoring" {
     ctlog_enabled            = optional(bool, true)
     rekor_enabled            = optional(bool, true)
     uptime_check_period      = optional(string, "60s")
+    cloudsql_enabled         = optional(bool, true)
   })
   default = {
     enabled                  = false
@@ -165,6 +166,7 @@ variable "monitoring" {
     ctlog_enabled            = true
     rekor_enabled            = true
     uptime_check_period      = "60s"
+    cloudsql_enabled         = true
   }
 }
 
