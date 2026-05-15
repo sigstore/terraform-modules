@@ -31,12 +31,10 @@ resource "google_kms_crypto_key" "tuf-key" {
   lifecycle {
     prevent_destroy = true
   }
-  depends_on = [google_kms_key_ring.tuf-keyring]
 }
 
 resource "google_kms_crypto_key_version" "tuf-key-version" {
   crypto_key = google_kms_crypto_key.tuf-key.id
-  depends_on = [google_kms_crypto_key.tuf-key]
 }
 
 resource "google_kms_key_ring_iam_member" "tuf-sa-key-iam" {
@@ -46,11 +44,16 @@ resource "google_kms_key_ring_iam_member" "tuf-sa-key-iam" {
   depends_on  = [google_kms_key_ring.tuf-keyring, google_service_account.tuf-sa]
 }
 
+resource "google_kms_key_ring_iam_member" "tuf-signer-sa-key-iam" {
+  key_ring_id = google_kms_key_ring.tuf-keyring.id
+  role        = "roles/cloudkms.signerVerifier"
+  member      = google_service_account.tuf-signer-sa.member
+}
+
 resource "google_kms_key_ring_iam_member" "tuf-key-iam-viewers" {
   for_each = toset(var.tuf_key_viewers)
 
   key_ring_id = google_kms_key_ring.tuf-keyring.id
   role        = "roles/cloudkms.publicKeyViewer"
   member      = each.key
-  depends_on  = [google_kms_key_ring.tuf-keyring]
 }
