@@ -53,6 +53,16 @@ variable "dns_domain_name" {
 }
 
 /********************************/
+/********* LOAD BALANCER ********/
+/********************************/
+
+variable "single_region" {
+  description = "Whether this module instance is only deployed in one region, and therefore in charge of managing its own IP address and DNS record but not other load balancer resources."
+  type        = bool
+  default     = true
+}
+
+/********************************/
 /************ BASTION ***********/
 /********************************/
 
@@ -552,6 +562,12 @@ variable "fulcio_enable_ssl_policy" {
   default     = false
 }
 
+variable "fulcio_manage_dns_a_record" {
+  description = "Whether this module is in charge of managing the DNS A record for Fulcio. This is to enable transitioning from having DNS managed in a single region to managing the same record globally for all regions."
+  type        = bool
+  default     = true
+}
+
 /********************************/
 /*********** REKOR v1 ***********/
 /********************************/
@@ -681,6 +697,12 @@ variable "timestamp_enable_ssl_policy" {
   description = "Whether to create a SSL policy for TSA."
   type        = bool
   default     = false
+}
+
+variable "timestamp_manage_dns_a_record" {
+  description = "Whether this module is in charge of managing the DNS A record for TSA. This is to enable transitioning from having DNS managed in a single region to managing the same record globally for all regions."
+  type        = bool
+  default     = true
 }
 
 /********************************/
