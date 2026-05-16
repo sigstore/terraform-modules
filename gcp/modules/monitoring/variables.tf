@@ -135,6 +135,12 @@ variable "rekor_enabled" {
   default     = true
 }
 
+variable "tuf_enabled" {
+  description = "Enable TUF monitoring"
+  type        = bool
+  default     = true
+}
+
 variable "enable_k8s_cpu_utilization_alert" {
   type        = string
   description = "whether to enable or disable the K8s CPU utilization alert"
@@ -149,6 +155,18 @@ variable "uptime_check_period" {
 
 variable "cloudsql_enabled" {
   description = "Enable cloudsql monitoring"
+  type        = bool
+  default     = true
+}
+
+variable "fulcio_create_logging_metrics" {
+  description = "Whether to create logging metrics. Another instance of the monitoring module may already be managing logging metrics for this service."
+  type        = bool
+  default     = true
+}
+
+variable "timestamp_create_logging_metrics" {
+  description = "Whether to create logging metrics. Another instance of the monitoring module may already be managing logging metrics for this service."
   type        = bool
   default     = true
 }

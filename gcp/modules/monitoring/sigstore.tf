@@ -66,6 +66,7 @@ module "fulcio" {
   prober_url               = var.prober_fulcio_url
   create_slos              = var.create_slos
   uptime_check_period      = var.uptime_check_period
+  create_logging_metrics   = var.fulcio_create_logging_metrics
 
   depends_on = [
     google_project_service.service
@@ -87,6 +88,7 @@ module "timestamp" {
   prober_url               = var.prober_timestamp_url
   create_slos              = var.create_slos
   uptime_check_period      = var.uptime_check_period
+  create_logging_metrics   = var.timestamp_create_logging_metrics
 
   depends_on = [
     google_project_service.service
@@ -116,12 +118,18 @@ module "dex" {
 module "tuf" {
   source = "./tuf"
 
+  count = var.tuf_enabled ? 1 : 0
+
   project_id = var.project_id
   tuf_url    = var.tuf_url
 
   depends_on = [
     google_project_service.service
   ]
+}
+moved {
+  from = module.tuf
+  to   = module.tuf[0]
 }
 
 // Prober

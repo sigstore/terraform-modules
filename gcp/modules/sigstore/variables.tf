@@ -139,34 +139,40 @@ variable "tuf_main_page_suffix" {
 variable "monitoring" {
   description = "Monitoring and alerting"
   type = object({
-    enabled                  = bool
-    fulcio_url               = string
-    rekor_url                = optional(string, "")
-    timestamp_url            = string
-    dex_url                  = string
-    tuf_url                  = string
-    ctlog_url                = optional(string, "")
-    notification_channel_ids = list(string)
-    timestamp_enabled        = bool
-    ctlog_enabled            = optional(bool, true)
-    rekor_enabled            = optional(bool, true)
-    uptime_check_period      = optional(string, "60s")
-    cloudsql_enabled         = optional(bool, true)
+    enabled                          = bool
+    fulcio_url                       = string
+    rekor_url                        = optional(string, "")
+    timestamp_url                    = string
+    dex_url                          = string
+    tuf_url                          = string
+    ctlog_url                        = optional(string, "")
+    notification_channel_ids         = list(string)
+    timestamp_enabled                = bool
+    ctlog_enabled                    = optional(bool, true)
+    rekor_enabled                    = optional(bool, true)
+    uptime_check_period              = optional(string, "60s")
+    cloudsql_enabled                 = optional(bool, true)
+    tuf_enabled                      = optional(bool, true)
+    fulcio_create_logging_metrics    = optional(bool, true)
+    timestamp_create_logging_metrics = optional(bool, true)
   })
   default = {
-    enabled                  = false
-    fulcio_url               = "fulcio.example.com"
-    rekor_url                = "rekor.example.com"
-    timestamp_url            = "timestamp.example.com"
-    dex_url                  = "oauth2.example.com"
-    tuf_url                  = "tuf.example.com"
-    ctlog_url                = "ctlog.example.com"
-    notification_channel_ids = []
-    timestamp_enabled        = false
-    ctlog_enabled            = true
-    rekor_enabled            = true
-    uptime_check_period      = "60s"
-    cloudsql_enabled         = true
+    enabled                          = false
+    fulcio_url                       = "fulcio.example.com"
+    rekor_url                        = "rekor.example.com"
+    timestamp_url                    = "timestamp.example.com"
+    dex_url                          = "oauth2.example.com"
+    tuf_url                          = "tuf.example.com"
+    ctlog_url                        = "ctlog.example.com"
+    notification_channel_ids         = []
+    timestamp_enabled                = false
+    ctlog_enabled                    = true
+    rekor_enabled                    = true
+    uptime_check_period              = "60s"
+    cloudsql_enabled                 = true
+    tuf_enabled                      = true
+    fulcio_create_logging_metrics    = true
+    timestamp_create_logging_metrics = true
   }
 }
 
