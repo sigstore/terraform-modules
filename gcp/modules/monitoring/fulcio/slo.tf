@@ -108,7 +108,7 @@ module "slos" {
 
 module "ctlog_slos" {
   source = "../slo"
-  count  = var.create_slos ? 1 : 0
+  count  = var.create_slos && var.ctlog_enabled ? 1 : 0
 
   project_id            = var.project_id
   project_number        = var.project_number
