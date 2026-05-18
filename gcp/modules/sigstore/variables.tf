@@ -118,6 +118,18 @@ variable "tuf_service_account_name" {
   default     = "tuf-gha"
 }
 
+variable "tuf_signer_service_account_name" {
+  type        = string
+  description = "TUF signer service account name"
+  default     = "tuf-signer"
+}
+
+variable "tuf_publisher_service_account_name" {
+  type        = string
+  description = "TUF publisher service account name"
+  default     = "tuf-publisher"
+}
+
 variable "tuf_keyring_name" {
   type        = string
   description = "Name of KMS keyring for TUF metadata signing"

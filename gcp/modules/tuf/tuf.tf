@@ -93,3 +93,14 @@ resource "google_storage_bucket_iam_member" "tuf_sa_editor" {
   role   = each.key
   member = google_service_account.tuf-sa.member
 }
+
+resource "google_storage_bucket_iam_member" "tuf_publisher_sa_editor" {
+  for_each = toset([
+    "roles/storage.objectUser",
+    "roles/storage.legacyBucketReader"
+  ])
+
+  bucket = google_storage_bucket.tuf.name
+  role   = each.key
+  member = google_service_account.tuf-publisher-sa.member
+}

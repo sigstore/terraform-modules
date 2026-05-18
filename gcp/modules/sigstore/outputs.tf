@@ -126,3 +126,13 @@ output "bastion_kubectl" {
   value       = "HTTPS_PROXY=socks5://localhost:8118 kubectl get pods --all-namespaces"
 }
 
+output "tuf_signer_service_account_email" {
+  description = "TUF signer service account email"
+  value       = length(module.tuf) > 0 ? module.tuf[0].tuf_signer_service_account_email : ""
+}
+
+output "tuf_publisher_service_account_email" {
+  description = "TUF publisher service account email"
+  value       = length(module.tuf) > 0 ? module.tuf[0].tuf_publisher_service_account_email : ""
+}
+
