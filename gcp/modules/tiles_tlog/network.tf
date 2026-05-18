@@ -44,12 +44,12 @@ moved {
   to   = module.shared[0].google_compute_health_check.grpc_health_check
 }
 moved {
-  from = google_compute_security_policy.k8s_http_grpc_security_policy_renamed
-  to   = module.shared[0].google_compute_security_policy.k8s_http_grpc_security_policy_renamed
+  from = google_compute_security_policy.k8s_http_grpc_security_policy_renamed[0]
+  to   = module.shared[0].google_compute_security_policy.k8s_http_grpc_security_policy[0]
 }
 moved {
   from = google_compute_security_policy.bucket_security_policy_renamed
-  to   = module.shared[0].google_compute_security_policy.bucket_security_policy_renamed
+  to   = module.shared[0].google_compute_security_policy.bucket_security_policy
 }
 moved {
   from = google_compute_ssl_policy.ssl_policy
