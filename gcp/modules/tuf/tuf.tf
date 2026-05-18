@@ -91,7 +91,5 @@ resource "google_storage_bucket_iam_member" "tuf_sa_editor" {
 
   bucket = google_storage_bucket.tuf.name
   role   = each.key
-  member = format("serviceAccount:%s@%s.iam.gserviceaccount.com", var.tuf_service_account_name, var.project_id)
-
-  depends_on = [google_storage_bucket.tuf, google_service_account.tuf-sa]
+  member = google_service_account.tuf-sa.member
 }

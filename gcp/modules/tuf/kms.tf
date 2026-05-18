@@ -42,8 +42,7 @@ resource "google_kms_crypto_key_version" "tuf-key-version" {
 resource "google_kms_key_ring_iam_member" "tuf-sa-key-iam" {
   key_ring_id = google_kms_key_ring.tuf-keyring.id
   role        = "roles/cloudkms.signerVerifier"
-  member      = format("serviceAccount:%s@%s.iam.gserviceaccount.com", var.tuf_service_account_name, var.project_id)
-  depends_on  = [google_kms_key_ring.tuf-keyring, google_service_account.tuf-sa]
+  member      = google_service_account.tuf-sa.member
 }
 
 resource "google_kms_key_ring_iam_member" "tuf-key-iam-viewers" {
@@ -52,5 +51,4 @@ resource "google_kms_key_ring_iam_member" "tuf-key-iam-viewers" {
   key_ring_id = google_kms_key_ring.tuf-keyring.id
   role        = "roles/cloudkms.publicKeyViewer"
   member      = each.key
-  depends_on  = [google_kms_key_ring.tuf-keyring]
 }

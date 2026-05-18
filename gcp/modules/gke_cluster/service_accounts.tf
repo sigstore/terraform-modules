@@ -32,7 +32,7 @@ resource "google_project_iam_member" "service-account" {
   ])
   project = var.project_id
   role    = each.key
-  member  = format("serviceAccount:%s", google_service_account.gke-sa.email)
+  member  = google_service_account.gke-sa.member
 }
 
 // Create the Prometheus service account
@@ -72,8 +72,7 @@ resource "google_project_iam_member" "prometheus_member" {
     "roles/monitoring.viewer",
     "roles/stackdriver.resourceMetadata.writer",
   ])
-  project    = var.project_id
-  role       = each.key
-  member     = "serviceAccount:${google_service_account.prometheus-sa.email}"
-  depends_on = [google_service_account.prometheus-sa]
+  project = var.project_id
+  role    = each.key
+  member  = google_service_account.prometheus-sa.member
 }

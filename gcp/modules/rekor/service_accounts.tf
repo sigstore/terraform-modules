@@ -31,22 +31,19 @@ resource "google_service_account_iam_member" "gke_sa_iam_member_rekor" {
 resource "google_kms_key_ring_iam_member" "rekor_signer_verifier_member" {
   key_ring_id = google_kms_key_ring.rekor-keyring.id
   role        = "roles/cloudkms.signerVerifier"
-  member      = "serviceAccount:${google_service_account.rekor-sa.email}"
-  depends_on  = [google_service_account.rekor-sa]
+  member      = google_service_account.rekor-sa.member
 }
 
 resource "google_kms_key_ring_iam_member" "rekor_kms_member" {
   key_ring_id = google_kms_key_ring.rekor-keyring.id
   role        = "roles/cloudkms.viewer"
-  member      = "serviceAccount:${google_service_account.rekor-sa.email}"
-  depends_on  = [google_service_account.rekor-sa]
+  member      = google_service_account.rekor-sa.member
 }
 
 resource "google_project_iam_member" "rekor_profiler_agent" {
-  project    = var.project_id
-  role       = "roles/cloudprofiler.agent"
-  member     = "serviceAccount:${google_service_account.rekor-sa.email}"
-  depends_on = [google_service_account.rekor-sa]
+  project = var.project_id
+  role    = "roles/cloudprofiler.agent"
+  member  = google_service_account.rekor-sa.member
 }
 
 resource "google_service_account_iam_member" "gke_sa_iam_member_rekor_server" {
@@ -64,8 +61,7 @@ resource "google_project_iam_member" "logserver_iam" {
     "roles/stackdriver.resourceMetadata.writer",
     "roles/cloudtrace.agent"
   ])
-  project    = var.project_id
-  role       = each.key
-  member     = "serviceAccount:${google_service_account.rekor-sa.email}"
-  depends_on = [google_service_account.rekor-sa]
+  project = var.project_id
+  role    = each.key
+  member  = google_service_account.rekor-sa.member
 }

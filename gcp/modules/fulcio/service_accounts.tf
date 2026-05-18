@@ -31,21 +31,18 @@ resource "google_service_account_iam_member" "gke_sa_iam_member_fulcio" {
 resource "google_kms_key_ring_iam_member" "fulcio_kms_signer_verifier_member" {
   key_ring_id = google_kms_key_ring.fulcio-keyring.id
   role        = "roles/cloudkms.signerVerifier"
-  member      = "serviceAccount:${google_service_account.fulcio-sa.email}"
-  depends_on  = [google_service_account.fulcio-sa]
+  member      = google_service_account.fulcio-sa.member
 }
 
 resource "google_kms_key_ring_iam_member" "fulcio_kms_viewer_member" {
   key_ring_id = google_kms_key_ring.fulcio-keyring.id
   role        = "roles/cloudkms.viewer"
-  member      = "serviceAccount:${google_service_account.fulcio-sa.email}"
-  depends_on  = [google_service_account.fulcio-sa]
+  member      = google_service_account.fulcio-sa.member
 }
 
 // Decrypt encrypted Tink keyset to get signing key
 resource "google_kms_key_ring_iam_member" "fulcio_kms_decrypter_member" {
   key_ring_id = google_kms_key_ring.fulcio-keyring.id
   role        = "roles/cloudkms.cryptoKeyDecrypter"
-  member      = "serviceAccount:${google_service_account.fulcio-sa.email}"
-  depends_on  = [google_service_account.fulcio-sa]
+  member      = google_service_account.fulcio-sa.member
 }

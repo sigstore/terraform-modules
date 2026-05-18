@@ -64,10 +64,9 @@ resource "google_service_account" "dbuser_trillian" {
 
 // Attach cloudsql access permissions to the Google SA.
 resource "google_project_iam_member" "db_admin_member_trillian" {
-  project    = var.project_id
-  role       = "roles/cloudsql.client"
-  member     = "serviceAccount:${google_service_account.dbuser_trillian.email}"
-  depends_on = [google_service_account.dbuser_trillian]
+  project = var.project_id
+  role    = "roles/cloudsql.client"
+  member  = google_service_account.dbuser_trillian.member
 }
 
 resource "google_service_account_iam_member" "gke_sa_iam_member_trillian_logserver" {
@@ -86,10 +85,9 @@ resource "google_project_iam_member" "logserver_iam" {
     "roles/cloudsql.client",
     "roles/cloudtrace.agent"
   ])
-  project    = var.project_id
-  role       = each.key
-  member     = "serviceAccount:${google_service_account.dbuser_trillian.email}"
-  depends_on = [google_service_account.dbuser_trillian]
+  project = var.project_id
+  role    = each.key
+  member  = google_service_account.dbuser_trillian.member
 }
 
 resource "google_service_account_iam_member" "gke_sa_iam_member_trillian_logsigner" {
@@ -279,10 +277,9 @@ resource "google_sql_user" "iam_user" {
 }
 
 resource "google_project_iam_member" "db_iam_auth" {
-  project    = var.project_id
-  role       = "roles/cloudsql.instanceUser"
-  member     = "serviceAccount:${google_service_account.dbuser_trillian.email}"
-  depends_on = [google_service_account.dbuser_trillian]
+  project = var.project_id
+  role    = "roles/cloudsql.instanceUser"
+  member  = google_service_account.dbuser_trillian.member
 }
 
 resource "google_sql_user" "breakglass_iam_group" {
