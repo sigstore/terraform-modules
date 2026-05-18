@@ -84,3 +84,9 @@ variable "uptime_check_period" {
   type    = string
   default = "60s"
 }
+
+variable "create_logging_metrics" {
+  description = "Whether to create logging metrics. Another instance of the monitoring module may already be managing logging metrics for this service."
+  type        = bool
+  default     = true
+}

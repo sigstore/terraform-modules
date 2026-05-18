@@ -17,6 +17,7 @@
 # This file contains alerts for the Timestamp Authority service
 
 resource "google_logging_metric" "timestamp_k8s_pod_restart_failing_container" {
+  count       = var.create_logging_metrics ? 1 : 0
   description = "Counts the number of logs that contain the \"restarting failed container\" message"
   filter      = "resource.labels.namespace_name=\"tsa-system\"\nresource.type=k8s_pod AND severity>=WARNING\n\"Back-off restarting failed container\"\n"
 
@@ -31,6 +32,7 @@ resource "google_logging_metric" "timestamp_k8s_pod_restart_failing_container" {
 }
 
 resource "google_logging_metric" "k8s_pod_unschedulable" {
+  count       = var.create_logging_metrics ? 1 : 0
   description = "Counts the number of k8s_pod resource logs that contain the message \"unschedulable\""
   filter      = "resource.labels.namespace_name=\"tsa-system\"\nresource.type=k8s_pod AND severity>=WARNING\n\"unschedulable\"\n"
 

@@ -117,6 +117,9 @@ module "monitoring" {
   enable_k8s_cpu_utilization_alert = var.enable_k8s_cpu_utilization_alert
   uptime_check_period              = var.monitoring.uptime_check_period
   cloudsql_enabled                 = var.monitoring.cloudsql_enabled
+  tuf_enabled                      = var.monitoring.tuf_enabled
+  fulcio_create_logging_metrics    = var.monitoring.fulcio_create_logging_metrics
+  timestamp_create_logging_metrics = var.monitoring.timestamp_create_logging_metrics
 
   depends_on = [
     module.gke-cluster,
