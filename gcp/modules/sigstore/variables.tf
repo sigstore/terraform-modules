@@ -112,12 +112,6 @@ variable "tuf_storage_class" {
   default     = "REGIONAL"
 }
 
-variable "tuf_service_account_name" {
-  type        = string
-  description = "Name of service account for TUF signing on GitHub Actions"
-  default     = "tuf-gha"
-}
-
 variable "tuf_signer_service_account_name" {
   type        = string
   description = "TUF signer service account name"

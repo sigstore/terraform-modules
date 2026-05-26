@@ -58,13 +58,6 @@ variable "gcs_logging_bucket" {
   default     = ""
 }
 
-// Service account variables
-variable "tuf_service_account_name" {
-  type        = string
-  description = "Name of service account for TUF signing on GitHub Actions"
-  default     = "tuf-gha"
-}
-
 variable "tuf_signer_service_account_name" {
   type        = string
   description = "TUF signer service account name"

@@ -37,12 +37,6 @@ resource "google_kms_crypto_key_version" "tuf-key-version" {
   crypto_key = google_kms_crypto_key.tuf-key.id
 }
 
-resource "google_kms_key_ring_iam_member" "tuf-sa-key-iam" {
-  key_ring_id = google_kms_key_ring.tuf-keyring.id
-  role        = "roles/cloudkms.signerVerifier"
-  member      = google_service_account.tuf-sa.member
-}
-
 resource "google_kms_key_ring_iam_member" "tuf-signer-sa-key-iam" {
   key_ring_id = google_kms_key_ring.tuf-keyring.id
   role        = "roles/cloudkms.signerVerifier"
