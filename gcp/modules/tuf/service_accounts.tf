@@ -14,12 +14,6 @@
  * limitations under the License.
  */
 
-resource "google_service_account" "tuf-sa" {
-  account_id   = var.tuf_service_account_name
-  display_name = "TUF Service Account for GitHub Actions"
-  project      = var.project_id
-}
-
 resource "google_service_account" "tuf-signer-sa" {
   account_id   = var.tuf_signer_service_account_name
   display_name = "TUF Signer Service Account for GitHub Actions"

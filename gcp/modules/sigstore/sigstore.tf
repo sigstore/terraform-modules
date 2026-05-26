@@ -77,7 +77,6 @@ module "tuf" {
   storage_class       = var.tuf_storage_class
   main_page_suffix    = var.tuf_main_page_suffix
 
-  tuf_service_account_name           = var.tuf_service_account_name
   tuf_signer_service_account_name    = var.tuf_signer_service_account_name
   tuf_publisher_service_account_name = var.tuf_publisher_service_account_name
 
