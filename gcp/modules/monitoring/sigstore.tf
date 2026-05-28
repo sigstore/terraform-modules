@@ -99,6 +99,8 @@ module "timestamp" {
 module "dex" {
   source = "./dex"
 
+  count = var.dex_enabled ? 1 : 0
+
   project_id               = var.project_id
   project_number           = var.project_number
   notification_channel_ids = var.notification_channel_ids
@@ -112,6 +114,10 @@ module "dex" {
   depends_on = [
     google_project_service.service
   ]
+}
+moved {
+  from = module.dex
+  to   = module.dex[0]
 }
 
 // TUF

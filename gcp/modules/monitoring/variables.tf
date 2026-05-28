@@ -141,6 +141,12 @@ variable "tuf_enabled" {
   default     = true
 }
 
+variable "dex_enabled" {
+  description = "Enable Dex monitoring"
+  type        = bool
+  default     = true
+}
+
 variable "enable_k8s_cpu_utilization_alert" {
   type        = string
   description = "whether to enable or disable the K8s CPU utilization alert"
