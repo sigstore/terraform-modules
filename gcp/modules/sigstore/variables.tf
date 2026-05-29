@@ -217,6 +217,12 @@ variable "cluster_name" {
   default     = "sigstore-staging"
 }
 
+variable "gke_service_account_prefix" {
+  description = "The prefix of the name of the GKE service accounts"
+  type        = string
+  default     = ""
+}
+
 variable "cluster_network_tag" {
   type    = string
   default = ""
