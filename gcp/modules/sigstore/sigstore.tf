@@ -113,6 +113,7 @@ module "monitoring" {
   timestamp_enabled                = var.monitoring.timestamp_enabled
   rekor_enabled                    = var.monitoring.rekor_enabled
   ctlog_enabled                    = var.monitoring.ctlog_enabled
+  dex_enabled                      = var.monitoring.dex_enabled
   enable_k8s_cpu_utilization_alert = var.enable_k8s_cpu_utilization_alert
   uptime_check_period              = var.monitoring.uptime_check_period
   cloudsql_enabled                 = var.monitoring.cloudsql_enabled
@@ -535,6 +536,8 @@ module "standalone_mysqls" {
 // dex
 module "dex" {
   source = "../dex"
+
+  count = var.enable_dex ? 1 : 0
 
   project_id = var.project_id
 

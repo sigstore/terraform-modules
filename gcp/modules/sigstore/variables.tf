@@ -166,6 +166,7 @@ variable "monitoring" {
     timestamp_enabled                = bool
     ctlog_enabled                    = optional(bool, true)
     rekor_enabled                    = optional(bool, true)
+    dex_enabled                      = optional(bool, true)
     uptime_check_period              = optional(string, "60s")
     cloudsql_enabled                 = optional(bool, true)
     tuf_enabled                      = optional(bool, true)
@@ -184,6 +185,7 @@ variable "monitoring" {
     timestamp_enabled                = false
     ctlog_enabled                    = true
     rekor_enabled                    = true
+    dex_enabled                      = true
     uptime_check_period              = "60s"
     cloudsql_enabled                 = true
     tuf_enabled                      = true
@@ -768,6 +770,12 @@ variable "audit_log_types" {
 /********************************/
 /************** DEX *************/
 /********************************/
+
+variable "enable_dex" {
+  description = "Whether to set up Dex."
+  type        = bool
+  default     = true
+}
 
 variable "dex_enable_cloud_armor" {
   description = "Whether to create a Cloud Armor security policy for Dex."
