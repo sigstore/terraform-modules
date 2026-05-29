@@ -168,12 +168,6 @@ variable "cluster_service_account" {
   type        = string
 }
 
-variable "network" {
-  description = "VPC network in which the GKE cluster lives"
-  type        = string
-  default     = "default"
-}
-
 variable "service_health_check_path" {
   description = "HTTP URL request path for the service health check"
   type        = string
