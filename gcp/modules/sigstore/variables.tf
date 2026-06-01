@@ -217,8 +217,8 @@ variable "cluster_name" {
   default     = "sigstore-staging"
 }
 
-variable "gke_service_account_prefix" {
-  description = "The prefix of the name of the GKE service accounts"
+variable "service_account_prefix" {
+  description = "The prefix of the name of GCP service accounts"
   type        = string
   default     = ""
 }

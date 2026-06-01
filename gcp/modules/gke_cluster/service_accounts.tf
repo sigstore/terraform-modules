@@ -15,6 +15,7 @@
  */
 
 locals {
+  // The cluster name may be too long to use as a part of a service account ID, which must be under 30 characters total.
   service_account_prefix = var.service_account_prefix != "" ? var.service_account_prefix : var.cluster_name
 }
 

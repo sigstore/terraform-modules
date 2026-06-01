@@ -39,6 +39,12 @@ variable "cluster_name" {
   type        = string
 }
 
+variable "service_account_prefix" {
+  description = "The prefix of the name of the GKE service accounts"
+  type        = string
+  default     = ""
+}
+
 // KMS
 variable "timestamp_keyring_name" {
   type        = string

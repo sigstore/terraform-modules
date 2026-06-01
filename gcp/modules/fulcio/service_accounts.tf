@@ -14,9 +14,15 @@
  * limitations under the License.
  */
 
+locals {
+  // The cluster name may be too long to use as a part of a service account ID, which must be under 30 characters total.
+  service_account_prefix = var.service_account_prefix != "" ? var.service_account_prefix : var.cluster_name
+}
+
+
 // Create the Fulcio service account
 resource "google_service_account" "fulcio-sa" {
-  account_id   = format("%s-fulcio-sa", var.cluster_name)
+  account_id   = format("%s-fulcio-sa", local.service_account_prefix)
   display_name = "Fulcio Service Account"
   project      = var.project_id
 }
