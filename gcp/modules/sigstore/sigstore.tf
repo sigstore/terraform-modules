@@ -158,7 +158,8 @@ module "gke-cluster" {
   region     = var.region
   project_id = var.project_id
 
-  cluster_name = var.cluster_name
+  cluster_name           = var.cluster_name
+  service_account_prefix = var.gke_service_account_prefix
 
   network                       = module.network.network_self_link
   subnetwork                    = module.network.subnetwork_self_link

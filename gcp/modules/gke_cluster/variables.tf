@@ -49,6 +49,12 @@ variable "cluster_name" {
   default     = "sigstore-staging"
 }
 
+variable "service_account_prefix" {
+  description = "The prefix of the name of the GKE service accounts"
+  type        = string
+  default     = ""
+}
+
 variable "channel" {
   type        = string
   description = "Release channel, options RAPID, REGULAR, STABLE"

@@ -14,9 +14,13 @@
  * limitations under the License.
  */
 
+locals {
+  service_account_prefix = var.service_account_prefix != "" ? var.service_account_prefix : var.cluster_name
+}
+
 // Create the GKE service account
 resource "google_service_account" "gke-sa" {
-  account_id   = format("%s-node-sa", var.cluster_name)
+  account_id   = format("%s-node-sa", local.service_account_prefix)
   display_name = "GKE Security Service Account"
   project      = var.project_id
   depends_on   = [google_project_service.service]
@@ -37,7 +41,7 @@ resource "google_project_iam_member" "service-account" {
 
 // Create the Prometheus service account
 resource "google_service_account" "prometheus-sa" {
-  account_id   = format("%s-prometheus-sa", var.cluster_name)
+  account_id   = format("%s-prometheus-sa", local.service_account_prefix)
   display_name = "Prometheus Service Account"
   project      = var.project_id
   depends_on   = [google_project_service.service]
