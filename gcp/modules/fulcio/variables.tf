@@ -39,6 +39,12 @@ variable "cluster_name" {
   type        = string
 }
 
+variable "service_account_prefix" {
+  description = "The prefix of the name of the GKE service accounts"
+  type        = string
+  default     = ""
+}
+
 // Certificate authority
 variable "ca_pool_name" {
   description = "Certificate authority pool name"

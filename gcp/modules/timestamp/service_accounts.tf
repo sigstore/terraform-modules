@@ -14,9 +14,14 @@
  * limitations under the License.
  */
 
+locals {
+  // The cluster name may be too long to use as a part of a service account ID, which must be under 30 characters total.
+  service_account_prefix = var.service_account_prefix != "" ? var.service_account_prefix : var.cluster_name
+}
+
 // Create the Timestamp Authority service account
 resource "google_service_account" "timestamp-sa" {
-  account_id   = format("%s-timestamp-sa", var.cluster_name)
+  account_id   = format("%s-timestamp-sa", local.service_account_prefix)
   display_name = "Timestamp Authority Service Account"
   project      = var.project_id
 }
