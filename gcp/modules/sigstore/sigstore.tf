@@ -16,6 +16,8 @@
 
 // IAM project roles
 module "project_roles" {
+  count = length(var.iam_members_to_roles) > 0 ? 1 : 0
+
   source               = "../project_roles"
   project_id           = var.project_id
   iam_members_to_roles = var.iam_members_to_roles
