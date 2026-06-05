@@ -74,8 +74,11 @@ resource "google_container_cluster" "cluster" {
   }
 
   node_pool_auto_config {
-    network_tags {
-      tags = [local.cluster_network_tag]
+    dynamic "network_tags" {
+      for_each = var.cluster_autoscaling_enabled ? [1] : []
+      content {
+        tags = [local.cluster_network_tag]
+      }
     }
   }
 
