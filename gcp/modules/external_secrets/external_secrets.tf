@@ -35,7 +35,7 @@ resource "helm_release" "external_secrets" {
 }
 
 resource "google_service_account" "external_secrets_sa" {
-  account_id   = "external-secrets-sa"
+  account_id   = var.service_account_id
   display_name = "external-secrets Service Account"
   project      = var.project_id
 }

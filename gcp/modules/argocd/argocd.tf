@@ -134,7 +134,7 @@ resource "helm_release" "argocd_apps" {
 # - Client ID needs to be enabled for domain-wide delegation
 # - SA needs to be granted "Groups Reader" role
 resource "google_service_account" "argocd-directory-api-sa" {
-  account_id   = "argocd-directory-api-sa"
+  account_id   = var.service_account_id
   display_name = "ArgoCD Directory API Service Account"
   project      = var.project_id
 }

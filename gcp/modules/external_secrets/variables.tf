@@ -31,3 +31,9 @@ variable "project_id" {
     error_message = "Must specify project_id variable."
   }
 }
+
+variable "service_account_id" {
+  description = "Name of the Google service account."
+  type        = string
+  default     = "external-secrets-sa"
+}

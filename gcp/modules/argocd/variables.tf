@@ -78,3 +78,9 @@ variable "gcp_secret_name_argocd_oauth_client_secret" {
   description = "GCP Secret name that holds the OAuth client secret used by ArgoCD's Dex instance."
   type        = string
 }
+
+variable "service_account_id" {
+  description = "Name of the Google service account."
+  type        = string
+  default     = "argocd-directory-api-sa"
+}
