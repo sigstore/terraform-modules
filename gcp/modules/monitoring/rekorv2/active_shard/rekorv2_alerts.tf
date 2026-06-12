@@ -37,7 +37,7 @@ resource "google_monitoring_alert_policy" "rekorv2_k8s_pod_restart_failing_conta
 
       comparison              = "COMPARISON_GT"
       duration                = "600s"
-      evaluation_missing_data = "EVALUATION_MISSING_DATA_NO_OP"
+      evaluation_missing_data = "EVALUATION_MISSING_DATA_INACTIVE"
       filter                  = "metric.type=\"logging.googleapis.com/user/${google_logging_metric.rekorv2_k8s_pod_restart_failing_container.name}\" resource.type=\"k8s_pod\""
       threshold_value         = "1"
 

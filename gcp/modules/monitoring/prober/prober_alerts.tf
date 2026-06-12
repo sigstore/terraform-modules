@@ -252,7 +252,7 @@ resource "google_monitoring_alert_policy" "prober_verification" {
       // When there are no responses we get no data instead of "0" in the
       // metric. This flag treats lack of data as 0 so incidents autoresolve
       // correctly.
-      evaluation_missing_data = "EVALUATION_MISSING_DATA_NO_OP"
+      evaluation_missing_data = "EVALUATION_MISSING_DATA_INACTIVE"
 
       trigger {
         count = "1"
