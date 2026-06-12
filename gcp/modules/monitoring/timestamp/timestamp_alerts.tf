@@ -75,7 +75,7 @@ resource "google_monitoring_alert_policy" "timestamp_k8s_pod_restart_failing_con
 
       comparison              = "COMPARISON_GT"
       duration                = "600s"
-      evaluation_missing_data = "EVALUATION_MISSING_DATA_NO_OP"
+      evaluation_missing_data = "EVALUATION_MISSING_DATA_INACTIVE"
       filter                  = "metric.type=\"logging.googleapis.com/user/timestamp/k8s_pod/restarting-failed-container\" resource.type=\"k8s_pod\""
       threshold_value         = "1"
 
