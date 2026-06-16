@@ -16,7 +16,7 @@
 
 resource "google_logging_metric" "rekorv2_k8s_pod_restart_failing_container" {
   description = "Counts the number of logs that contain the \"restarting failed container\" message"
-  filter      = "resource.labels.namespace_name=\"${var.shard_name}-${var.gke_namespace_suffix}\"\nresource.type=k8s_pod AND severity>=WARNING\n\"Back-off restarting failed container\"\n"
+  filter      = "resource.labels.namespace_name=\"${var.shard_name}-${var.gke_namespace_suffix}\"\nresource.labels.cluster_name=\"${var.cluster_name}\"\nresource.type=k8s_pod AND severity>=WARNING\n\"Back-off restarting failed container\"\n"
 
   metric_descriptor {
     metric_kind = "DELTA"
@@ -24,13 +24,13 @@ resource "google_logging_metric" "rekorv2_k8s_pod_restart_failing_container" {
     value_type  = "INT64"
   }
 
-  name    = "rekorv2-${var.shard_name}/k8s_pod/restarting-failed-container"
+  name    = "rekorv2-${var.shard_name}/${var.cluster_name}/k8s_pod/restarting-failed-container"
   project = var.project_id
 }
 
 resource "google_logging_metric" "k8s_pod_unschedulable" {
   description = "Counts the number of k8s_pod resource logs that contain the message \"unschedulable\""
-  filter      = "resource.labels.namespace_name=\"${var.shard_name}-${var.gke_namespace_suffix}\"\nresource.type=k8s_pod AND severity>=WARNING\n\"unschedulable\"\n"
+  filter      = "resource.labels.namespace_name=\"${var.shard_name}-${var.gke_namespace_suffix}\"\nresource.labels.cluster_name=\"${var.cluster_name}\"\nresource.type=k8s_pod AND severity>=WARNING\n\"unschedulable\"\n"
 
   metric_descriptor {
     metric_kind = "DELTA"
@@ -38,6 +38,6 @@ resource "google_logging_metric" "k8s_pod_unschedulable" {
     value_type  = "INT64"
   }
 
-  name    = "rekorv2-${var.shard_name}/k8s_pod/unschedulable"
+  name    = "rekorv2-${var.shard_name}/${var.cluster_name}/k8s_pod/unschedulable"
   project = var.project_id
 }

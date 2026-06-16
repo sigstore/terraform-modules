@@ -52,6 +52,12 @@ variable "cloudsql_enabled" {
   default     = true
 }
 
+variable "rekor_enabled" {
+  description = "Enable rekor v1 monitoring"
+  type        = bool
+  default     = true
+}
+
 locals {
   notification_channels = toset([for nc in var.notification_channel_ids : format("projects/%v/notificationChannels/%v", var.project_id, nc)])
 }

@@ -66,6 +66,8 @@ resource "google_monitoring_dashboard" "clients_dashboard" {
 }
 
 resource "google_monitoring_dashboard" "rekor_v1" {
+  count = var.rekor_enabled ? 1 : 0
+
   project = var.project_id
 
   dashboard_json = templatefile("${path.module}/rekor_v1.json", {

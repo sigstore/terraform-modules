@@ -20,8 +20,8 @@ module "slos" {
 
   project_id            = var.project_id
   project_number        = var.project_number
-  service_id            = "${var.shard_name}-ctlog"
-  display_name          = "CT log (TesseraCT) - ${var.shard_name}"
+  service_id            = "${var.shard_name}-${var.cluster_location}-ctlog"
+  display_name          = "CT log (TesseraCT) - ${var.shard_name} - ${var.cluster_location}"
   resource_name         = format("//container.googleapis.com/projects/%s/locations/%s/clusters/%s/k8s/namespaces/%s-%s", var.project_id, var.cluster_location, var.cluster_name, var.shard_name, var.gke_namespace_suffix)
   notification_channels = local.notification_channels
 

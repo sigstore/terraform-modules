@@ -15,7 +15,7 @@
  */
 
 resource "google_monitoring_uptime_check_config" "uptime_ctlog" {
-  display_name = "CT Log Uptime"
+  display_name = "CT Log Uptime - ${var.cluster_location}"
 
   http_check {
     mask_headers   = "false"
