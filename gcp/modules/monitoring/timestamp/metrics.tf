@@ -19,7 +19,7 @@
 resource "google_logging_metric" "timestamp_k8s_pod_restart_failing_container" {
   count       = var.create_logging_metrics ? 1 : 0
   description = "Counts the number of logs that contain the \"restarting failed container\" message"
-  filter      = "resource.labels.namespace_name=\"tsa-system\"\nresource.type=k8s_pod AND severity>=WARNING\n\"Back-off restarting failed container\"\n"
+  filter      = format("resource.labels.namespace_name=\"tsa-system\"\nresource.labels.cluster_name=\"%s\"\nresource.type=k8s_pod AND severity>=WARNING\n\"Back-off restarting failed container\"\n", var.cluster_name)
 
   metric_descriptor {
     metric_kind = "DELTA"
@@ -27,14 +27,14 @@ resource "google_logging_metric" "timestamp_k8s_pod_restart_failing_container" {
     value_type  = "INT64"
   }
 
-  name    = "timestamp/k8s_pod/restarting-failed-container"
+  name    = format("timestamp/%s/k8s_pod/restarting-failed-container", var.cluster_name)
   project = var.project_id
 }
 
 resource "google_logging_metric" "k8s_pod_unschedulable" {
   count       = var.create_logging_metrics ? 1 : 0
   description = "Counts the number of k8s_pod resource logs that contain the message \"unschedulable\""
-  filter      = "resource.labels.namespace_name=\"tsa-system\"\nresource.type=k8s_pod AND severity>=WARNING\n\"unschedulable\"\n"
+  filter      = format("resource.labels.namespace_name=\"tsa-system\"\nresource.labels.cluster_name=\"%s\"\nresource.type=k8s_pod AND severity>=WARNING\n\"unschedulable\"\n", var.cluster_name)
 
   metric_descriptor {
     metric_kind = "DELTA"
@@ -42,6 +42,6 @@ resource "google_logging_metric" "k8s_pod_unschedulable" {
     value_type  = "INT64"
   }
 
-  name    = "timestamp/k8s_pod/unschedulable"
+  name    = format("timestamp/k8s_pod/unschedulable", var.cluster_name)
   project = var.project_id
 }

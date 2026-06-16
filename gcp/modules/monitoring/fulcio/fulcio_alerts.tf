@@ -204,7 +204,7 @@ resource "google_monitoring_alert_policy" "fulcio_k8s_pod_restart_failing_contai
       comparison              = "COMPARISON_GT"
       duration                = "600s"
       evaluation_missing_data = "EVALUATION_MISSING_DATA_INACTIVE"
-      filter                  = "metric.type=\"logging.googleapis.com/user/fulcio/k8s_pod/restarting-failed-container\" resource.type=\"k8s_pod\""
+      filter                  = format("metric.type=\"logging.googleapis.com/user/fulcio/%s/k8s_pod/restarting-failed-container\" resource.type=\"k8s_pod\"", var.cluster_name)
       threshold_value         = "1"
 
       trigger {
@@ -251,7 +251,7 @@ resource "google_monitoring_alert_policy" "fulcio_k8s_pod_unschedulable" {
       comparison              = "COMPARISON_GT"
       duration                = "600s"
       evaluation_missing_data = "EVALUATION_MISSING_DATA_INACTIVE"
-      filter                  = "metric.type=\"logging.googleapis.com/user/fulcio/k8s_pod/unschedulable\" resource.type=\"k8s_pod\""
+      filter                  = format("metric.type=\"logging.googleapis.com/user/fulcio/%s/k8s_pod/unschedulable\" resource.type=\"k8s_pod\"", var.cluster_name)
       threshold_value         = "1"
 
       trigger {

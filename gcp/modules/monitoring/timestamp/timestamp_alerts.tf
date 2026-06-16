@@ -76,7 +76,7 @@ resource "google_monitoring_alert_policy" "timestamp_k8s_pod_restart_failing_con
       comparison              = "COMPARISON_GT"
       duration                = "600s"
       evaluation_missing_data = "EVALUATION_MISSING_DATA_INACTIVE"
-      filter                  = "metric.type=\"logging.googleapis.com/user/timestamp/k8s_pod/restarting-failed-container\" resource.type=\"k8s_pod\""
+      filter                  = format("metric.type=\"logging.googleapis.com/user/timestamp/%s/k8s_pod/restarting-failed-container\" resource.type=\"k8s_pod\"", var.cluster_name)
       threshold_value         = "1"
 
       trigger {
@@ -121,7 +121,7 @@ resource "google_monitoring_alert_policy" "timestamp_k8s_pod_unschedulable" {
 
       comparison      = "COMPARISON_GT"
       duration        = "600s"
-      filter          = "metric.type=\"logging.googleapis.com/user/timestamp/k8s_pod/unschedulable\" resource.type=\"k8s_pod\""
+      filter          = format("metric.type=\"logging.googleapis.com/user/timestamp/%s/k8s_pod/unschedulable\" resource.type=\"k8s_pod\"", var.cluster_name)
       threshold_value = "1"
 
       trigger {
