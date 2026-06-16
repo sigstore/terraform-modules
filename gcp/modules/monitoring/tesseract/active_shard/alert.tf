@@ -47,7 +47,7 @@ resource "google_monitoring_alert_policy" "ctlog_uptime_alert" {
     display_name = "Failure of uptime check_id ctlog-uptime"
   }
 
-  display_name          = "CT Log (TesseraCT) Uptime Alert"
+  display_name          = "CT Log (TesseraCT) Uptime Alert - ${var.cluster_location}"
   enabled               = "true"
   notification_channels = local.notification_channels
   project               = var.project_id
@@ -90,7 +90,7 @@ resource "google_monitoring_alert_policy" "ctlog_k8s_pod_restart_failing_contain
     display_name = "K8s Restart Failing Container for more than ten minutes"
   }
 
-  display_name = "CT log (TesseraCT) ${var.shard_name} K8s Restart Failing Container"
+  display_name = "CT log (TesseraCT) ${var.shard_name} ${var.cluster_location} K8s Restart Failing Container"
 
   documentation {
     content   = "K8s is restarting a failing container for longer than the accepted time limit, please see playbook for help.\n"
@@ -135,7 +135,7 @@ resource "google_monitoring_alert_policy" "ctlog_k8s_pod_unschedulable" {
     display_name = "K8s was unable to schedule a pod for more than ten minutes"
   }
 
-  display_name = "CT log (TesseraCT) ${var.shard_name} K8s Unschedulable"
+  display_name = "CT log (TesseraCT) ${var.shard_name} ${var.cluster_location} K8s Unschedulable"
 
   documentation {
     content   = "K8s was unable to schedule a pod for longer than the accepted time limit, please see playbook for help."

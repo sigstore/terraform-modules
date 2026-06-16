@@ -162,6 +162,7 @@ module "infra" {
   rekor_url                        = local.qualified_rekor_url
   fulcio_url                       = local.qualified_fulcio_url
   cloudsql_enabled                 = var.cloudsql_enabled
+  rekor_enabled                    = var.rekor_enabled
 
   depends_on = [
     google_project_service.service
