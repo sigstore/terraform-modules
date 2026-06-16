@@ -42,6 +42,6 @@ resource "google_logging_metric" "k8s_pod_unschedulable" {
     value_type  = "INT64"
   }
 
-  name    = format("timestamp/k8s_pod/unschedulable", var.cluster_name)
+  name    = format("timestamp/%s/k8s_pod/unschedulable", var.cluster_name)
   project = var.project_id
 }
