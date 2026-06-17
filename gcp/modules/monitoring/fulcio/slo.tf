@@ -20,15 +20,15 @@ module "slos" {
 
   project_id            = var.project_id
   project_number        = var.project_number
-  service_id            = "fulcio"
-  display_name          = "Fulcio"
+  service_id            = format("fulcio-%s", var.cluster_location)
+  display_name          = format("Fulcio (%s)", var.cluster_location)
   resource_name         = format("//container.googleapis.com/projects/%s/locations/%s/clusters/%s/k8s/namespaces/%s", var.project_id, var.cluster_location, var.cluster_name, var.gke_namespace)
   notification_channels = local.notification_channels
 
   availability_slos = {
     server-availability = {
       display_prefix            = "Availability (Server)"
-      base_total_service_filter = format("metric.type=\"prometheus.googleapis.com/grpc_server_handled_total/counter\" resource.type=\"prometheus_target\" resource.labels.namespace=\"%s\"", var.gke_namespace)
+      base_total_service_filter = format("metric.type=\"prometheus.googleapis.com/grpc_server_handled_total/counter\" resource.type=\"prometheus_target\" resource.labels.namespace=\"%s\" resource.labels.location=\"%s\"", var.gke_namespace, var.cluster_location)
       # Only count server errors.
       # TODO: If clients can trigger DeadlineExceeded with short deadlines, reconsider this metric.
       bad_filter = "metric.labels.grpc_method=one_of(\"DeadlineExceeded\",\"Internal\")"
@@ -68,7 +68,7 @@ module "slos" {
     },
     prober-availability = {
       display_prefix            = "Availability (Prober)"
-      base_total_service_filter = format("metric.type=\"prometheus.googleapis.com/api_endpoint_latency_count/summary\" resource.type=\"prometheus_target\" metric.labels.host=\"%s\"", var.prober_url)
+      base_total_service_filter = format("metric.type=\"prometheus.googleapis.com/api_endpoint_latency_count/summary\" resource.type=\"prometheus_target\" metric.labels.host=\"%s\" resource.labels.location=\"%s\"", var.prober_url, var.cluster_location)
       bad_filter                = "metric.labels.status_code!=monitoring.regex.full_match(\"20[0-1]\")"
       slos = {
         all-methods = {
