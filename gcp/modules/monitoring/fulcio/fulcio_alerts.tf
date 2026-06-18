@@ -140,46 +140,6 @@ resource "google_monitoring_alert_policy" "ca_service_cert_expiration_alert" {
   project               = var.project_id
 }
 
-resource "google_monitoring_alert_policy" "ca_service_cert_quota" {
-  alert_strategy {
-    auto_close = "604800s"
-  }
-
-  combiner = "OR"
-
-  conditions {
-    condition_threshold {
-      aggregations {
-        alignment_period   = "300s"
-        per_series_aligner = "ALIGN_RATE"
-      }
-
-      comparison      = "COMPARISON_GT"
-      duration        = "300s"
-      filter          = format("metric.type=\"privateca.googleapis.com/ca/cert/create_count\" resource.type=\"privateca.googleapis.com/CertificateAuthority\" resource.label.\"ca_pool_id\"=\"%s\"", var.ca_pool_name)
-      threshold_value = "25"
-
-      trigger {
-        count   = "1"
-        percent = "0"
-      }
-    }
-
-    display_name = "Certificate creation count for sigstore [RATE]"
-  }
-
-  display_name = "Certificate creation count for sigstore CA above quota"
-
-  documentation {
-    content   = "According to docs for the CA service, the DevOps tier CA has a [request quota](https://cloud.google.com/certificate-authority-service/quotas#request_quotas) of 25 certs/second.\n;\nThis alert will fire if we exceed 25 certs/second for longer than 5 minutes.\n\nIf this happens, consider increasing quotas as described [here](https://cloud.google.com/docs/quota#requesting_higher_quota)"
-    mime_type = "text/markdown"
-  }
-
-  enabled               = "true"
-  notification_channels = local.notification_channels
-  project               = var.project_id
-}
-
 ### K8s Alerts
 
 resource "google_monitoring_alert_policy" "fulcio_k8s_pod_restart_failing_container" {
