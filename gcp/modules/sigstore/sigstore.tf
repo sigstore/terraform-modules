@@ -119,6 +119,8 @@ module "monitoring" {
   dex_enabled                      = var.monitoring.dex_enabled
   enable_k8s_cpu_utilization_alert = var.enable_k8s_cpu_utilization_alert
   uptime_check_period              = var.monitoring.uptime_check_period
+  fulcio_check_uptime              = var.monitoring.fulcio_check_uptime
+  timestamp_check_uptime           = var.monitoring.timestamp_check_uptime
   cloudsql_enabled                 = var.monitoring.cloudsql_enabled
   tuf_enabled                      = var.monitoring.tuf_enabled
   fulcio_create_logging_metrics    = var.monitoring.fulcio_create_logging_metrics

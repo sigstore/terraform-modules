@@ -14,42 +14,9 @@
  * limitations under the License.
  */
 
-// Alert if we see a failure every minute for 5 consecutive minutes
-resource "google_monitoring_alert_policy" "timestamp_uptime_alerts" {
-  # In the absence of data, incident will auto-close in 7 days
-  alert_strategy {
-    auto_close = "604800s"
-  }
-  combiner = "OR"
-
-  conditions {
-    condition_threshold {
-      aggregations {
-        alignment_period     = "60s"
-        cross_series_reducer = "REDUCE_COUNT_FALSE"
-        group_by_fields      = ["resource.*"]
-        per_series_aligner   = "ALIGN_NEXT_OLDER"
-      }
-
-      comparison      = "COMPARISON_GT"
-      duration        = "300s"
-      filter          = format("metric.type=\"monitoring.googleapis.com/uptime_check/check_passed\" resource.type=\"uptime_url\" metric.label.\"check_id\"=\"%s\"", google_monitoring_uptime_check_config.uptime_timestamp.uptime_check_id)
-      threshold_value = "1"
-
-      trigger {
-        count   = "1"
-        percent = "0"
-      }
-    }
-
-    display_name = "Failure of uptime check_id timestamp-uptime"
-  }
-
-  display_name          = "Timestamp Authority uptime alert"
-  enabled               = "true"
-  notification_channels = local.notification_channels
-  project               = var.project_id
-  depends_on            = [google_monitoring_uptime_check_config.uptime_timestamp]
+moved {
+  from = google_monitoring_alert_policy.timestamp_uptime_alerts
+  to   = module.monitoring_timestamp_global[0].google_monitoring_alert_policy.timestamp_uptime_alerts
 }
 
 ### K8s Alerts

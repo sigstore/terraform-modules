@@ -159,6 +159,18 @@ variable "uptime_check_period" {
   default     = "60s"
 }
 
+variable "fulcio_check_uptime" {
+  description = "Whether to manage the fulcio uptime check from this module. Disable it to manage global uptime checks from the global monitoring module."
+  type        = bool
+  default     = true
+}
+
+variable "timestamp_check_uptime" {
+  description = "Whether to manage the timestamp uptime check from this module. Disable it to manage global uptime checks from the global monitoring module."
+  type        = bool
+  default     = true
+}
+
 variable "cloudsql_enabled" {
   description = "Enable cloudsql monitoring"
   type        = bool
