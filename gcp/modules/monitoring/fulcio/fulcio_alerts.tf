@@ -111,7 +111,7 @@ resource "google_monitoring_alert_policy" "ca_service_cert_expiration_alert" {
 
       comparison = "COMPARISON_LT"
       duration   = "0s"
-      filter     = "metric.type=\"privateca.googleapis.com/ca/cert_expiration\" resource.type=\"privateca.googleapis.com/CertificateAuthority\""
+      filter     = format("metric.type=\"privateca.googleapis.com/ca/cert_expiration\" resource.type=\"privateca.googleapis.com/CertificateAuthority\" resource.labels.location=\"%s\"", var.cluster_location)
       // alert on 10 weeks
       threshold_value = "6048000"
 
@@ -124,10 +124,10 @@ resource "google_monitoring_alert_policy" "ca_service_cert_expiration_alert" {
     display_name = "CA certificate expiration [MEAN]"
   }
 
-  display_name = "Certificate Authority Cert Expiration"
+  display_name = format("Certificate Authority Cert Expiration - %s", var.cluster_location)
 
   documentation {
-    content   = "Certificate authority certs will expire in 10 weeks. Please rotate the root cert."
+    content   = format("Certificate authority certs in %s will expire in 10 weeks. Please rotate the root cert.", var.cluster_location)
     mime_type = "text/markdown"
   }
 

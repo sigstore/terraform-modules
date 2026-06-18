@@ -163,7 +163,7 @@ resource "google_monitoring_alert_policy" "signing_cert_expiration_alert" {
 
       comparison = "COMPARISON_LT"
       duration   = "300s"
-      filter     = "metric.type=\"prometheus.googleapis.com/timestamp_authority_certificate_valid_days_remaining/gauge\" resource.type=\"prometheus_target\""
+      filter     = format("metric.type=\"prometheus.googleapis.com/timestamp_authority_certificate_valid_days_remaining/gauge\" resource.type=\"prometheus_target\" resource.labels.location=\"%s\"", var.cluster_location)
       // alert on 10 weeks = 7 days per week X 10 weeks
       threshold_value = "70"
 
@@ -176,10 +176,10 @@ resource "google_monitoring_alert_policy" "signing_cert_expiration_alert" {
     display_name = "Timestamp Authority signing certificate expiration"
   }
 
-  display_name = "Signing Cert Expiration"
+  display_name = format("Timestamp Authority Signing Cert Expiration - %s", var.cluster_location)
 
   documentation {
-    content   = "Signing certs will expire in 10 weeks. Please rotate the appropriate cert."
+    content   = format("Timestamp Authority signing certs in %s will expire in 10 weeks. Please rotate the appropriate cert.", var.cluster_location)
     mime_type = "text/markdown"
   }
 
