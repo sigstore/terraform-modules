@@ -84,3 +84,14 @@ variable "create_slos" {
   type        = bool
   default     = false
 }
+
+variable "rekor_url" {
+  description = "Rekor v2 URL"
+  type        = string
+}
+
+variable "uptime_check_period" {
+  description = "Uptime check period"
+  type        = string
+  default     = "60s"
+}
