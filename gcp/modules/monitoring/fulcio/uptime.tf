@@ -14,30 +14,19 @@
  * limitations under the License.
  */
 
-resource "google_monitoring_uptime_check_config" "uptime_fulcio" {
-  display_name = "Fulcio Uptime"
+module "monitoring_fulcio_global" {
+  count = var.check_uptime ? 1 : 0
 
-  http_check {
-    mask_headers   = "false"
-    path           = "/api/v1/rootCert"
-    port           = "443"
-    request_method = "GET"
-    use_ssl        = "true"
-    validate_ssl   = "true"
-  }
+  source = "./global"
 
-  monitored_resource {
-    labels = {
-      host       = var.fulcio_url
-      project_id = var.project_id
-    }
+  project_id          = var.project_id
+  fulcio_url          = var.fulcio_url
+  uptime_check_period = var.uptime_check_period
+}
 
-    type = "uptime_url"
-  }
-
-  period  = var.uptime_check_period
-  project = var.project_id
-  timeout = "10s"
+moved {
+  from = google_monitoring_uptime_check_config.uptime_fulcio
+  to   = module.monitoring_fulcio_global[0].google_monitoring_uptime_check_config.uptime_fulcio
 }
 
 resource "google_monitoring_uptime_check_config" "uptime_ct_log" {

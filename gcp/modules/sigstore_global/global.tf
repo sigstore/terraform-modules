@@ -74,3 +74,21 @@ module "fulcio" {
   enable_healthcheck_logging     = var.enable_loadbalancer_logging
   enable_backend_service_logging = var.enable_loadbalancer_logging
 }
+
+module "fulcio_monitoring" {
+  source = "../monitoring/fulcio/global"
+
+  project_id               = var.project_id
+  fulcio_url               = var.fulcio_url
+  uptime_check_period      = var.fulcio_uptime_check_period
+  notification_channel_ids = var.notification_channel_ids
+}
+
+module "timestamp_monitoring" {
+  source = "../monitoring/timestamp/global"
+
+  project_id               = var.project_id
+  timestamp_url            = var.timestamp_url
+  uptime_check_period      = var.timestamp_uptime_check_period
+  notification_channel_ids = var.notification_channel_ids
+}

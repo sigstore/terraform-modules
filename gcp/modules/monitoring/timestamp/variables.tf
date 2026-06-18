@@ -85,6 +85,12 @@ variable "uptime_check_period" {
   default = "60s"
 }
 
+variable "check_uptime" {
+  description = "Whether to manage the uptime check from this module. Disable it to manage global uptime checks from the global monitoring module."
+  type        = bool
+  default     = true
+}
+
 variable "create_logging_metrics" {
   description = "Whether to create logging metrics. Another instance of the monitoring module may already be managing logging metrics for this service."
   type        = bool

@@ -66,6 +66,7 @@ module "fulcio" {
   prober_url               = var.prober_fulcio_url
   create_slos              = var.create_slos
   uptime_check_period      = var.uptime_check_period
+  check_uptime             = var.fulcio_check_uptime
   create_logging_metrics   = var.fulcio_create_logging_metrics
 
   depends_on = [
@@ -88,6 +89,7 @@ module "timestamp" {
   prober_url               = var.prober_timestamp_url
   create_slos              = var.create_slos
   uptime_check_period      = var.uptime_check_period
+  check_uptime             = var.timestamp_check_uptime
   create_logging_metrics   = var.timestamp_create_logging_metrics
 
   depends_on = [
