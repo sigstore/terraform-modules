@@ -34,13 +34,3 @@ variable "oslogin" {
   }
   description = "oslogin settings for access to VMs"
 }
-
-variable "instance_os_login_members" {
-  type = map(object({
-    instance_name = string
-    zone          = string
-    members       = set(string)
-  }))
-  default     = {}
-  description = "Map of VMs and members to grant oslogin roles"
-}
