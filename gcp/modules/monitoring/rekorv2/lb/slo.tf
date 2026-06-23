@@ -22,7 +22,7 @@ module "slos" {
   project_number        = var.project_number
   service_id            = "rekor_v2_global_lb_view"
   display_name          = "Rekor V2 Reads"
-  resource_name         = "" # no telementry, this isn't a service
+  resource_name         = "" # no telemetry, this isn't a service
   notification_channels = local.notification_channels
   severity              = "warning"
 
@@ -34,8 +34,8 @@ module "slos" {
       bad_filter = "metric.labels.response_code=monitoring.regex.full_match(\"5[0-9][0-9]\")"
       slos = {
         api-v2-read = {
-          display_suffix = "/api/v2/{path=**} - GCS Reads"
-          label_filter   = "resource.labels.forwarding_rule_name=monitoring.regex.full_math(\".*-rekor-https-forwarding-rule\") resource.labels.matched_url_path_rule=\"/api/v2/{path=**}\""
+          display_suffix = "GCS Reads"
+          label_filter   = "resource.labels.forwarding_rule_name=monitoring.regex.full_math(\".*-rekor-https-forwarding-rule\") resource.labels.backend_target_type=\"BACKEND_BUCKET\""
           goal           = 0.995
         },
       }
