@@ -372,9 +372,15 @@ module "timestamp" {
 
 // Audit
 module "audit" {
+  count = var.enable_audit ? 1 : 0
+
   source     = "../audit"
   project_id = var.project_id
   log_types  = var.audit_log_types
+}
+moved {
+  from = module.audit
+  to   = module.audit[0]
 }
 
 // OSLogin configuration

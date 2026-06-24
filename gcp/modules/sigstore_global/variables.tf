@@ -39,6 +39,30 @@ variable "dns_domain_name" {
   type        = string
 }
 
+variable "oslogin" {
+  type = object({
+    enabled          = optional(bool, false)
+    enabled_with_2fa = optional(bool, false)
+  })
+  default = {
+    enabled          = false
+    enabled_with_2fa = false
+  }
+  description = "oslogin settings for access to VMs"
+}
+
+variable "enable_audit" {
+  description = "Whether to enable auditing"
+  type        = bool
+  default     = true
+}
+
+variable "audit_log_types" {
+  type        = list(string)
+  description = "list of audit log types to apply against allServices"
+  default     = ["ADMIN_READ", "DATA_READ", "DATA_WRITE"]
+}
+
 variable "enable_loadbalancer_logging" {
   description = "Whether to enable logging for the HTTP health checks and backend services for Fulcio, TSA, Dex"
   type        = bool
