@@ -31,6 +31,8 @@ resource "google_monitoring_uptime_check_config" "uptime_rekorv2" {
       host       = var.rekor_url
       project_id = var.project_id
     }
+
+    type = "uptime_url"
   }
 
   period  = var.uptime_check_period
