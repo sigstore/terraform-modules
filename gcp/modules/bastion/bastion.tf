@@ -195,3 +195,16 @@ resource "google_service_account_iam_member" "bastion_access" {
   role               = "roles/iam.serviceAccountUser"
   member             = each.key
 }
+
+resource "google_compute_instance_iam_member" "instance_oslogin_member" {
+  for_each = var.enable_oslogin ? toset(var.tunnel_accessor_sa) : []
+
+  project = var.project_id
+
+  member        = each.value
+  zone          = google_compute_instance.bastion.zone
+  instance_name = google_compute_instance.bastion.name
+
+  role       = "roles/compute.osLogin"
+  depends_on = [google_project_service.service]
+}

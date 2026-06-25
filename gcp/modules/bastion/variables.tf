@@ -51,3 +51,9 @@ variable "tunnel_accessor_sa" {
   type        = list(string)
   description = "Email of group to give access to the tunnel to"
 }
+
+variable "enable_oslogin" {
+  description = "Whether to enable oslogin for the bastion"
+  type        = bool
+  default     = false
+}

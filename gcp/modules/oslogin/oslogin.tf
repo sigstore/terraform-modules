@@ -44,36 +44,3 @@ resource "google_compute_project_metadata_item" "oslogin_enable_2fa" {
   key     = "enable-oslogin-2fa"
   value   = "TRUE"
 }
-
-locals {
-  // Flatten the instances to members list so we can use the
-  // for_each expression for each role binding
-  instance_member_list = flatten([
-    for key, instance in var.instance_os_login_members : [
-      for member in instance.members :
-      {
-        key           = key
-        instance_name = instance.instance_name
-        zone          = instance.zone
-        member        = member
-      }
-    ]
-  ])
-}
-
-resource "google_compute_instance_iam_member" "instance_oslogin_member" {
-  // Use the "<key> <member>" as the unique key for each binding.
-  for_each = {
-    for i in local.instance_member_list :
-    "${i.key} ${i.member}" => i
-  }
-
-  project = var.project_id
-
-  member        = each.value.member
-  zone          = each.value.zone
-  instance_name = each.value.instance_name
-
-  role       = "roles/compute.osLogin"
-  depends_on = [google_project_service.service]
-}

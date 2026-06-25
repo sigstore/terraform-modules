@@ -53,6 +53,7 @@ module "bastion" {
   network            = module.network.network_name
   subnetwork         = module.network.subnetwork_self_link
   tunnel_accessor_sa = var.tunnel_accessor_sa
+  enable_oslogin     = var.oslogin.enabled
 
   depends_on = [
     module.network,
@@ -371,9 +372,15 @@ module "timestamp" {
 
 // Audit
 module "audit" {
+  count = var.enable_audit ? 1 : 0
+
   source     = "../audit"
   project_id = var.project_id
   log_types  = var.audit_log_types
+}
+moved {
+  from = module.audit
+  to   = module.audit[0]
 }
 
 // OSLogin configuration
@@ -385,20 +392,10 @@ module "oslogin" {
   count = var.oslogin.enabled ? 1 : 0
 
   oslogin = var.oslogin
-
-  // Grant OSLogin access to the bastion instance to the GHA
-  // SA for terraform access and to tunnel accessors.
-  instance_os_login_members = var.enable_bastion ? {
-    bastion = {
-      instance_name = module.bastion[0].name
-      zone          = module.bastion[0].zone
-      members       = var.tunnel_accessor_sa
-    }
-  } : {}
-  depends_on = [
-    module.bastion,
-    module.project_roles
-  ]
+}
+moved {
+  from = module.oslogin[0].google_compute_instance_iam_member.instance_oslogin_member
+  to   = module.bastion[0].google_compute_instance_iam_member.instance_oslogin_member
 }
 
 // ctlog. This was the original (pre-ga) ctlog that shared the DB instance

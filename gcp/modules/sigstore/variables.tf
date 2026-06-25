@@ -767,6 +767,12 @@ variable "gcs_logging_bucket" {
 /************* AUDIT ************/
 /********************************/
 
+variable "enable_audit" {
+  description = "Whether to enable auditing"
+  type        = bool
+  default     = true
+}
+
 variable "audit_log_types" {
   type        = list(string)
   description = "list of audit log types to apply against allServices"

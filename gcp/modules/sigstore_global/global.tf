@@ -22,6 +22,24 @@ module "project_roles" {
   iam_members_to_roles = var.iam_members_to_roles
 }
 
+module "oslogin" {
+  source     = "../oslogin"
+  project_id = var.project_id
+
+  // Disable module entirely if oslogin is disabled
+  count = var.oslogin.enabled ? 1 : 0
+
+  oslogin = var.oslogin
+}
+
+module "audit" {
+  count = var.enable_audit ? 1 : 0
+
+  source     = "../audit"
+  project_id = var.project_id
+  log_types  = var.audit_log_types
+}
+
 module "timestamp" {
   source = "../timestamp/global"
 
