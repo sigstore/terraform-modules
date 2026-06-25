@@ -117,3 +117,9 @@ variable "create_logging_metrics" {
   type        = bool
   default     = true
 }
+
+variable "check_uptime" {
+  description = "Whether to manage the uptime check from this module. Disable it to manage global uptime checks from the global monitoring module."
+  type        = bool
+  default     = true
+}

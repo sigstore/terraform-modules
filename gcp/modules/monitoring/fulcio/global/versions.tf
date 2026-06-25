@@ -1,5 +1,5 @@
 /**
- * Copyright 2025 The Sigstore Authors
+ * Copyright 2022 The Sigstore Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,17 +14,13 @@
  * limitations under the License.
  */
 
-module "monitoring_timestamp_global" {
-  count = var.check_uptime ? 1 : 0
+terraform {
+  required_version = "1.14.2"
 
-  source = "./global"
-
-  project_id          = var.project_id
-  timestamp_url       = var.timestamp_url
-  uptime_check_period = var.uptime_check_period
-}
-
-moved {
-  from = google_monitoring_uptime_check_config.uptime_timestamp
-  to   = module.monitoring_timestamp_global[0].google_monitoring_uptime_check_config.uptime_timestamp
+  required_providers {
+    google = {
+      version = "7.21.0"
+      source  = "hashicorp/google"
+    }
+  }
 }

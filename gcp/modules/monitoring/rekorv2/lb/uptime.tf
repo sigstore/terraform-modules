@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 The Sigstore Authors
+ * Copyright 2026 The Sigstore Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,29 +14,12 @@
  * limitations under the License.
  */
 
-module "monitoring_fulcio_global" {
-  count = var.check_uptime ? 1 : 0
-
-  source = "./global"
-
-  project_id          = var.project_id
-  fulcio_url          = var.fulcio_url
-  uptime_check_period = var.uptime_check_period
-}
-
-moved {
-  from = google_monitoring_uptime_check_config.uptime_fulcio
-  to   = module.monitoring_fulcio_global[0].google_monitoring_uptime_check_config.uptime_fulcio
-}
-
-resource "google_monitoring_uptime_check_config" "uptime_ct_log" {
-  count = var.ctlog_enabled ? 1 : 0
-
-  display_name = "CT Log Uptime"
+resource "google_monitoring_uptime_check_config" "rekor_v2_global_uptime" {
+  display_name = "Rekor v2 Uptime - global"
 
   http_check {
     mask_headers   = "false"
-    path           = "/test/ct/v1/get-sth"
+    path           = "/healthz"
     port           = "443"
     request_method = "GET"
     use_ssl        = "true"
@@ -45,7 +28,7 @@ resource "google_monitoring_uptime_check_config" "uptime_ct_log" {
 
   monitored_resource {
     labels = {
-      host       = var.ctlog_url
+      host       = var.rekor_global_url
       project_id = var.project_id
     }
 
