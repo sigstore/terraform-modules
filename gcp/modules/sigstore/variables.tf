@@ -78,6 +78,12 @@ variable "enable_bastion" {
   default     = true
 }
 
+variable "bastion_enable_oslogin" {
+  description = "Whether to set the oslogin role assignment for the bastion. OSLogin metadata settings at the project level may be managed by another module."
+  type        = bool
+  default     = false
+}
+
 /********************************/
 /************** TUF *************/
 /********************************/

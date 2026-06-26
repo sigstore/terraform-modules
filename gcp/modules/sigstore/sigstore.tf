@@ -53,7 +53,7 @@ module "bastion" {
   network            = module.network.network_name
   subnetwork         = module.network.subnetwork_self_link
   tunnel_accessor_sa = var.tunnel_accessor_sa
-  enable_oslogin     = var.oslogin.enabled
+  enable_oslogin     = var.bastion_enable_oslogin
 
   depends_on = [
     module.network,
