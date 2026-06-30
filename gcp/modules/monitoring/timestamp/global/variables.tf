@@ -1,5 +1,5 @@
 /**
- * Copyright 2025 The Sigstore Authors
+ * Copyright 2026 The Sigstore Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,48 +23,25 @@ variable "project_id" {
   }
 }
 
-variable "project_number" {
+variable "uptime_check_period" {
   type    = string
-  default = ""
-  validation {
-    condition     = length(var.project_number) > 0
-    error_message = "Must specify PROJECT_NUMBER variable."
-  }
+  default = "60s"
 }
 
-variable "active_shards" {
-  type    = list(string)
-  default = []
-}
-
-variable "frozen_shards" {
-  type    = list(string)
-  default = []
+// URLs for Sigstore services
+variable "timestamp_url" {
+  description = "Timestamp Authority URL"
+  type        = string
+  default     = "timestamp.sigstore.dev"
 }
 
 // Set-up for notification channel for alerting
 variable "notification_channel_ids" {
-  type        = list(string)
   description = "List of notification channel IDs which alerts should be sent to. You can find this by running `gcloud alpha monitoring channels list`."
+  type        = list(string)
+  default     = []
 }
 
 locals {
   notification_channels = toset([for nc in var.notification_channel_ids : format("projects/%v/notificationChannels/%v", var.project_id, nc)])
-}
-
-variable "create_slos" {
-  description = "True to enable SLO creation"
-  type        = bool
-  default     = false
-}
-
-variable "rekor_global_url" {
-  description = "Rekor v2 global URL"
-  type        = string
-}
-
-variable "uptime_check_period" {
-  description = "Uptime check period"
-  type        = string
-  default     = "60s"
 }

@@ -186,3 +186,31 @@ variable "fulcio_manage_dns_a_record" {
   type        = bool
   default     = true
 }
+
+variable "timestamp_uptime_check_period" {
+  type    = string
+  default = "60s"
+}
+
+variable "timestamp_url" {
+  description = "Timestamp Authority URL"
+  type        = string
+  default     = "timestamp.sigstore.dev"
+}
+
+variable "fulcio_uptime_check_period" {
+  type    = string
+  default = "60s"
+}
+
+variable "fulcio_url" {
+  description = "Fulcio URL"
+  type        = string
+  default     = "fulcio.sigstore.dev"
+}
+
+variable "notification_channel_ids" {
+  description = "List of notification channel IDs which alerts should be sent to. You can find this by running `gcloud alpha monitoring channels list`."
+  type        = list(string)
+  default     = []
+}

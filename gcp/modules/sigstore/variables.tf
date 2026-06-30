@@ -174,6 +174,8 @@ variable "monitoring" {
     rekor_enabled                    = optional(bool, true)
     dex_enabled                      = optional(bool, true)
     uptime_check_period              = optional(string, "60s")
+    fulcio_check_uptime              = optional(bool, true)
+    timestamp_check_uptime           = optional(bool, true)
     cloudsql_enabled                 = optional(bool, true)
     tuf_enabled                      = optional(bool, true)
     fulcio_create_logging_metrics    = optional(bool, true)
@@ -193,6 +195,8 @@ variable "monitoring" {
     rekor_enabled                    = true
     dex_enabled                      = true
     uptime_check_period              = "60s"
+    fulcio_check_uptime              = true
+    timestamp_check_uptime           = true
     cloudsql_enabled                 = true
     tuf_enabled                      = true
     fulcio_create_logging_metrics    = true
