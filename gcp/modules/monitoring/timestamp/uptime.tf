@@ -26,5 +26,5 @@ module "monitoring_timestamp_global" {
 
 moved {
   from = google_monitoring_uptime_check_config.uptime_timestamp
-  to   = module.monitoring_timestamp_global[0].google_monitoring_uptime_check_config.uptime_timestamp
+  to   = module.monitoring_timestamp_global[0].google_monitoring_uptime_check_config.timestamp_uptime
 }
