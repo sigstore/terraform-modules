@@ -31,7 +31,7 @@ module "slos" {
       display_prefix            = "TesseraCT Read Availability"
       base_total_service_filter = "metric.type=\"loadbalancing.googleapis.com/https/request_count\" resource.type=\"https_lb_rule\""
       # Only count 500s as server errors since clients can trigger 400s.
-      bad_filter = "metric.labels.response_code=monitoring.regex.full_match(\"5[0-9][0-9]\")"
+      bad_filter = "metric.labels.response_code_class=500"
       slos = {
         api-v2-read = {
           display_suffix = "GCS Reads"
