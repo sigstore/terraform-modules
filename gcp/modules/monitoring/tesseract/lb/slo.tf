@@ -35,7 +35,7 @@ module "slos" {
       slos = {
         api-v2-read = {
           display_suffix = "GCS Reads"
-          label_filter   = "resource.labels.forwarding_rule_name=monitoring.regex.full_math(\".*-ctfe-https-forwarding-rule\") resource.labels.backend_target_type=\"BACKEND_BUCKET\""
+          label_filter   = "resource.labels.forwarding_rule_name=monitoring.regex.full_match(\".*-ctfe-https-forwarding-rule\") resource.labels.backend_target_type=\"BACKEND_BUCKET\""
           goal           = 0.995
         },
       }
