@@ -33,9 +33,15 @@ resource "google_container_node_pool" "cluster_nodes" {
     ]
   }
 
-  autoscaling {
-    min_node_count = var.autoscaling_min_node
-    max_node_count = var.autoscaling_max_node
+  dynamic "autoscaling" {
+    for_each = (var.autoscaling_min_node != null || var.autoscaling_max_node != null) ? [1] : []
+
+    content {
+      min_node_count       = var.autoscaling_scope == "ZONE" ? var.autoscaling_min_node : null
+      max_node_count       = var.autoscaling_scope == "ZONE" ? var.autoscaling_max_node : null
+      total_min_node_count = var.autoscaling_scope == "CLUSTER" ? var.autoscaling_min_node : null
+      total_max_node_count = var.autoscaling_scope == "CLUSTER" ? var.autoscaling_max_node : null
+    }
   }
 
   management {

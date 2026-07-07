@@ -189,6 +189,17 @@ variable "autoscaling_max_node" {
   default = 10
 }
 
+variable "autoscaling_scope" {
+  type        = string
+  description = "The scope of autoscaling min/max node limits: ZONE (per zone) or CLUSTER (total across all zones)."
+  default     = "ZONE"
+
+  validation {
+    condition     = contains(["ZONE", "CLUSTER"], var.autoscaling_scope)
+    error_message = "autoscaling_scope must be either 'ZONE' or 'CLUSTER'."
+  }
+}
+
 variable "initial_node_count" {
   type    = number
   default = 3
