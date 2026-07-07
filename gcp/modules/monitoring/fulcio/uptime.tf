@@ -19,9 +19,10 @@ module "monitoring_fulcio_global" {
 
   source = "./global"
 
-  project_id          = var.project_id
-  fulcio_url          = var.fulcio_url
-  uptime_check_period = var.uptime_check_period
+  project_id               = var.project_id
+  fulcio_url               = var.fulcio_url
+  uptime_check_period      = var.uptime_check_period
+  notification_channel_ids = var.notification_channel_ids
 }
 
 moved {
