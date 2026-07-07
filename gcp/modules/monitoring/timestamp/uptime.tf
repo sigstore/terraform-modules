@@ -19,9 +19,10 @@ module "monitoring_timestamp_global" {
 
   source = "./global"
 
-  project_id          = var.project_id
-  timestamp_url       = var.timestamp_url
-  uptime_check_period = var.uptime_check_period
+  project_id               = var.project_id
+  timestamp_url            = var.timestamp_url
+  uptime_check_period      = var.uptime_check_period
+  notification_channel_ids = var.notification_channel_ids
 }
 
 moved {
