@@ -28,7 +28,7 @@ module "slos" {
   availability_slos = {
     http-server-availability = {
       display_prefix            = "Availability (HTTP Server)"
-      base_total_service_filter = "metric.type=\"workload.googleapis.com/tesseract.http.response.count\" resource.type=\"k8s_cluster\""
+      base_total_service_filter = "metric.type=\"workload.googleapis.com/tesseract.http.response.count\" resource.type=\"k8s_container\""
       # Only count 500s as server errors since clients can trigger 400s.
       bad_filter = "metric.labels.http_response_status_code=monitoring.regex.full_match(\"5[0-9][0-9]\")"
       slos = {
