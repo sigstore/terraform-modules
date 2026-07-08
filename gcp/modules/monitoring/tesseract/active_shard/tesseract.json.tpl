@@ -17,7 +17,7 @@
                 "crossSeriesReducer": "REDUCE_SUM",
                 "perSeriesAligner": "ALIGN_MEAN"
               },
-              "filter": "metric.type=\"workload.googleapis.com/tessera.appender.integrated.size\" resource.type=\"k8s_cluster\""
+              "filter": "metric.type=\"workload.googleapis.com/tessera.appender.integrated.size\" resource.type=\"k8s_container\""
             }
           }
         }
@@ -43,7 +43,7 @@
                     ],
                     "perSeriesAligner": "ALIGN_RATE"
                   },
-                  "filter": "metric.type=\"workload.googleapis.com/tesseract.http.request.count\" resource.type=\"k8s_cluster\""
+                  "filter": "metric.type=\"workload.googleapis.com/tesseract.http.request.count\" resource.type=\"k8s_container\""
                 }
               }
             }
@@ -71,7 +71,7 @@
                     "crossSeriesReducer": "REDUCE_SUM",
                     "perSeriesAligner": "ALIGN_DELTA"
                   },
-                  "filter": "metric.type=\"workload.googleapis.com/tesseract.http.request.duration\" resource.type=\"k8s_cluster\""
+                  "filter": "metric.type=\"workload.googleapis.com/tesseract.http.request.duration\" resource.type=\"k8s_container\""
                 }
               }
             }
