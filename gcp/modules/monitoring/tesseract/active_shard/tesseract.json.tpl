@@ -18,7 +18,7 @@
                 "perSeriesAligner": "ALIGN_MEAN",
                 "groupByFields": [
                   "metric.label.\"service_name\""
-                ],
+                ]
               },
               "filter": "metric.type=\"workload.googleapis.com/tessera.appender.integrated.size\" resource.type=\"k8s_container\""
             }
