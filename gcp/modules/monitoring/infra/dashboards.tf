@@ -17,7 +17,7 @@
 resource "google_monitoring_dashboard" "spanner_cpu_dashboard" {
   dashboard_json = <<EOF
 {
-  "displayName": "Spanner CPU Alerts.",
+  "displayName": "Spanner CPU Alerts",
   "mosaicLayout": {
     "columns": 48,
     "tiles": [
