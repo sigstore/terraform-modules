@@ -177,6 +177,7 @@ module "gke-cluster" {
   initial_node_count   = var.initial_node_count
   autoscaling_min_node = var.autoscaling_min_node
   autoscaling_max_node = var.autoscaling_max_node
+  autoscaling_scope    = var.autoscaling_scope
 
   node_config_machine_type = var.gke_node_config_machine_type
 
