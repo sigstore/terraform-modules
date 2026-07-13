@@ -516,6 +516,34 @@ variable "mysql_data_cache_enabled_ctlog" {
   default     = false
 }
 
+variable "mysql_deny_maintenance_period" {
+  type = object({
+    end_date   = string
+    start_date = string
+    time       = string
+  })
+  description = "Deny maintenance period settings"
+  default     = null
+}
+
+variable "mysql_final_backup_config" {
+  type = object({
+    enabled        = optional(bool)
+    retention_days = optional(number)
+  })
+  description = "Final backup config settings"
+  default     = null
+}
+
+variable "mysql_maintenance_window" {
+  type = object({
+    day  = optional(number)
+    hour = optional(number)
+  })
+  description = "Maintenance window settings"
+  default     = null
+}
+
 /********************************/
 /************ FULCIO ************/
 /********************************/

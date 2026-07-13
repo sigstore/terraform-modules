@@ -237,6 +237,9 @@ module "mysql" {
   binary_log_backup_enabled      = var.mysql_binary_log_backup_enabled
   retained_backups               = var.mysql_retained_backups
   transaction_log_retention_days = var.mysql_transaction_log_retention_days
+  deny_maintenance_period        = var.mysql_deny_maintenance_period
+  final_backup_config            = var.mysql_final_backup_config
+  maintenance_window             = var.mysql_maintenance_window
 
   breakglass_iam_group = var.breakglass_sql_iam_group
 

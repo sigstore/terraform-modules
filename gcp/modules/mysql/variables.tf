@@ -162,3 +162,31 @@ variable "data_cache_enabled" {
   description = "Whether the data cache is enabled for the instance"
   default     = false
 }
+
+variable "deny_maintenance_period" {
+  type = object({
+    end_date   = string
+    start_date = string
+    time       = string
+  })
+  description = "Deny maintenance period settings"
+  default     = null
+}
+
+variable "final_backup_config" {
+  type = object({
+    enabled        = optional(bool)
+    retention_days = optional(number)
+  })
+  description = "Final backup config settings"
+  default     = null
+}
+
+variable "maintenance_window" {
+  type = object({
+    day  = optional(number)
+    hour = optional(number)
+  })
+  description = "Maintenance window settings"
+  default     = null
+}
