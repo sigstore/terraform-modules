@@ -1,0 +1,172 @@
+/**
+ * Copyright 2022 The Sigstore Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// Enable required services for this module
+resource "google_project_service" "service" {
+  for_each = toset([
+    "monitoring.googleapis.com", // For monitoring alerts.
+  ])
+  project = var.project_id
+  service = each.key
+
+  // Do not disable the service on destroy. On destroy, we are going to
+  // destroy the project, but we need the APIs available to destroy the
+  // underlying resources.
+  disable_on_destroy = false
+}
+
+// Pull in submodules for rekor, fulcio, and dex
+
+// Rekor
+module "rekor" {
+  source = "./rekor"
+
+  count = var.rekor_enabled ? 1 : 0
+
+  project_id               = var.project_id
+  project_number           = var.project_number
+  notification_channel_ids = var.notification_channel_ids
+  rekor_url                = var.rekor_url
+  cluster_name             = var.cluster_name
+  cluster_location         = var.cluster_location
+  prober_url               = var.prober_rekor_url
+  create_slos              = var.create_slos
+  uptime_check_period      = var.uptime_check_period
+
+  depends_on = [
+    google_project_service.service
+  ]
+}
+
+// Fulcio
+module "fulcio" {
+  source = "./fulcio"
+
+  project_id               = var.project_id
+  project_number           = var.project_number
+  notification_channel_ids = var.notification_channel_ids
+  ctlog_url                = var.ctlog_url
+  ctlog_enabled            = var.ctlog_enabled
+  fulcio_url               = var.fulcio_url
+  cluster_name             = var.cluster_name
+  cluster_location         = var.cluster_location
+  prober_url               = var.prober_fulcio_url
+  create_slos              = var.create_slos
+  uptime_check_period      = var.uptime_check_period
+  check_uptime             = var.fulcio_check_uptime
+  create_logging_metrics   = var.fulcio_create_logging_metrics
+
+  depends_on = [
+    google_project_service.service
+  ]
+}
+
+// Timestamp Authority
+module "timestamp" {
+  source = "./timestamp"
+
+  count = var.timestamp_enabled ? 1 : 0
+
+  project_id               = var.project_id
+  project_number           = var.project_number
+  notification_channel_ids = var.notification_channel_ids
+  timestamp_url            = var.timestamp_url
+  cluster_name             = var.cluster_name
+  cluster_location         = var.cluster_location
+  prober_url               = var.prober_timestamp_url
+  create_slos              = var.create_slos
+  uptime_check_period      = var.uptime_check_period
+  check_uptime             = var.timestamp_check_uptime
+  create_logging_metrics   = var.timestamp_create_logging_metrics
+
+  depends_on = [
+    google_project_service.service
+  ]
+}
+
+// Dex
+module "dex" {
+  source = "./dex"
+
+  count = var.dex_enabled ? 1 : 0
+
+  project_id               = var.project_id
+  project_number           = var.project_number
+  notification_channel_ids = var.notification_channel_ids
+  cluster_name             = var.cluster_name
+  cluster_location         = var.cluster_location
+  create_slos              = var.create_slos
+
+  dex_url             = var.dex_url
+  uptime_check_period = var.uptime_check_period
+
+  depends_on = [
+    google_project_service.service
+  ]
+}
+moved {
+  from = module.dex
+  to   = module.dex[0]
+}
+
+// TUF
+module "tuf" {
+  source = "./tuf"
+
+  count = var.tuf_enabled ? 1 : 0
+
+  project_id = var.project_id
+  tuf_url    = var.tuf_url
+
+  depends_on = [
+    google_project_service.service
+  ]
+}
+moved {
+  from = module.tuf
+  to   = module.tuf[0]
+}
+
+// Prober
+module "prober" {
+  source = "./prober"
+
+  project_id               = var.project_id
+  notification_channel_ids = var.notification_channel_ids
+  rekor_url                = var.prober_rekor_url
+  fulcio_url               = var.prober_fulcio_url
+  timestamp_url            = var.prober_timestamp_url
+
+  depends_on = [
+    google_project_service.service
+  ]
+}
+// Infra
+module "infra" {
+  source = "./infra"
+
+  project_id                       = var.project_id
+  notification_channel_ids         = var.notification_channel_ids
+  enable_k8s_cpu_utilization_alert = var.enable_k8s_cpu_utilization_alert
+  rekor_url                        = local.qualified_rekor_url
+  fulcio_url                       = local.qualified_fulcio_url
+  cloudsql_enabled                 = var.cloudsql_enabled
+  rekor_enabled                    = var.rekor_enabled
+
+  depends_on = [
+    google_project_service.service
+  ]
+}

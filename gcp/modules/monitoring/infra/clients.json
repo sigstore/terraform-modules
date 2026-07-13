@@ -1,0 +1,83 @@
+{
+  "displayName": "Clients",
+  "gridLayout": {
+    "columns": "2",
+    "widgets": [
+      {
+        "title": "Clients",
+        "pieChart": {
+          "chartType": "PIE",
+          "dataSets": [
+            {
+              "timeSeriesQuery": {
+                "prometheusQuery": "sum by (client) (increase({__name__=\"logging.googleapis.com/user/tuf/client_user_agents\"}[7d]))"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "text": {
+          "content": "These \"client marketshare\" numbers are based on parsing the user-agent header from requests to `timestamp.json` in the TUF repository. The assumption here is that clients -- whether they are signing or verifying -- make that request when starting up.\n",
+          "format": "MARKDOWN",
+          "style": {
+            "fontSize": "FS_LARGE",
+            "padding": "P_EXTRA_SMALL"
+          }
+        }
+      },
+      {
+        "title": "sigstore-python versions",
+        "pieChart": {
+          "chartType": "PIE",
+          "dataSets": [
+            {
+              "timeSeriesQuery": {
+                "prometheusQuery": "label_replace(\n  sum by (version) (increase({__name__=\"logging.googleapis.com/user/tuf/client_user_agents\", client=\"sigstore-python\"}[7d])),\n  \"version\",\n  \"unknown\",\n  \"version\",\n  \"^$\"\n)"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "title": "sigstore-go versions",
+        "pieChart": {
+          "chartType": "PIE",
+          "dataSets": [
+            {
+              "timeSeriesQuery": {
+                "prometheusQuery": "label_replace(\n  sum by (version) (increase({__name__=\"logging.googleapis.com/user/tuf/client_user_agents\", client=\"sigstore-go\"}[7d])),\n  \"version\",\n  \"unknown\",\n  \"version\",\n  \"^$\"\n)"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "title": "cosign versions",
+        "pieChart": {
+          "chartType": "PIE",
+          "dataSets": [
+            {
+              "timeSeriesQuery": {
+                "prometheusQuery": "label_replace(\n  sum by (version) (increase({__name__=\"logging.googleapis.com/user/tuf/client_user_agents\", client=\"cosign\"}[7d])),\n  \"version\",\n  \"unknown\",\n  \"version\",\n  \"^$\"\n)"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "title": "sigstore-java versions",
+        "pieChart": {
+          "chartType": "PIE",
+          "dataSets": [
+            {
+              "timeSeriesQuery": {
+                "prometheusQuery": "label_replace(\n  sum by (version) (increase({__name__=\"logging.googleapis.com/user/tuf/client_user_agents\", client=\"sigstoreJavaClient\"}[7d])),\n  \"version\",\n  \"unknown\",\n  \"version\",\n  \"^$\"\n)"
+              }
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

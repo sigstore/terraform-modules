@@ -1,0 +1,69 @@
+/**
+ * Copyright 2022 The Sigstore Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+
+locals {
+  namespace = "external-secrets"
+  k8s_sa    = "external-secrets"
+}
+
+// External-Secrets
+resource "helm_release" "external_secrets" {
+  name             = "external-secrets"
+  namespace        = local.namespace
+  create_namespace = true
+  chart            = "external-secrets"
+  repository       = "https://charts.external-secrets.io"
+  version          = var.external_secrets_chart_version
+
+  values = [
+    file(var.external_secrets_chart_values_yaml_path)
+  ]
+}
+
+resource "google_service_account" "external_secrets_sa" {
+  account_id   = var.service_account_id
+  display_name = "external-secrets Service Account"
+  project      = var.project_id
+}
+
+resource "google_project_iam_member" "external_secrets_binding" {
+  project = var.project_id
+  role    = "roles/secretmanager.secretAccessor"
+  member  = google_service_account.external_secrets_sa.member
+}
+
+resource "google_service_account_iam_member" "gke_sa_iam_member_external_secrets" {
+  service_account_id = google_service_account.external_secrets_sa.name
+  role               = "roles/iam.workloadIdentityUser"
+  member             = "serviceAccount:${var.project_id}.svc.id.goog[${local.namespace}/${local.k8s_sa}]"
+  depends_on         = [google_service_account.external_secrets_sa]
+}
+
+resource "kubectl_manifest" "secretstore_gcp_backend" {
+  yaml_body = <<YAML
+apiVersion: external-secrets.io/v1
+kind: ClusterSecretStore
+metadata:
+  name: gcp-backend
+spec:
+  provider:
+      gcpsm:
+        projectID: "${var.project_id}"
+YAML
+
+  depends_on = [helm_release.external_secrets]
+}

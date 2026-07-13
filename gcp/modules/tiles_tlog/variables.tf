@@ -1,0 +1,302 @@
+/**
+ * Copyright 2025 The Sigstore Authors
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+variable "project_id" {
+  type    = string
+  default = ""
+  validation {
+    condition     = length(var.project_id) > 0
+    error_message = "must specify project_id variable."
+  }
+}
+
+variable "project_number" {
+  type    = string
+  default = ""
+  validation {
+    condition     = length(var.project_number) > 0
+    error_message = "must specify project_number variable."
+  }
+}
+
+variable "single_region" {
+  description = "Whether this module instance is only deployed in one region."
+  type        = bool
+  default     = true
+}
+
+variable "region" {
+  description = "GCP region"
+  type        = string
+}
+
+variable "cluster_name" {
+  type    = string
+  default = ""
+}
+
+variable "shard_name" {
+  description = "name of the log shard"
+  type        = string
+}
+
+# Backend services must be removed from the load balancer before attempting to delete the backend services,
+# otherwise a resource-in-use error is thrown. Terraform isn't able to order operations, so the backend services must be removed first.
+variable "lb_backend_turndown" {
+  description = "whether to remove the K8s backends from the load balancer, when the shard is being turned down"
+  type        = bool
+  default     = false
+}
+
+variable "freeze_shard" {
+  description = "whether the shard is frozen. Spanner, KMS and Compute resources will be deleted."
+  type        = bool
+  default     = false
+}
+
+variable "spanner_instance_name_suffix" {
+  description = "base name for transparency log resources"
+  type        = string
+}
+
+variable "spanner_processing_units" {
+  description = "number of Spanner processing units (increments of 100)"
+  type        = number
+  default     = 100
+}
+
+variable "spanner_instance_display_name_suffix" {
+  description = "display name for the Spanner instance"
+  type        = string
+  default     = "tiles-tlog"
+}
+
+variable "spanner_database_sequencer_deletion_protection" {
+  description = "whether to enable deletion protection for the spanner sequencer database"
+  type        = bool
+  default     = true
+}
+
+variable "spanner_database_antispam_deletion_protection" {
+  description = "whether to enable deletion protection for the spanner antispam database"
+  type        = bool
+  default     = true
+}
+
+variable "bucket_name_suffix" {
+  description = "suffix of the bucket for Tessera tiles and checkpoints"
+  type        = string
+}
+
+variable "bucket_id_length" {
+  description = "length of random byte string to append to the bucket name. Appended as hex so ID length will be twice this value. GCS bucket name cannot be longer than 63 characters"
+  type        = number
+  default     = 10
+}
+
+variable "storage_class" {
+  description = "storage class for the Tessera bucket"
+  type        = string
+  default     = "STANDARD"
+}
+
+variable "public_bucket_member" {
+  description = "user, group, or service account to grant access to the Tessera GCS bucket. Use 'allUsers' for general access, or e.g. group:mygroup@myorg.com for granular access."
+  type        = string
+  default     = "allUsers"
+}
+
+variable "keyring_name_suffix" {
+  description = "suffix of the KMS keyring for Tinkey to encrypt/decrypt a checkpoint signing key, or used to sign checkpoints"
+  type        = string
+  default     = ""
+}
+
+variable "key_name" {
+  description = "name of the KMS encryption key for Tinkey to encrypt/decrypt a checkpoint signing key, or used to sign checkpoints"
+  type        = string
+  default     = "checkpoint-signer-key-encryption-key"
+}
+
+variable "kms_location" {
+  description = "location of the KMS keyring for the Tessera checkpoint signer"
+  type        = string
+  default     = "global"
+}
+
+variable "kms_crypto_key_algorithm" {
+  description = "the encryption algorithm for a Tink key encryption key, or a signing algorithm for signing checkpoints"
+  type        = string
+  default     = "GOOGLE_SYMMETRIC_ENCRYPTION"
+}
+
+variable "dns_zone_name" {
+  description = "name of DNS Zone object in Google Cloud DNS"
+  type        = string
+}
+
+variable "dns_domain_name" {
+  description = "name of DNS domain name in Google Cloud DNS; set to '' in a development environment to avoid creating DNS records and associated TLS certificates"
+  type        = string
+}
+
+variable "dns_subdomain_name" {
+  description = "DNS subdomain name"
+  type        = string
+}
+
+variable "cluster_namespace_suffix" {
+  description = "suffix of the Kubernetes namespace for the transparency log deployment"
+  type        = string
+}
+
+variable "cluster_service_account" {
+  description = "kubernetes service account name for the transparency log deployment"
+  type        = string
+}
+
+variable "service_health_check_path" {
+  description = "HTTP URL request path for the service health check"
+  type        = string
+  default     = "/healthz"
+}
+
+variable "http_write_path" {
+  description = "the template or full path to match for HTTP log write requests"
+  type        = string
+}
+
+variable "grpc_write_path" {
+  description = "the template or full path to match for gRPC log write requests"
+  type        = string
+  default     = ""
+}
+
+variable "http_read_path" {
+  description = "the template or full path for the patch to match for HTTP log read requests"
+  type        = string
+}
+
+variable "http_read_rewrite_path" {
+  description = "the template for the path to rewrite read requests to"
+  type        = string
+  default     = ""
+}
+
+variable "network_endpoint_group_http_name_suffix" {
+  type        = string
+  description = "suffix of the name of the network endpoint group that will be created for the HTTP service by the tiles Kubernetes service"
+}
+
+variable "network_endpoint_group_grpc_name_suffix" {
+  type        = string
+  description = "suffix of the name of the network endpoint group that will be created for the gRPC service by the tiles Kubernetes service"
+  default     = ""
+}
+
+variable "network_endpoint_group_zones" {
+  type        = list(string)
+  description = "zones where the NEGs live. NEGs will not exist until the Kubernetes service they belong to exists and creates them. This value must be set to empty if NEGs are not expected to exist yet, and then can later be updated."
+  default     = []
+}
+
+variable "enable_cdn" {
+  description = "whether to enable the CDN on the load balancer backend bucket service"
+  type        = bool
+  default     = true
+}
+
+variable "max_req_content_length" {
+  description = "maximum request content length in bytes for the write path"
+  type        = number
+  default     = 8388608 // 8 MB
+}
+
+variable "max_req_content_length_description" {
+  description = "maximum request content length, used only for security policy description"
+  type        = string
+  default     = "8MB"
+}
+
+variable "enable_healthcheck_logging" {
+  description = "whether to enable logging for the HTTP and gRPC health checks"
+  type        = bool
+  default     = true
+}
+
+variable "enable_backend_service_logging" {
+  description = "whether to enable logging for the HTTP and gRPC backend services"
+  type        = bool
+  default     = true
+}
+
+variable "http_grpc_qpm_rate_limit" {
+  description = "count of write requests per minute allowed to HTTP and gRPC backends"
+  type        = number
+  default     = 600 // 10 QPS
+}
+
+variable "enable_adaptive_protection" {
+  description = "whether to enable layer 7 DDoS adaptive protection"
+  type        = bool
+  default     = true
+}
+
+variable "spanner_timeseries_role_id" {
+  description = "name of the project role for managing timeseries entries for Spanner - role must include permissions `monitoring.timeSeries.create` and `monitoring.timeSeries.list`"
+  type        = string
+}
+
+variable "monitoring_role_id" {
+  description = "name of the project role for managing metrics - role must include permissions `monitoring.metricDescriptors.create`"
+  type        = string
+}
+
+variable "enable_secrets" {
+  description = "whether to use GCP Secret Manager for the transparency log's public and private keys"
+  type        = bool
+  default     = false
+}
+
+variable "http_health_check_id" {
+  description = "ID of the shared HTTP health check"
+  type        = string
+  default     = ""
+}
+
+variable "grpc_health_check_id" {
+  description = "ID of the shared gRPC health check"
+  type        = string
+  default     = ""
+}
+
+variable "security_policy_id" {
+  description = "ID of the shared Cloud Armor security policy"
+  type        = string
+  default     = ""
+}
+
+variable "bucket_security_policy_id" {
+  description = "ID of the shared Cloud Armor security policy for the bucket"
+  type        = string
+  default     = ""
+}
+
+variable "ssl_policy_id" {
+  description = "ID of the shared SSL policy"
+  type        = string
+  default     = ""
+}
