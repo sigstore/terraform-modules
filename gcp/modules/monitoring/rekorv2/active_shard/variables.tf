@@ -95,3 +95,8 @@ variable "uptime_check_period" {
   type        = string
   default     = "60s"
 }
+
+variable "spanner_instance_id" {
+  description = "Spanner instance to monitor"
+  type        = string
+}
