@@ -157,6 +157,31 @@ resource "google_sql_database_instance" "sigstore" {
         retention_unit   = "COUNT"
       }
     }
+
+    dynamic "deny_maintenance_period" {
+      for_each = var.deny_maintenance_period == null ? [] : [1]
+      content {
+        end_date   = var.deny_maintenance_period.end_date
+        start_date = var.deny_maintenance_period.start_date
+        time       = var.deny_maintenance_period.time
+      }
+    }
+
+    dynamic "final_backup_config" {
+      for_each = var.final_backup_config == null ? [] : [1]
+      content {
+        enabled        = var.final_backup_config.enabled
+        retention_days = var.final_backup_config.retention_days
+      }
+    }
+
+    dynamic "maintenance_window" {
+      for_each = var.maintenance_window == null ? [] : [1]
+      content {
+        day  = var.maintenance_window.day
+        hour = var.maintenance_window.hour
+      }
+    }
   }
 
   timeouts {
