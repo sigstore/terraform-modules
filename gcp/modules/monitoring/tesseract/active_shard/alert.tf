@@ -212,9 +212,9 @@ resource "google_monitoring_alert_policy" "spanner_smoothed_cpu_utilization_warn
         count = "1"
       }
     }
-    display_name = "Spanner Instance 24 Hour Rolling Average CPU Utilization > 90% (Rekor v2 - ${var.cluster_location})"
+    display_name = "Spanner Instance 24 Hour Rolling Average CPU Utilization > 90% (TesseraCT - ${var.cluster_location})"
   }
-  display_name = "Spanner Instance 24 Hour Rolling Average CPU Utilization > 90% (Rekor v2 - ${var.cluster_location})"
+  display_name = "Spanner Instance 24 Hour Rolling Average CPU Utilization > 90% (TesseraCT - ${var.cluster_location})"
   documentation {
     content   = "Spanner instance 24 hour rolling average CPU utilization is >90%. Please reduce CPU utilization (https://cloud.google.com/spanner/docs/cpu-utilization#reduce)."
     mime_type = "text/markdown"
@@ -251,9 +251,9 @@ resource "google_monitoring_alert_policy" "spanner_disk_utilization_warning" {
         count = "1"
       }
     }
-    display_name = "Spanner Instance Disk Usage > 80% (Rekor v2 - ${var.cluster_location})"
+    display_name = "Spanner Instance Disk Usage > 80% (TesseraCT - ${var.cluster_location})"
   }
-  display_name = "Spanner Instance Disk Usage > 80% (Rekor v2 - ${var.cluster_location})"
+  display_name = "Spanner Instance Disk Usage > 80% (TesseraCT - ${var.cluster_location})"
   documentation {
     content   = "Spanner instance disk usage is reaching maximum capacity (https://cloud.google.com/spanner/docs/storage-utilization#reduce)."
     mime_type = "text/markdown"
