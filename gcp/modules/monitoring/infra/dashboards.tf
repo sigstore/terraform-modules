@@ -14,45 +14,6 @@
  * limitations under the License.
  */
 
-resource "google_monitoring_dashboard" "spanner_cpu_dashboard" {
-  dashboard_json = <<EOF
-{
-  "displayName": "Spanner CPU Alerts",
-  "mosaicLayout": {
-    "columns": 48,
-    "tiles": [
-      {
-        "height": 16,
-        "width": 24,
-        "widget": {
-          "alertChart": {
-            "name": "${google_monitoring_alert_policy.spanner_high_priority_cpu_utilization_warning.id}"
-          }
-        }
-      },
-      {
-        "xPos": 24,
-        "height": 16,
-        "width": 24,
-        "widget": {
-          "alertChart": {
-            "name": "${google_monitoring_alert_policy.spanner_smoothed_cpu_utilization_warning.id}"
-          }
-        }
-      }
-    ]
-  }
-}
-EOF
-
-  project = var.project_id
-
-  depends_on = [
-    google_monitoring_alert_policy.spanner_high_priority_cpu_utilization_warning,
-    google_monitoring_alert_policy.spanner_smoothed_cpu_utilization_warning
-  ]
-}
-
 resource "google_monitoring_dashboard" "timestamp_authority_dashboard" {
   project = var.project_id
 
