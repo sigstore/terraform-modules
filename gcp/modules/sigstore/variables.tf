@@ -892,6 +892,126 @@ variable "dex_enable_ssl_policy" {
 }
 
 /********************************/
+/******* REKOR v2 TILES *********/
+/********************************/
+
+variable "rekor_tiles_shards" {
+  type = map(object({
+    cluster_namespace_suffix                       = string
+    bucket_name_suffix                             = string
+    spanner_processing_units                       = optional(number)
+    spanner_instance_name_suffix                   = string
+    spanner_instance_display_name_suffix           = string
+    network_endpoint_group_http_name_suffix        = string
+    network_endpoint_group_grpc_name_suffix        = string
+    network_endpoint_group_zones                   = optional(list(string), [])
+    rekor_url                                      = optional(string)
+    freeze_shard                                   = optional(bool, false)
+    lb_backend_turndown                            = optional(bool, false)
+    bucket_id_length                               = optional(number, 10)
+    spanner_database_sequencer_deletion_protection = optional(bool, true)
+    spanner_database_antispam_deletion_protection  = optional(bool, true)
+    http_grpc_qpm_rate_limit                       = optional(number, 600)
+    max_req_content_length                         = optional(number, 102400)
+    max_req_content_length_description             = optional(string, "100KiB")
+    keyring_name_suffix                            = optional(string, "rekor-tiles-keyring")
+    dns_subdomain_name                             = optional(string, "rekor")
+    single_region                                  = optional(bool, true)
+    key_name                                       = optional(string, "checkpoint-signer-key-encryption-key")
+    spanner_instance_id                            = optional(string)
+    enable_monitoring                              = optional(bool, true)
+  }))
+  description = "Map of Rekor shards to dynamically instantiate"
+  default     = {}
+}
+
+variable "ctlog_tiles_shards" {
+  type = map(object({
+    cluster_namespace_suffix                       = string
+    bucket_name_suffix                             = string
+    spanner_processing_units                       = optional(number)
+    spanner_instance_name_suffix                   = string
+    spanner_instance_display_name_suffix           = string
+    network_endpoint_group_http_name_suffix        = string
+    network_endpoint_group_grpc_name_suffix        = optional(string)
+    network_endpoint_group_zones                   = optional(list(string), [])
+    ctlog_url                                      = optional(string)
+    freeze_shard                                   = optional(bool, false)
+    lb_backend_turndown                            = optional(bool, false)
+    bucket_id_length                               = optional(number, 10)
+    spanner_database_sequencer_deletion_protection = optional(bool, true)
+    spanner_database_antispam_deletion_protection  = optional(bool, true)
+    http_grpc_qpm_rate_limit                       = optional(number, 600)
+    max_req_content_length                         = optional(number, 102400)
+    max_req_content_length_description             = optional(string, "100KiB")
+    dns_subdomain_name                             = optional(string, "ctfe")
+    single_region                                  = optional(bool, true)
+    spanner_instance_id                            = optional(string)
+    enable_monitoring                              = optional(bool, true)
+  }))
+  description = "Map of CTLog shards to dynamically instantiate"
+  default     = {}
+}
+
+/********************************/
+/**** SHARD GLOBAL RESOURCES ****/
+/********************************/
+
+variable "rekor_http_health_check_id" {
+  type        = string
+  description = "Global Rekor HTTP Health Check ID"
+  default     = null
+}
+
+variable "rekor_grpc_health_check_id" {
+  type        = string
+  description = "Global Rekor gRPC Health Check ID"
+  default     = null
+}
+
+variable "rekor_security_policy_id" {
+  type        = string
+  description = "Global Rekor Security Policy ID"
+  default     = null
+}
+
+variable "rekor_bucket_security_policy_id" {
+  type        = string
+  description = "Global Rekor Bucket Security Policy ID"
+  default     = null
+}
+
+variable "rekor_ssl_policy_id" {
+  type        = string
+  description = "Global Rekor SSL Policy ID"
+  default     = null
+}
+
+variable "ctlog_http_health_check_id" {
+  type        = string
+  description = "Global CTLog HTTP Health Check ID"
+  default     = null
+}
+
+variable "ctlog_security_policy_id" {
+  type        = string
+  description = "Global CTLog Security Policy ID"
+  default     = null
+}
+
+variable "ctlog_bucket_security_policy_id" {
+  type        = string
+  description = "Global CTLog Bucket Security Policy ID"
+  default     = null
+}
+
+variable "ctlog_ssl_policy_id" {
+  type        = string
+  description = "Global CTLog SSL Policy ID"
+  default     = null
+}
+
+/********************************/
 /********** VALIDATION **********/
 /********************************/
 

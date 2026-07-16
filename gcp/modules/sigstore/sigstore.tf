@@ -567,3 +567,178 @@ module "dex" {
     module.project_roles
   ]
 }
+
+// Rekor Tiles Shards
+module "rekor_tiles" {
+  for_each = var.rekor_tiles_shards
+
+  source = "../tiles_tlog"
+
+  shard_name = each.key
+
+  freeze_shard        = each.value.freeze_shard
+  lb_backend_turndown = each.value.lb_backend_turndown
+
+  project_id     = var.project_id
+  project_number = var.project_number
+  region         = var.region
+  cluster_name   = var.cluster_name
+
+  cluster_namespace_suffix = each.value.cluster_namespace_suffix
+  cluster_service_account  = "rekor-tiles"
+
+  bucket_name_suffix = each.value.bucket_name_suffix
+  bucket_id_length   = each.value.bucket_id_length
+
+  spanner_processing_units             = each.value.spanner_processing_units
+  spanner_instance_name_suffix         = each.value.spanner_instance_name_suffix
+  spanner_instance_display_name_suffix = each.value.spanner_instance_display_name_suffix
+
+  keyring_name_suffix = each.value.keyring_name_suffix
+  key_name            = each.value.key_name
+
+  dns_zone_name      = var.dns_zone_name
+  dns_domain_name    = var.dns_domain_name
+  dns_subdomain_name = each.value.dns_subdomain_name
+
+  http_grpc_qpm_rate_limit           = each.value.http_grpc_qpm_rate_limit
+  max_req_content_length             = each.value.max_req_content_length
+  max_req_content_length_description = each.value.max_req_content_length_description
+
+  network_endpoint_group_http_name_suffix = each.value.network_endpoint_group_http_name_suffix
+  network_endpoint_group_grpc_name_suffix = each.value.network_endpoint_group_grpc_name_suffix
+  network_endpoint_group_zones            = each.value.network_endpoint_group_zones
+
+  http_write_path        = "/api/v2/log/entries"
+  grpc_write_path        = "/dev.sigstore.rekor.v2.Rekor/CreateEntry"
+  http_read_path         = "/api/v2/{path=**}"
+  http_read_rewrite_path = "/{path}"
+
+  http_health_check_id      = var.rekor_http_health_check_id
+  grpc_health_check_id      = var.rekor_grpc_health_check_id
+  security_policy_id        = var.rekor_security_policy_id
+  bucket_security_policy_id = var.rekor_bucket_security_policy_id
+  ssl_policy_id             = var.rekor_ssl_policy_id
+
+  spanner_timeseries_role_id = "SpannerMonitoringTimeseries"
+  monitoring_role_id         = "OTelMetrics"
+
+  spanner_database_sequencer_deletion_protection = each.value.spanner_database_sequencer_deletion_protection
+  spanner_database_antispam_deletion_protection  = each.value.spanner_database_antispam_deletion_protection
+
+  single_region = each.value.single_region
+
+  depends_on = [
+    module.gke-cluster,
+    module.network,
+    module.project_roles
+  ]
+}
+
+module "rekor_monitoring" {
+  for_each = {
+    for k, v in var.rekor_tiles_shards : k => v
+    if !v.freeze_shard && lookup(v, "enable_monitoring", true)
+  }
+
+  source = "../monitoring/rekorv2/active_shard"
+
+  shard_name = each.key
+
+  project_id           = var.project_id
+  project_number       = var.project_number
+  cluster_location     = var.region
+  cluster_name         = var.cluster_name
+  gke_namespace_suffix = each.value.cluster_namespace_suffix
+  rekor_url            = each.value.rekor_url
+  spanner_instance_id  = each.value.spanner_instance_id != null && each.value.spanner_instance_id != "" ? each.value.spanner_instance_id : module.rekor_tiles[each.key].spanner_instance_id
+
+  notification_channel_ids = var.monitoring.notification_channel_ids
+  create_slos              = var.create_slos
+}
+
+// CTLog Tiles Shards
+module "ctlog_tiles" {
+  for_each = var.ctlog_tiles_shards
+
+  source = "../tiles_tlog"
+
+  shard_name = each.key
+
+  lb_backend_turndown = each.value.lb_backend_turndown
+  freeze_shard        = each.value.freeze_shard
+
+  project_id     = var.project_id
+  project_number = var.project_number
+  region         = var.region
+  cluster_name   = var.cluster_name
+
+  cluster_namespace_suffix = each.value.cluster_namespace_suffix
+  cluster_service_account  = "ctlog-tiles"
+
+  bucket_name_suffix = each.value.bucket_name_suffix
+  bucket_id_length   = each.value.bucket_id_length
+
+  spanner_processing_units             = each.value.spanner_processing_units
+  spanner_instance_name_suffix         = each.value.spanner_instance_name_suffix
+  spanner_instance_display_name_suffix = each.value.spanner_instance_display_name_suffix
+
+  # TesseraCT uses Secret Manager instead of KMS
+  keyring_name_suffix = ""
+  enable_secrets      = true
+
+  dns_zone_name      = var.dns_zone_name
+  dns_domain_name    = var.dns_domain_name
+  dns_subdomain_name = each.value.dns_subdomain_name
+
+  http_grpc_qpm_rate_limit           = each.value.http_grpc_qpm_rate_limit
+  max_req_content_length             = each.value.max_req_content_length
+  max_req_content_length_description = each.value.max_req_content_length_description
+
+  network_endpoint_group_http_name_suffix = each.value.network_endpoint_group_http_name_suffix
+  network_endpoint_group_zones            = each.value.network_endpoint_group_zones
+
+  http_write_path           = "/ct/v1/get-roots"
+  http_read_path            = "/checkpoint"
+  http_health_check_id      = var.ctlog_http_health_check_id
+  security_policy_id        = var.ctlog_security_policy_id
+  bucket_security_policy_id = var.ctlog_bucket_security_policy_id
+  ssl_policy_id             = var.ctlog_ssl_policy_id
+
+  spanner_timeseries_role_id = "SpannerMonitoringTimeseries"
+  monitoring_role_id         = "OTelMetrics"
+
+  spanner_database_sequencer_deletion_protection = each.value.spanner_database_sequencer_deletion_protection
+  spanner_database_antispam_deletion_protection  = each.value.spanner_database_antispam_deletion_protection
+
+  single_region = each.value.single_region
+
+  depends_on = [
+    module.gke-cluster,
+    module.network,
+    module.project_roles
+  ]
+}
+
+module "ctlog_monitoring" {
+  for_each = {
+    for k, v in var.ctlog_tiles_shards : k => v
+    if !v.freeze_shard && lookup(v, "enable_monitoring", true)
+  }
+
+  source = "../monitoring/tesseract/active_shard"
+
+  shard_name = each.key
+
+  project_id           = var.project_id
+  project_number       = var.project_number
+  cluster_location     = var.region
+  cluster_name         = var.cluster_name
+  gke_namespace_suffix = each.value.cluster_namespace_suffix
+  ctlog_url            = each.value.ctlog_url
+  spanner_instance_id  = each.value.spanner_instance_id != null && each.value.spanner_instance_id != "" ? each.value.spanner_instance_id : module.ctlog_tiles[each.key].spanner_instance_id
+
+  notification_channel_ids = var.monitoring.notification_channel_ids
+  create_slos              = var.create_slos
+}
+
