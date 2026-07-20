@@ -214,3 +214,62 @@ variable "notification_channel_ids" {
   type        = list(string)
   default     = []
 }
+
+variable "rekor_tiles_http_negs" {
+  type = list(object({
+    name = string
+    zone = string
+  }))
+  description = "List of objects containing the names and zones of active HTTP NEGs across all shards and regions to route write traffic to."
+  default     = []
+}
+
+variable "rekor_tiles_grpc_negs" {
+  type = list(object({
+    name = string
+    zone = string
+  }))
+  description = "List of objects containing the names and zones of active gRPC NEGs across all shards and regions to route write traffic to."
+  default     = []
+}
+
+variable "rekor_tiles_dns_subdomain_name" {
+  description = "DNS subdomain name for global Rekor"
+  type        = string
+  default     = "global.rekor"
+}
+
+variable "ctlog_tiles_dns_subdomain_name" {
+  description = "DNS subdomain name for global CTLog"
+  type        = string
+  default     = "global.ctfe"
+}
+
+variable "project_number" {
+  type    = string
+  default = ""
+}
+
+variable "rekor_tiles_active_shards" {
+  description = "List of active Rekor v2 shard names to monitor."
+  type        = list(string)
+  default     = []
+}
+
+variable "rekor_tiles_frozen_shards" {
+  description = "List of frozen Rekor v2 shard names to monitor."
+  type        = list(string)
+  default     = []
+}
+
+variable "rekor_tiles_create_slos" {
+  description = "True to enable Rekor tiles global LB SLO creation."
+  type        = bool
+  default     = true
+}
+
+variable "rekor_tiles_uptime_check_period" {
+  description = "Uptime check period for the global Rekor tiles LB."
+  type        = string
+  default     = "60s"
+}
