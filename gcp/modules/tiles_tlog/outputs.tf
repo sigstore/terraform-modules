@@ -23,3 +23,8 @@ output "grpc_neg_name" {
   description = "Name of the gRPC Network Endpoint Group"
   value       = var.network_endpoint_group_grpc_name_suffix != "" ? "${var.shard_name}-${var.network_endpoint_group_grpc_name_suffix}" : ""
 }
+
+output "spanner_instance_id" {
+  description = "Name of the Spanner Instance"
+  value       = var.freeze_shard ? "" : google_spanner_instance.tessera[0].name
+}

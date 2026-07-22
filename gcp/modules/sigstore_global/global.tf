@@ -110,3 +110,38 @@ module "timestamp_monitoring" {
   uptime_check_period      = var.timestamp_uptime_check_period
   notification_channel_ids = var.notification_channel_ids
 }
+
+module "rekor_tiles_global" {
+  source = "../tiles_tlog/global"
+
+  project_id         = var.project_id
+  dns_zone_name      = var.dns_zone_name
+  dns_domain_name    = var.dns_domain_name
+  dns_subdomain_name = var.rekor_tiles_dns_subdomain_name
+
+  active_http_negs = var.rekor_tiles_http_negs
+  active_grpc_negs = var.rekor_tiles_grpc_negs
+
+  http_write_path = "/api/v2/log/entries"
+  grpc_write_path = "/dev.sigstore.rekor.v2.Rekor/CreateEntry"
+}
+
+module "ctlog_tiles_shared" {
+  source = "../tiles_tlog/shared"
+
+  project_id         = var.project_id
+  dns_subdomain_name = var.ctlog_tiles_dns_subdomain_name
+}
+
+module "monitoring_rekorv2_lb_all" {
+  source = "../monitoring/rekorv2/lb"
+
+  project_id               = var.project_id
+  project_number           = var.project_number
+  active_shards            = var.rekor_tiles_active_shards
+  frozen_shards            = var.rekor_tiles_frozen_shards
+  notification_channel_ids = var.notification_channel_ids
+  create_slos              = var.rekor_tiles_create_slos
+  rekor_global_url         = "${var.rekor_tiles_dns_subdomain_name}.${trimsuffix(var.dns_domain_name, ".")}"
+  uptime_check_period      = var.rekor_tiles_uptime_check_period
+}
