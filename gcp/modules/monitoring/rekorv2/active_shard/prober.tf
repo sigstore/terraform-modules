@@ -24,14 +24,14 @@ resource "google_monitoring_alert_policy" "prober_rekorv2_endpoint_latency" {
   conditions {
     condition_threshold {
       aggregations {
-        alignment_period     = "300s"
+        alignment_period     = "600s"
         cross_series_reducer = "REDUCE_PERCENTILE_95"
         group_by_fields      = ["metric.label.endpoint"]
         per_series_aligner   = "ALIGN_MEAN"
       }
 
       comparison      = "COMPARISON_GT"
-      duration        = "300s"
+      duration        = "600s"
       filter          = format("resource.type = \"prometheus_target\" AND metric.type = \"prometheus.googleapis.com/api_endpoint_latency/summary\" AND metric.labels.host = \"%s\" AND %s", local.prober_url, "metric.labels.endpoint = \"/api/v2/log/entries\"")
       threshold_value = "10000"
 
@@ -44,10 +44,10 @@ resource "google_monitoring_alert_policy" "prober_rekorv2_endpoint_latency" {
     display_name = "API Prober: Rekor v2 API Endpoint Latency > 10 s"
   }
 
-  display_name = "API Prober: Rekor v2 API Endpoint Latency > 10 s for 5 minutes"
+  display_name = "API Prober: Rekor v2 API Endpoint Latency > 10 s for 10 minutes"
 
   documentation {
-    content   = "At least one supported Rekor v2 API Endpoint has had latency > 10 s for 5 minutes."
+    content   = "At least one supported Rekor v2 API Endpoint has had latency > 10 s for 10 minutes."
     mime_type = "text/markdown"
   }
 
@@ -66,13 +66,13 @@ resource "google_monitoring_alert_policy" "prober_data_absent_alert" {
   conditions {
     condition_absent {
       aggregations {
-        alignment_period     = "300s"
+        alignment_period     = "600s"
         cross_series_reducer = "REDUCE_PERCENTILE_95"
         group_by_fields      = ["metric.label.endpoint"]
         per_series_aligner   = "ALIGN_MEAN"
       }
 
-      duration = "300s"
+      duration = "600s"
       filter   = format("resource.type = \"prometheus_target\" AND metric.type = \"prometheus.googleapis.com/api_endpoint_latency/summary\" AND metric.labels.host = \"%s\" AND %s", local.prober_url, "metric.labels.endpoint = \"/api/v2/log/entries\"")
 
       trigger {
@@ -81,13 +81,13 @@ resource "google_monitoring_alert_policy" "prober_data_absent_alert" {
       }
     }
 
-    display_name = format("API Prober: Latency Data Absent for 5 minutes: %s", local.prober_url)
+    display_name = format("API Prober: Latency Data Absent for 10 minutes: %s", local.prober_url)
   }
 
-  display_name = format("API Prober: Latency Data Absent for 5 minutes: %s", local.prober_url)
+  display_name = format("API Prober: Latency Data Absent for 10 minutes: %s", local.prober_url)
 
   documentation {
-    content   = format("API Endpoint Latency Data Absent for 5 minutes: %s. Check playbook for more details.", local.prober_url)
+    content   = format("API Endpoint Latency Data Absent for 10 minutes: %s. Check playbook for more details.", local.prober_url)
     mime_type = "text/markdown"
   }
 

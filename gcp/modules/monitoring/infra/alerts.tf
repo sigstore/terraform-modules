@@ -78,7 +78,7 @@ resource "google_monitoring_alert_policy" "cloud_sql_cpu_utilization_warning" {
   conditions {
     condition_threshold {
       aggregations {
-        alignment_period   = "300s"
+        alignment_period   = "600s"
         per_series_aligner = "ALIGN_MEAN"
       }
       comparison      = "COMPARISON_GT"
@@ -118,7 +118,7 @@ resource "google_monitoring_alert_policy" "cloud_sql_cpu_utilization" {
   conditions {
     condition_threshold {
       aggregations {
-        alignment_period   = "300s"
+        alignment_period   = "600s"
         per_series_aligner = "ALIGN_MEAN"
       }
       comparison      = "COMPARISON_GT"
@@ -155,7 +155,7 @@ resource "google_monitoring_alert_policy" "cloud_sql_memory_utilization" {
   conditions {
     condition_threshold {
       aggregations {
-        alignment_period   = "300s"
+        alignment_period   = "600s"
         per_series_aligner = "ALIGN_MEAN"
       }
 
@@ -254,7 +254,7 @@ resource "google_monitoring_alert_policy" "cloudsqlconn_connection_failure" {
       }
 
       comparison      = "COMPARISON_GT"
-      duration        = "300s"
+      duration        = "600s"
       filter          = "metric.type=\"prometheus.googleapis.com/cloudsqlconn_dial_failure_count/counter\" resource.type=\"prometheus_target\""
       threshold_value = "0"
 
@@ -270,7 +270,7 @@ resource "google_monitoring_alert_policy" "cloudsqlconn_connection_failure" {
   display_name = "Cloud SQL Proxy connections failing"
 
   documentation {
-    content   = "Cloud SQL Proxy connections have been failing for at least 5 minutes.\n"
+    content   = "Cloud SQL Proxy connections have been failing for at least 10 minutes.\n"
     mime_type = "text/markdown"
   }
 
@@ -391,7 +391,7 @@ resource "google_monitoring_alert_policy" "k8s_container_memory_allocatable_util
   conditions {
     condition_threshold {
       aggregations {
-        alignment_period   = "300s"
+        alignment_period   = "600s"
         per_series_aligner = "ALIGN_MEAN"
       }
 
@@ -433,7 +433,7 @@ resource "google_monitoring_alert_policy" "k8s_container_cpu_allocatable_utiliza
   conditions {
     condition_threshold {
       aggregations {
-        alignment_period   = "300s"
+        alignment_period   = "600s"
         per_series_aligner = "ALIGN_MEAN"
       }
 
