@@ -24,14 +24,14 @@ resource "google_monitoring_alert_policy" "prober_rekor_endpoint_latency" {
   conditions {
     condition_threshold {
       aggregations {
-        alignment_period     = "300s"
+        alignment_period     = "600s"
         cross_series_reducer = "REDUCE_PERCENTILE_95"
         group_by_fields      = ["metric.label.endpoint"]
         per_series_aligner   = "ALIGN_MEAN"
       }
 
       comparison      = "COMPARISON_GT"
-      duration        = "300s"
+      duration        = "600s"
       filter          = format("resource.type = \"prometheus_target\" AND metric.type = \"prometheus.googleapis.com/api_endpoint_latency/summary\" AND metric.labels.host = \"%s\" AND %s", var.rekor_url, local.rekor_endpoint_filter)
       threshold_value = "750"
 
@@ -44,10 +44,10 @@ resource "google_monitoring_alert_policy" "prober_rekor_endpoint_latency" {
     display_name = "API Prober: Rekor API Endpoint Latency > 750 ms"
   }
 
-  display_name = "API Prober: Rekor API Endpoint Latency > 750 ms for 5 minutes"
+  display_name = "API Prober: Rekor API Endpoint Latency > 750 ms for 10 minutes"
 
   documentation {
-    content   = "At least one supported Rekor API Endpoint has had latency > 750 ms for 5 minutes."
+    content   = "At least one supported Rekor API Endpoint has had latency > 750 ms for 10 minutes."
     mime_type = "text/markdown"
   }
 
@@ -66,14 +66,14 @@ resource "google_monitoring_alert_policy" "prober_fulcio_endpoint_latency" {
   conditions {
     condition_threshold {
       aggregations {
-        alignment_period     = "300s"
+        alignment_period     = "600s"
         cross_series_reducer = "REDUCE_PERCENTILE_95"
         group_by_fields      = ["metric.label.endpoint"]
         per_series_aligner   = "ALIGN_MEAN"
       }
 
       comparison      = "COMPARISON_GT"
-      duration        = "300s"
+      duration        = "600s"
       filter          = format("resource.type = \"prometheus_target\" AND metric.type = \"prometheus.googleapis.com/api_endpoint_latency/summary\" AND metric.labels.host = \"%s\" AND %s", var.fulcio_url, local.fulcio_endpoint_filter)
       threshold_value = "750"
 
@@ -86,10 +86,10 @@ resource "google_monitoring_alert_policy" "prober_fulcio_endpoint_latency" {
     display_name = "API Prober: Fulcio API Endpoint Latency > 750 ms"
   }
 
-  display_name = "API Prober: Fulcio API Endpoint Latency > 750 ms for 5 minutes"
+  display_name = "API Prober: Fulcio API Endpoint Latency > 750 ms for 10 minutes"
 
   documentation {
-    content   = "At least one supported Fulcio API Endpoint has had latency > 750 ms for 5 minutes."
+    content   = "At least one supported Fulcio API Endpoint has had latency > 750 ms for 10 minutes."
     mime_type = "text/markdown"
   }
 
@@ -108,14 +108,14 @@ resource "google_monitoring_alert_policy" "prober_timestamp_endpoint_latency" {
   conditions {
     condition_threshold {
       aggregations {
-        alignment_period     = "300s"
+        alignment_period     = "600s"
         cross_series_reducer = "REDUCE_PERCENTILE_95"
         group_by_fields      = ["metric.label.endpoint"]
         per_series_aligner   = "ALIGN_MEAN"
       }
 
       comparison      = "COMPARISON_GT"
-      duration        = "300s"
+      duration        = "600s"
       filter          = format("resource.type = \"prometheus_target\" AND metric.type = \"prometheus.googleapis.com/api_endpoint_latency/summary\" AND metric.labels.host = \"%s\" AND %s", var.timestamp_url, local.timestamp_endpoint_filter)
       threshold_value = "750"
 
@@ -128,10 +128,10 @@ resource "google_monitoring_alert_policy" "prober_timestamp_endpoint_latency" {
     display_name = "API Prober: Timestamp API Endpoint Latency > 750 ms"
   }
 
-  display_name = "API Prober: Timestamp API Endpoint Latency > 750 ms for 5 minutes"
+  display_name = "API Prober: Timestamp API Endpoint Latency > 750 ms for 10 minutes"
 
   documentation {
-    content   = "At least one supported Timestamp API Endpoint has had latency > 750 ms for 5 minutes."
+    content   = "At least one supported Timestamp API Endpoint has had latency > 750 ms for 10 minutes."
     mime_type = "text/markdown"
   }
 
@@ -155,13 +155,13 @@ resource "google_monitoring_alert_policy" "prober_data_absent_alert" {
   conditions {
     condition_absent {
       aggregations {
-        alignment_period     = "300s"
+        alignment_period     = "600s"
         cross_series_reducer = "REDUCE_PERCENTILE_95"
         group_by_fields      = ["metric.label.endpoint"]
         per_series_aligner   = "ALIGN_MEAN"
       }
 
-      duration = "300s"
+      duration = "600s"
       filter   = format("resource.type = \"prometheus_target\" AND metric.type = \"prometheus.googleapis.com/api_endpoint_latency/summary\" AND metric.labels.host = \"%s\" AND %s", each.key, each.value)
 
       trigger {
@@ -170,13 +170,13 @@ resource "google_monitoring_alert_policy" "prober_data_absent_alert" {
       }
     }
 
-    display_name = format("API Prober: Latency Data Absent for 5 minutes: %s", each.key)
+    display_name = format("API Prober: Latency Data Absent for 10 minutes: %s", each.key)
   }
 
-  display_name = format("API Prober: Latency Data Absent for 5 minutes: %s", each.key)
+  display_name = format("API Prober: Latency Data Absent for 10 minutes: %s", each.key)
 
   documentation {
-    content   = format("API Endpoint Latency Data Absent for 5 minutes: %s. Check playbook for more details.", each.key)
+    content   = format("API Endpoint Latency Data Absent for 10 minutes: %s. Check playbook for more details.", each.key)
     mime_type = "text/markdown"
   }
 
@@ -186,7 +186,7 @@ resource "google_monitoring_alert_policy" "prober_data_absent_alert" {
 }
 
 // This alert will fire if a non-200 error code is seen over the past 60s (alignment_period)
-// AND if this sustains for 5 minutes (duration)
+// AND if this sustains for 10 minutes (duration)
 // NOTE: The Rekor endpoint for `/api/v1/index/retrieve` is ignored as it is experimental and will not alert
 resource "google_monitoring_alert_policy" "prober_error_codes" {
   alert_strategy {
@@ -205,7 +205,7 @@ resource "google_monitoring_alert_policy" "prober_error_codes" {
       }
 
       comparison      = "COMPARISON_GT"
-      duration        = "300s"
+      duration        = "600s"
       filter          = format("resource.type = \"prometheus_target\" AND metric.type = \"prometheus.googleapis.com/api_endpoint_latency_count/summary\" AND metric.labels.status_code != one_of(\"200\", \"201\") AND %s", local.all_endpoints_filter)
       threshold_value = "0"
 
@@ -221,7 +221,7 @@ resource "google_monitoring_alert_policy" "prober_error_codes" {
   display_name = "API Prober: Error Codes are non-200"
 
   documentation {
-    content   = "At least one Sigstore API endpoint has returned non-200 error codes for at least 5 minutes.\n"
+    content   = "At least one Sigstore API endpoint has returned non-200 error codes for at least 10 minutes.\n"
     mime_type = "text/markdown"
   }
 
@@ -283,12 +283,12 @@ resource "google_monitoring_alert_policy" "prober_verification_data_absent_alert
   conditions {
     condition_absent {
       aggregations {
-        alignment_period     = "300s"
+        alignment_period     = "600s"
         cross_series_reducer = "REDUCE_PERCENTILE_95"
         per_series_aligner   = "ALIGN_MEAN"
       }
 
-      duration = "300s"
+      duration = "600s"
       filter   = "resource.type = \"prometheus_target\" AND metric.type = \"prometheus.googleapis.com/verification/unknown\""
 
       trigger {
@@ -297,13 +297,13 @@ resource "google_monitoring_alert_policy" "prober_verification_data_absent_alert
       }
     }
 
-    display_name = "API Prober: Verification Data Absent for 5 minutes"
+    display_name = "API Prober: Verification Data Absent for 10 minutes"
   }
 
-  display_name = "API Prober: Verification Data Absent for 5 minutes"
+  display_name = "API Prober: Verification Data Absent for 10 minutes"
 
   documentation {
-    content   = "Verification Data Absent for 5 minutes. Check playbook for more details."
+    content   = "Verification Data Absent for 10 minutes. Check playbook for more details."
     mime_type = "text/markdown"
   }
 
