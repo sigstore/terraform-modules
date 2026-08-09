@@ -352,9 +352,9 @@ resource "google_monitoring_alert_policy" "kms_crypto_request_alert" {
 
       comparison = "COMPARISON_GT"
       duration   = "300s"
-      filter     = "resource.type = \"consumer_quota\" AND resource.labels.service = \"cloudkms.googleapis.com\" AND metric.type = \"serviceruntime.googleapis.com/quota/rate/net_usage\" AND metric.labels.quota_metric = \"cloudkms.googleapis.com/crypto_requests\""
-      // The threshold is 60,000/min or 1000/s
-      threshold_value = "1000"
+      filter     = "resource.type = \"consumer_quota\" AND resource.labels.service = \"cloudkms.googleapis.com\" AND metric.type = \"serviceruntime.googleapis.com/quota/rate/net_usage\" AND metric.labels.quota_metric = \"cloudkms.googleapis.com/software_usage\""
+      // The threshold is 1,200,000/min or 20000/s
+      threshold_value = "20000"
 
       trigger {
         count   = "1"
@@ -368,7 +368,7 @@ resource "google_monitoring_alert_policy" "kms_crypto_request_alert" {
   display_name = "KMS Crypto Requests Rate Above Quota"
 
   documentation {
-    content   = "KMS Crypto Requests Above Quota, please see playbook for help."
+    content   = "KMS Crypto Requests for 'Software cryptographic usage per minute per region' Above Quota, please see playbook for help."
     mime_type = "text/markdown"
   }
 
