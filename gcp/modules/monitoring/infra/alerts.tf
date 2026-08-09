@@ -368,7 +368,7 @@ resource "google_monitoring_alert_policy" "kms_crypto_request_alert" {
   display_name = "KMS Crypto Requests Rate Above Quota"
 
   documentation {
-    content   = "KMS Crypto Requests for "Software cryptographic usage per minute per region" Above Quota, please see playbook for help."
+    content   = "KMS Crypto Requests for 'Software cryptographic usage per minute per region' Above Quota, please see playbook for help."
     mime_type = "text/markdown"
   }
 
