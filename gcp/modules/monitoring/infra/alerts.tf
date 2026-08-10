@@ -353,8 +353,8 @@ resource "google_monitoring_alert_policy" "kms_crypto_request_alert" {
       comparison = "COMPARISON_GT"
       duration   = "300s"
       filter     = "resource.type = \"consumer_quota\" AND resource.labels.service = \"cloudkms.googleapis.com\" AND metric.type = \"serviceruntime.googleapis.com/quota/rate/net_usage\" AND metric.labels.quota_metric = \"cloudkms.googleapis.com/software_usage\""
-      // The threshold is 1,200,000/min or 20000/s
-      threshold_value = "20000"
+      // The threshold is 12,000,000/min or 200,000/s
+      threshold_value = "200000"
 
       trigger {
         count   = "1"
