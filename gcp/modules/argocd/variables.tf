@@ -24,12 +24,12 @@ variable "project_id" {
 }
 
 variable "argocd_chart_version" {
-  description = "Version of ArgoCD Helm chart. Versions listed here https://artifacthub.io/packages/helm/argo/argo-cd"
+  description = "Version of ArgoCD Helm chart, optionally pinned to a manifest digest as \"<version>@sha256:...\". Versions listed here https://artifacthub.io/packages/helm/argo/argo-cd"
   type        = string
 }
 
 variable "argocd_apps_chart_version" {
-  description = "Version of ArgoCD-Apps Helm chart. Versions listed here https://artifacthub.io/packages/helm/argo/argocd-apps"
+  description = "Version of ArgoCD-Apps Helm chart, optionally pinned to a manifest digest as \"<version>@sha256:...\". Versions listed here https://artifacthub.io/packages/helm/argo/argocd-apps"
   type        = string
 }
 

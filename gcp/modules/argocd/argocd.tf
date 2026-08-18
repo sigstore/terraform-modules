@@ -14,6 +14,19 @@
  * limitations under the License.
  */
 
+locals {
+  // helm takes a manifest digest only on the chart reference, never on the version
+  // constraint, so an optional "<version>@sha256:..." pin has to be split apart.
+  // Supplying both makes helm verify the tag resolves to that digest.
+  argocd_chart_pin = split("@", var.argocd_chart_version)
+  argocd_chart_ref = "argo-cd${try("@${local.argocd_chart_pin[1]}", "")}"
+  argocd_chart_tag = local.argocd_chart_pin[0]
+
+  argocd_apps_chart_pin = split("@", var.argocd_apps_chart_version)
+  argocd_apps_chart_ref = "argocd-apps${try("@${local.argocd_apps_chart_pin[1]}", "")}"
+  argocd_apps_chart_tag = local.argocd_apps_chart_pin[0]
+}
+
 // Enable required services for this module
 resource "google_project_service" "service" {
   for_each = toset([
@@ -97,9 +110,9 @@ YAML
 resource "helm_release" "argocd" {
   name       = "argocd"
   namespace  = "argocd"
-  chart      = "argo-cd"
-  repository = "https://argoproj.github.io/argo-helm"
-  version    = var.argocd_chart_version
+  chart      = local.argocd_chart_ref
+  repository = "oci://ghcr.io/argoproj/argo-helm"
+  version    = local.argocd_chart_tag
   timeout    = 900
 
   values = [
@@ -116,9 +129,9 @@ resource "helm_release" "argocd" {
 resource "helm_release" "argocd_apps" {
   name       = "argocd-apps"
   namespace  = "argocd"
-  chart      = "argocd-apps"
-  repository = "https://argoproj.github.io/argo-helm"
-  version    = var.argocd_apps_chart_version
+  chart      = local.argocd_apps_chart_ref
+  repository = "oci://ghcr.io/argoproj/argo-helm"
+  version    = local.argocd_apps_chart_tag
   timeout    = 900
 
   values = [

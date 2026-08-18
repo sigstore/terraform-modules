@@ -18,6 +18,13 @@
 locals {
   namespace = "external-secrets"
   k8s_sa    = "external-secrets"
+
+  // helm takes a manifest digest only on the chart reference, never on the version
+  // constraint, so an optional "<version>@sha256:..." pin has to be split apart.
+  // Supplying both makes helm verify the tag resolves to that digest.
+  chart_pin = split("@", var.external_secrets_chart_version)
+  chart_ref = "external-secrets${try("@${local.chart_pin[1]}", "")}"
+  chart_tag = local.chart_pin[0]
 }
 
 // External-Secrets
@@ -25,9 +32,9 @@ resource "helm_release" "external_secrets" {
   name             = "external-secrets"
   namespace        = local.namespace
   create_namespace = true
-  chart            = "external-secrets"
-  repository       = "https://charts.external-secrets.io"
-  version          = var.external_secrets_chart_version
+  chart            = local.chart_ref
+  repository       = "oci://ghcr.io/external-secrets/charts"
+  version          = local.chart_tag
 
   values = [
     file(var.external_secrets_chart_values_yaml_path)
