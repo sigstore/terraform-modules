@@ -305,9 +305,9 @@ resource "google_monitoring_alert_policy" "kms_read_request_alert" {
 
       comparison = "COMPARISON_GT"
       duration   = "0s"
-      filter     = "metric.type=\"serviceruntime.googleapis.com/quota/rate/net_usage\" resource.type=\"consumer_quota\" resource.label.\"service\"=\"cloudkms.googleapis.com\" metric.label.\"quota_metric\"=\"cloudkms.googleapis.com/read_requests\""
-      // The threshold is 1500/min or 25/s
-      threshold_value = "25"
+      filter     = "metric.type=\"serviceruntime.googleapis.com/quota/rate/net_usage\" resource.type=\"consumer_quota\" resource.label.\"service\"=\"cloudkms.googleapis.com\" metric.label.\"quota_metric\"=\"cloudkms.googleapis.com/read_usage\""
+      // The threshold is 2400/min or 40/s
+      threshold_value = "40"
 
       trigger {
         count   = "1"
@@ -315,13 +315,13 @@ resource "google_monitoring_alert_policy" "kms_read_request_alert" {
       }
     }
 
-    display_name = "KMS Read Requests Above Quota"
+    display_name = "KMS Read Usage Above Quota"
   }
 
-  display_name = "KMS Read Requests quota usage"
+  display_name = "KMS Read Usage quota usage"
 
   documentation {
-    content   = "KMS Read Requests Above Quota, please see playbook for help."
+    content   = "KMS Read Usage Above Quota, please see playbook for help."
     mime_type = "text/markdown"
   }
 
