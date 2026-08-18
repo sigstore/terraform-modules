@@ -15,7 +15,7 @@
  */
 
 variable "external_secrets_chart_version" {
-  description = "Version of External-Secrets Helm chart. Versions listed here https://artifacthub.io/packages/helm/external-secrets-operator/external-secrets"
+  description = "Version of External-Secrets Helm chart, optionally pinned to a manifest digest as \"<version>@sha256:...\". Versions listed here https://artifacthub.io/packages/helm/external-secrets-operator/external-secrets"
   type        = string
 }
 
