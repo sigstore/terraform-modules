@@ -17,7 +17,6 @@
 variable "project_id" {
   description = "Project in which the mirror repositories are created"
   type        = string
-  default     = ""
   validation {
     condition     = length(var.project_id) > 0
     error_message = "Must specify project_id variable."
