@@ -55,6 +55,7 @@ jobs:
           - ./gcp/modules/tiles_tlog
           - ./gcp/modules/external_secrets
           - ./gcp/modules/argocd
+          - ./gcp/modules/artifact_registry_mirror
 
     steps:
       - name: 'Checkout'
