@@ -111,7 +111,7 @@ resource "helm_release" "argocd" {
   name       = "argocd"
   namespace  = "argocd"
   chart      = local.argocd_chart_ref
-  repository = "oci://ghcr.io/argoproj/argo-helm"
+  repository = var.argocd_chart_repo
   version    = local.argocd_chart_tag
   timeout    = 900
 
@@ -130,7 +130,7 @@ resource "helm_release" "argocd_apps" {
   name       = "argocd-apps"
   namespace  = "argocd"
   chart      = local.argocd_apps_chart_ref
-  repository = "oci://ghcr.io/argoproj/argo-helm"
+  repository = var.argocd_apps_chart_repo
   version    = local.argocd_apps_chart_tag
   timeout    = 900
 

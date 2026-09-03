@@ -23,8 +23,20 @@ variable "project_id" {
   }
 }
 
+variable "argocd_chart_repo" {
+  description = "Repository to pull the ArgoCD Helm chart from"
+  default     = "oci://ghcr.io/argoproj/argo-helm"
+  type        = string
+}
+
 variable "argocd_chart_version" {
   description = "Version of ArgoCD Helm chart, optionally pinned to a manifest digest as \"<version>@sha256:...\". Versions listed here https://artifacthub.io/packages/helm/argo/argo-cd"
+  type        = string
+}
+
+variable "argocd_apps_chart_repo" {
+  description = "Repository to pull the ArgoCD Apps Helm chart from"
+  default     = "oci://ghcr.io/argoproj/argo-helm"
   type        = string
 }
 

@@ -33,7 +33,7 @@ resource "helm_release" "external_secrets" {
   namespace        = local.namespace
   create_namespace = true
   chart            = local.chart_ref
-  repository       = "oci://ghcr.io/external-secrets/charts"
+  repository       = var.external_secrets_chart_repo
   version          = local.chart_tag
 
   values = [
