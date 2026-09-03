@@ -14,6 +14,12 @@
  * limitations under the License.
  */
 
+variable "external_secrets_chart_repo" {
+  description = "Repository to pull the External Secrets chart from"
+  default     = "oci://ghcr.io/external-secrets/charts"
+  type        = string
+}
+
 variable "external_secrets_chart_version" {
   description = "Version of External-Secrets Helm chart, optionally pinned to a manifest digest as \"<version>@sha256:...\". Versions listed here https://artifacthub.io/packages/helm/external-secrets-operator/external-secrets"
   type        = string
