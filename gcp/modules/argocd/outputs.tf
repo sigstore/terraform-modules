@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 The Sigstore Authors
+ * Copyright 2026 The Sigstore Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,12 @@
  * limitations under the License.
  */
 
-terraform {
-  required_version = "1.15.8"
+output "directory_api_service_account_email" {
+  description = "The email of the ArgoCD Directory API service account."
+  value       = google_service_account.argocd-directory-api-sa.email
+}
 
-  required_providers {
-    google = {
-      source  = "hashicorp/google"
-      version = "7.43.0"
-    }
-    kubectl = {
-      source  = "gavinbunney/kubectl"
-      version = "1.19.0"
-    }
-    helm = {
-      source  = "hashicorp/helm"
-      version = "3.2.0"
-    }
-    kubernetes = {
-      source  = "hashicorp/kubernetes"
-      version = "3.2.1"
-    }
-  }
+output "directory_api_service_account_unique_id" {
+  description = "The unique numeric client ID of the ArgoCD Directory API service account (used for Google Workspace Domain-Wide Delegation)."
+  value       = google_service_account.argocd-directory-api-sa.unique_id
 }

@@ -96,3 +96,9 @@ variable "service_account_id" {
   type        = string
   default     = "argocd-directory-api-sa"
 }
+
+variable "dex_k8s_service_account_name" {
+  description = "Name of the Kubernetes ServiceAccount used by ArgoCD Dex."
+  type        = string
+  default     = "argocd-dex-server"
+}

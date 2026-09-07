@@ -152,6 +152,18 @@ resource "google_service_account" "argocd-directory-api-sa" {
   project      = var.project_id
 }
 
+resource "google_service_account_iam_member" "argocd_dex_workload_identity" {
+  service_account_id = google_service_account.argocd-directory-api-sa.name
+  role               = "roles/iam.workloadIdentityUser"
+  member             = "serviceAccount:${var.project_id}.svc.id.goog[${kubernetes_namespace_v1.argocd.metadata[0].name}/${var.dex_k8s_service_account_name}]"
+}
+
+resource "google_service_account_iam_member" "argocd_directory_api_token_creator" {
+  service_account_id = google_service_account.argocd-directory-api-sa.name
+  role               = "roles/iam.serviceAccountTokenCreator"
+  member             = "serviceAccount:${google_service_account.argocd-directory-api-sa.email}"
+}
+
 resource "kubectl_manifest" "externalsecret_argocd_oauth_client_credentials" {
   yaml_body = <<YAML
 apiVersion: external-secrets.io/v1
@@ -165,6 +177,10 @@ spec:
     name: gcp-backend
   target:
     name: argocd-oauth-client-credentials
+    template:
+      metadata:
+        labels:
+          app.kubernetes.io/part-of: argocd
   data:
   - secretKey: client-id
     remoteRef:
