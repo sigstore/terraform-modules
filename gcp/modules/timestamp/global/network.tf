@@ -147,8 +147,9 @@ resource "google_compute_ssl_policy" "ssl_policy" {
   name    = var.ssl_policy_name
   project = var.project_id
 
-  profile         = "MODERN"
-  min_tls_version = "TLS_1_2"
+  profile                   = "MODERN"
+  min_tls_version           = "TLS_1_2"
+  post_quantum_key_exchange = "ENABLED"
 }
 
 ####################### PER-SERVICE MULTIREGION ########################
