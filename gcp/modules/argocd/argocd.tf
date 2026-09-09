@@ -78,6 +78,9 @@ spec:
     workloadIdentity:
       serviceAccountRef:
         name: "${var.repo_server_k8s_service_account_name}"
+      clusterLocation: "${var.cluster_location}"
+      clusterName: "${var.cluster_name}"
+      clusterProjectID: "${var.project_id}"
 YAML
 
   depends_on = [
