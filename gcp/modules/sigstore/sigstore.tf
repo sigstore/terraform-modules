@@ -83,9 +83,10 @@ module "tuf" {
   tuf_signer_service_account_name    = var.tuf_signer_service_account_name
   tuf_publisher_service_account_name = var.tuf_publisher_service_account_name
 
-  tuf_keyring_name = var.tuf_keyring_name
-  tuf_key_name     = var.tuf_key_name
-  kms_location     = var.tuf_kms_location
+  tuf_keyring_name  = var.tuf_keyring_name
+  tuf_key_name      = var.tuf_key_name
+  tuf_key_algorithm = var.tuf_key_algorithm
+  kms_location      = var.tuf_kms_location
 
   depends_on = [
     module.project_roles

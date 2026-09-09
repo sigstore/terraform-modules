@@ -136,3 +136,33 @@ output "tuf_publisher_service_account_email" {
   value       = length(module.tuf) > 0 ? module.tuf[0].tuf_publisher_service_account_email : ""
 }
 
+output "tuf_bucket_name" {
+  description = "TUF bucket name"
+  value       = length(module.tuf) > 0 ? module.tuf[0].tuf_bucket_name : ""
+}
+
+output "tuf_keyring_name" {
+  description = "TUF KMS keyring name"
+  value       = length(module.tuf) > 0 ? module.tuf[0].tuf_keyring_name : ""
+}
+
+output "tuf_keyring_id" {
+  description = "TUF KMS keyring ID"
+  value       = length(module.tuf) > 0 ? module.tuf[0].tuf_keyring_id : ""
+}
+
+output "tuf_key_name" {
+  description = "TUF KMS key name"
+  value       = length(module.tuf) > 0 ? module.tuf[0].tuf_key_name : ""
+}
+
+output "tuf_key_id" {
+  description = "TUF KMS key ID"
+  value       = length(module.tuf) > 0 ? module.tuf[0].tuf_key_id : ""
+}
+
+output "tuf_key_version_id" {
+  description = "TUF KMS key version ID"
+  value       = length(module.tuf) > 0 ? module.tuf[0].tuf_key_version_id : ""
+}
+
