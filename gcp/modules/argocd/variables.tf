@@ -23,6 +23,16 @@ variable "project_id" {
   }
 }
 
+variable "cluster_location" {
+  description = "Location of the GKE cluster where Argo CD is installed."
+  type        = string
+}
+
+variable "cluster_name" {
+  description = "Name of the GKE cluster where Argo CD is installed."
+  type        = string
+}
+
 variable "argocd_chart_repo" {
   description = "Repository to pull the ArgoCD Helm chart from"
   default     = "oci://ghcr.io/argoproj/argo-helm"
