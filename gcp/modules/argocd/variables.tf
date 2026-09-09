@@ -102,3 +102,15 @@ variable "dex_k8s_service_account_name" {
   type        = string
   default     = "argocd-dex-server"
 }
+
+variable "repo_server_k8s_service_account_name" {
+  description = "Name of the Kubernetes ServiceAccount used by the Argo CD repo server."
+  type        = string
+  default     = "argocd-repo-server"
+}
+
+variable "artifact_registry_host" {
+  description = "Artifact Registry hostname used as the Argo CD repository credentials prefix."
+  type        = string
+  default     = "us-docker.pkg.dev"
+}

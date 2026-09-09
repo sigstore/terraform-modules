@@ -49,6 +49,78 @@ resource "kubernetes_namespace_v1" "argocd" {
   }
 }
 
+data "google_project" "argocd" {
+  project_id = var.project_id
+}
+
+resource "google_project_iam_member" "argocd_ar_reader" {
+  project = var.project_id
+  role    = "roles/artifactregistry.reader"
+  member = format(
+    "principal://iam.googleapis.com/projects/%s/locations/global/workloadIdentityPools/%s.svc.id.goog/subject/ns/%s/sa/%s",
+    data.google_project.argocd.number,
+    var.project_id,
+    kubernetes_namespace_v1.argocd.metadata[0].name,
+    var.repo_server_k8s_service_account_name,
+  )
+}
+
+resource "kubectl_manifest" "gcr_access_token" {
+  yaml_body = <<YAML
+apiVersion: generators.external-secrets.io/v1alpha1
+kind: GCRAccessToken
+metadata:
+  name: gcp-ar-token
+  namespace: "${kubernetes_namespace_v1.argocd.metadata[0].name}"
+spec:
+  projectID: "${var.project_id}"
+  auth:
+    workloadIdentity:
+      serviceAccountRef:
+        name: "${var.repo_server_k8s_service_account_name}"
+YAML
+
+  depends_on = [
+    google_project_iam_member.argocd_ar_reader,
+    helm_release.argocd
+  ]
+}
+
+resource "kubectl_manifest" "externalsecret_ar_pull" {
+  yaml_body = <<YAML
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: ar-pull
+  namespace: "${kubernetes_namespace_v1.argocd.metadata[0].name}"
+spec:
+  refreshInterval: 10m
+  dataFrom:
+    - sourceRef:
+        generatorRef:
+          apiVersion: generators.external-secrets.io/v1alpha1
+          kind: GCRAccessToken
+          name: gcp-ar-token
+  target:
+    name: ar-pull
+    template:
+      engineVersion: v2
+      metadata:
+        labels:
+          argocd.argoproj.io/secret-type: repo-creds
+      data:
+        type: "helm"
+        enableOCI: "true"
+        url: "${var.artifact_registry_host}/${var.project_id}"
+        username: "{{ .username }}"
+        password: "{{ .password }}"
+YAML
+
+  depends_on = [
+    kubectl_manifest.gcr_access_token
+  ]
+}
+
 resource "kubectl_manifest" "externalsecret_argocd_ssh" {
   yaml_body = <<YAML
 apiVersion: external-secrets.io/v1
@@ -139,7 +211,8 @@ resource "helm_release" "argocd_apps" {
   ]
 
   depends_on = [
-    helm_release.argocd
+    helm_release.argocd,
+    kubectl_manifest.externalsecret_ar_pull
   ]
 }
 
