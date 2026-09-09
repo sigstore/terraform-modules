@@ -23,3 +23,33 @@ output "tuf_publisher_service_account_email" {
   value       = google_service_account.tuf-publisher-sa.email
   description = "TUF publisher service account email"
 }
+
+output "tuf_bucket_name" {
+  value       = google_storage_bucket.tuf.name
+  description = "TUF bucket name"
+}
+
+output "tuf_keyring_name" {
+  value       = google_kms_key_ring.tuf-keyring.name
+  description = "TUF KMS keyring name"
+}
+
+output "tuf_keyring_id" {
+  value       = google_kms_key_ring.tuf-keyring.id
+  description = "TUF KMS keyring ID"
+}
+
+output "tuf_key_name" {
+  value       = google_kms_crypto_key.tuf-key.name
+  description = "TUF KMS key name"
+}
+
+output "tuf_key_id" {
+  value       = google_kms_crypto_key.tuf-key.id
+  description = "TUF KMS key ID"
+}
+
+output "tuf_key_version_id" {
+  value       = google_kms_crypto_key_version.tuf-key-version.id
+  description = "TUF KMS key version ID"
+}
