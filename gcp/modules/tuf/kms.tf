@@ -25,7 +25,7 @@ resource "google_kms_crypto_key" "tuf-key" {
   key_ring = google_kms_key_ring.tuf-keyring.id
   purpose  = "ASYMMETRIC_SIGN"
   version_template {
-    algorithm        = "EC_SIGN_P256_SHA256"
+    algorithm        = var.tuf_key_algorithm
     protection_level = "SOFTWARE"
   }
   lifecycle {

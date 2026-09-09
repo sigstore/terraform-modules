@@ -142,6 +142,12 @@ variable "tuf_key_name" {
   default     = "tuf-key"
 }
 
+variable "tuf_key_algorithm" {
+  type        = string
+  description = "Algorithm for TUF KMS key"
+  default     = "EC_SIGN_P256_SHA256"
+}
+
 variable "tuf_kms_location" {
   type        = string
   description = "Location of KMS keyring"
