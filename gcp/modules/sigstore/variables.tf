@@ -291,6 +291,11 @@ variable "gke_node_config_machine_type" {
   default = "n2-standard-4"
 }
 
+variable "gke_node_config_disk_type" {
+  type    = string
+  default = "pd-ssd"
+}
+
 variable "cluster_monitoring_components" {
   description = "The GKE components exposing metrics. Supported values include: SYSTEM_COMPONENTS, APISERVER, CONTROLLER_MANAGER, and SCHEDULER."
   type        = list(string)
