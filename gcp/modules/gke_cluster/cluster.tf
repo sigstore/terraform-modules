@@ -190,6 +190,11 @@ resource "google_container_cluster" "cluster" {
     }
   }
 
+  lifecycle {
+    # The default pool is removed; separate node-pool resources manage nodes.
+    ignore_changes = [node_config]
+  }
+
   depends_on = [google_project_service.service]
 }
 
