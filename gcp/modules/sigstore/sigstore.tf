@@ -181,7 +181,7 @@ module "gke-cluster" {
   autoscaling_scope    = var.autoscaling_scope
 
   node_config_machine_type = var.gke_node_config_machine_type
-  node_disk_machine_type   = var.gke_node_config_disk_type
+  node_config_disk_type    = var.gke_node_config_disk_type
 
   resource_limits_resource_cpu_max = var.gke_autoscaling_resource_limits_resource_cpu_max
   resource_limits_resource_mem_max = var.gke_autoscaling_resource_limits_resource_mem_max
