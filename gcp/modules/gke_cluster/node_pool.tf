@@ -60,6 +60,15 @@ resource "google_container_node_pool" "cluster_nodes" {
     disk_type    = var.node_config_disk_type
     image_type   = var.node_config_image_type
 
+    dynamic "taint_config" {
+      # The a4x prefix includes both A4X and A4X Max machine types.
+      for_each = contains(["n4a", "c4a", "a4x"], split("-", var.node_config_machine_type)[0]) ? [1] : []
+
+      content {
+        architecture_taint_behavior = "NONE"
+      }
+    }
+
     metadata = {
       disable-legacy-endpoints = true
     }
