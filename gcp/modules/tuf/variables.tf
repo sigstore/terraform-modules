@@ -104,5 +104,5 @@ variable "tuf_key_viewers" {
 variable "main_page_suffix" {
   type        = string
   description = "Behaves as the bucket's directory index where missing objects are treated as potential directories"
-  default     = ""
+  default     = "index.html"
 }
