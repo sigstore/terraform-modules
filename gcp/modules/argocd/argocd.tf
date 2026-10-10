@@ -124,6 +124,42 @@ YAML
   ]
 }
 
+# Argo CD only matches this to Applications whose repoURL starts with oci:// (native OCI sources),
+# which, unlike Helm sources, accept a digest in targetRevision.
+resource "kubectl_manifest" "externalsecret_ar_pull_oci" {
+  yaml_body = <<YAML
+apiVersion: external-secrets.io/v1
+kind: ExternalSecret
+metadata:
+  name: ar-pull-oci
+  namespace: "${kubernetes_namespace_v1.argocd.metadata[0].name}"
+spec:
+  refreshInterval: 10m
+  dataFrom:
+    - sourceRef:
+        generatorRef:
+          apiVersion: generators.external-secrets.io/v1alpha1
+          kind: GCRAccessToken
+          name: gcp-ar-token
+  target:
+    name: ar-pull-oci
+    template:
+      engineVersion: v2
+      metadata:
+        labels:
+          argocd.argoproj.io/secret-type: repo-creds
+      data:
+        type: "oci"
+        url: "oci://${var.artifact_registry_host}/${var.project_id}"
+        username: "{{ .username }}"
+        password: "{{ .password }}"
+YAML
+
+  depends_on = [
+    kubectl_manifest.gcr_access_token
+  ]
+}
+
 resource "kubectl_manifest" "externalsecret_argocd_ssh" {
   yaml_body = <<YAML
 apiVersion: external-secrets.io/v1
@@ -215,7 +251,8 @@ resource "helm_release" "argocd_apps" {
 
   depends_on = [
     helm_release.argocd,
-    kubectl_manifest.externalsecret_ar_pull
+    kubectl_manifest.externalsecret_ar_pull,
+    kubectl_manifest.externalsecret_ar_pull_oci
   ]
 }
 
