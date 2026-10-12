@@ -186,7 +186,7 @@ resource "google_sql_database_instance" "sigstore" {
 
   timeouts {
     create = "10m"
-    update = "10m"
+    update = "30m"
     delete = "10m"
   }
 }
@@ -233,6 +233,12 @@ resource "google_sql_database_instance" "read_replica" {
       name  = "cloudsql_iam_authentication"
       value = "on"
     }
+  }
+
+  timeouts {
+    create = "10m"
+    update = "30m"
+    delete = "10m"
   }
 }
 
