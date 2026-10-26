@@ -612,7 +612,7 @@ module "rekor_tiles" {
   network_endpoint_group_zones            = each.value.network_endpoint_group_zones
 
   http_write_path        = "/api/v2/log/entries"
-  grpc_write_path        = "/dev.sigstore.rekor.v2.Rekor/CreateEntry"
+  grpc_write_path        = each.value.grpc_write_path
   http_read_path         = "/api/v2/{path=**}"
   http_read_rewrite_path = "/{path}"
 
