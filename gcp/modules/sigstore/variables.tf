@@ -931,6 +931,7 @@ variable "rekor_tiles_shards" {
     key_name                                       = optional(string, "checkpoint-signer-key-encryption-key")
     spanner_instance_id                            = optional(string)
     enable_monitoring                              = optional(bool, true)
+    grpc_write_path                                = optional(string, "/dev.sigstore.rekor.v2.Rekor/CreateEntry")
   }))
   description = "Map of Rekor shards to dynamically instantiate"
   default     = {}
