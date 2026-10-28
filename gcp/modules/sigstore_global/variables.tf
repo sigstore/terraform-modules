@@ -215,6 +215,24 @@ variable "notification_channel_ids" {
   default     = []
 }
 
+variable "rekor_tiles_pqc_http_negs" {
+  type = list(object({
+    name = string
+    zone = string
+  }))
+  description = "List of objects containing the names and zones of active HTTP NEGs across all PQC shards and regions to route write traffic to."
+  default     = []
+}
+
+variable "rekor_tiles_pqc_grpc_negs" {
+  type = list(object({
+    name = string
+    zone = string
+  }))
+  description = "List of objects containing the names and zones of active gRPC NEGs across all PQC shards and regions to route write traffic to."
+  default     = []
+}
+
 variable "rekor_tiles_http_negs" {
   type = list(object({
     name = string
@@ -231,6 +249,12 @@ variable "rekor_tiles_grpc_negs" {
   }))
   description = "List of objects containing the names and zones of active gRPC NEGs across all shards and regions to route write traffic to."
   default     = []
+}
+
+variable "rekor_tiles_pqc_dns_subdomain_name" {
+  description = "DNS subdomain name for global Rekor PQC"
+  type        = string
+  default     = "global-pqc.rekor"
 }
 
 variable "rekor_tiles_dns_subdomain_name" {

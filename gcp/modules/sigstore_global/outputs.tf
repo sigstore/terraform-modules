@@ -39,6 +39,31 @@ output "rekor_ssl_policy_id" {
   value       = module.rekor_tiles_global.ssl_policy_id
 }
 
+output "rekor_pqc_http_health_check_id" {
+  description = "The HTTP health check ID for the global Rekor PQC LBs."
+  value       = module.rekor_tiles_pqc_global.http_health_check_id
+}
+
+output "rekor_pqc_grpc_health_check_id" {
+  description = "The gRPC health check ID for the global Rekor PQC LBs."
+  value       = module.rekor_tiles_pqc_global.grpc_health_check_id
+}
+
+output "rekor_pqc_security_policy_id" {
+  description = "The security policy ID for the global Rekor PQC LBs."
+  value       = module.rekor_tiles_pqc_global.security_policy_id
+}
+
+output "rekor_pqc_bucket_security_policy_id" {
+  description = "The bucket security policy ID for the global Rekor PQC LBs."
+  value       = module.rekor_tiles_pqc_global.bucket_security_policy_id
+}
+
+output "rekor_pqc_ssl_policy_id" {
+  description = "The SSL policy ID for the global Rekor PQC LBs."
+  value       = module.rekor_tiles_pqc_global.ssl_policy_id
+}
+
 output "ctlog_http_health_check_id" {
   description = "The HTTP health check ID for the shared CTLog LBs."
   value       = module.ctlog_tiles_shared.http_health_check_id

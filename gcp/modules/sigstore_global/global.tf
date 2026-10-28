@@ -126,6 +126,21 @@ module "rekor_tiles_global" {
   grpc_write_path = "/dev.sigstore.rekor.v2.Rekor/CreateEntry"
 }
 
+module "rekor_tiles_pqc_global" {
+  source = "../tiles_tlog/global"
+
+  project_id         = var.project_id
+  dns_zone_name      = var.dns_zone_name
+  dns_domain_name    = var.dns_domain_name
+  dns_subdomain_name = var.rekor_tiles_pqc_dns_subdomain_name
+
+  active_http_negs = var.rekor_tiles_pqc_http_negs
+  active_grpc_negs = var.rekor_tiles_pqc_grpc_negs
+
+  http_write_path = "/api/v2/log/entries"
+  grpc_write_path = "/dev.sigstore.rekor.v2.IdentityRekor/CreateEntry"
+}
+
 module "ctlog_tiles_shared" {
   source = "../tiles_tlog/shared"
 

@@ -932,6 +932,7 @@ variable "rekor_tiles_shards" {
     spanner_instance_id                            = optional(string)
     enable_monitoring                              = optional(bool, true)
     grpc_write_path                                = optional(string, "/dev.sigstore.rekor.v2.Rekor/CreateEntry")
+    use_pqc_global_lb                              = optional(bool, false)
   }))
   description = "Map of Rekor shards to dynamically instantiate"
   default     = {}
@@ -1031,6 +1032,36 @@ variable "rekor_bucket_security_policy_id" {
 variable "rekor_ssl_policy_id" {
   type        = string
   description = "Global Rekor SSL Policy ID"
+  default     = null
+}
+
+variable "rekor_pqc_http_health_check_id" {
+  type        = string
+  description = "Global Rekor PQC HTTP Health Check ID"
+  default     = null
+}
+
+variable "rekor_pqc_grpc_health_check_id" {
+  type        = string
+  description = "Global Rekor PQC gRPC Health Check ID"
+  default     = null
+}
+
+variable "rekor_pqc_security_policy_id" {
+  type        = string
+  description = "Global Rekor PQC Security Policy ID"
+  default     = null
+}
+
+variable "rekor_pqc_bucket_security_policy_id" {
+  type        = string
+  description = "Global Rekor PQC Bucket Security Policy ID"
+  default     = null
+}
+
+variable "rekor_pqc_ssl_policy_id" {
+  type        = string
+  description = "Global Rekor PQC SSL Policy ID"
   default     = null
 }
 
