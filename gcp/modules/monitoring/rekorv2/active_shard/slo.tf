@@ -46,7 +46,7 @@ module "slos" {
     grpc-server-availability = {
       display_prefix            = "Availability (gRPC Server)"
       base_total_service_filter = format("metric.type=\"prometheus.googleapis.com/grpc_server_handled_total/counter\" resource.type=\"prometheus_target\" resource.labels.namespace=\"%s-%s\"", var.shard_name, var.gke_namespace_suffix)
-      bad_filter                = "metric.labels.grpc_method=one_of(\"DeadlineExceeded\",\"Internal\")"
+      bad_filter                = "metric.labels.grpc_code=one_of(\"DeadlineExceeded\",\"Internal\")"
       slos = {
         api-v2-log-entries-post = {
           display_suffix = "Create Entry"

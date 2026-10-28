@@ -31,7 +31,7 @@ module "slos" {
       base_total_service_filter = format("metric.type=\"prometheus.googleapis.com/grpc_server_handled_total/counter\" resource.type=\"prometheus_target\" resource.labels.namespace=\"%s\" resource.labels.location=\"%s\"", var.gke_namespace, var.cluster_location)
       # Only count server errors.
       # TODO: If clients can trigger DeadlineExceeded with short deadlines, reconsider this metric.
-      bad_filter = "metric.labels.grpc_method=one_of(\"DeadlineExceeded\",\"Internal\")"
+      bad_filter = "metric.labels.grpc_code=one_of(\"DeadlineExceeded\",\"Internal\")"
       slos = {
         all-methods = {
           display_suffix = "All Methods"
