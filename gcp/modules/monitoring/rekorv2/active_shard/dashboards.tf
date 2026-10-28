@@ -19,15 +19,19 @@ resource "google_monitoring_dashboard" "rekor_v2_dashboard" {
   project = var.project_id
 
   dashboard_json = templatefile("${path.module}/rekor_v2.json", {
-    http_slo_id = module.slos[count.index].slo_ids["http-server-availability-api-v2-log-entries-post"]
-    grpc_slo_id = module.slos[count.index].slo_ids["grpc-server-availability-api-v2-log-entries-post"]
+    service_display_name = local.service_display_name
+    shard_name           = var.shard_name
+    cluster_location     = var.cluster_location
+    namespace            = "${var.shard_name}-${var.gke_namespace_suffix}"
+    http_slo_id          = module.slos[count.index].slo_ids["http-server-availability-api-v2-log-entries-post"]
+    grpc_slo_id          = module.slos[count.index].slo_ids["grpc-server-availability-api-v2-log-entries-post"]
   })
 }
 
 resource "google_monitoring_dashboard" "spanner_cpu_dashboard" {
   dashboard_json = <<EOF
 {
-  "displayName": "Spanner CPU Alerts",
+  "displayName": "Spanner CPU Alerts (${var.shard_name} - ${var.cluster_location})",
   "mosaicLayout": {
     "columns": 48,
     "tiles": [

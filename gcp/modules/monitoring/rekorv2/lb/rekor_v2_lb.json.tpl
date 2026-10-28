@@ -1,5 +1,5 @@
 {
-  "displayName": "Rekor v2 Requests",
+  "displayName": "${display_name}",
   "gridLayout": {
     "columns": "2",
     "widgets": [

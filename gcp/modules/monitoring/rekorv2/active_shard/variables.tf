@@ -66,7 +66,7 @@ variable "prober_url" {
 variable "gke_namespace_suffix" {
   description = "GKE Namespace suffix"
   type        = string
-  default     = ""
+  default     = "rekor-tiles-system"
 }
 
 // Set-up for notification channel for alerting
@@ -77,6 +77,7 @@ variable "notification_channel_ids" {
 
 locals {
   notification_channels = toset([for nc in var.notification_channel_ids : format("projects/%v/notificationChannels/%v", var.project_id, nc)])
+  service_display_name  = strcontains(var.grpc_service, "IdentityRekor") ? "Rekor PQC" : "Rekor v2"
 }
 
 variable "create_slos" {
@@ -98,5 +99,10 @@ variable "uptime_check_period" {
 
 variable "spanner_instance_id" {
   description = "Spanner instance to monitor"
+  type        = string
+}
+
+variable "grpc_service" {
+  description = "gRPC service name for Rekor v2 CreateEntry SLO"
   type        = string
 }

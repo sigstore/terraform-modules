@@ -160,3 +160,18 @@ module "monitoring_rekorv2_lb_all" {
   rekor_global_url         = "${var.rekor_tiles_dns_subdomain_name}.${trimsuffix(var.dns_domain_name, ".")}"
   uptime_check_period      = var.rekor_tiles_uptime_check_period
 }
+
+module "monitoring_rekor_pqc_lb_all" {
+  source = "../monitoring/rekorv2/lb"
+
+  project_id               = var.project_id
+  project_number           = var.project_number
+  active_shards            = var.rekor_tiles_pqc_active_shards
+  frozen_shards            = var.rekor_tiles_pqc_frozen_shards
+  notification_channel_ids = var.notification_channel_ids
+  create_slos              = var.rekor_tiles_pqc_create_slos
+  rekor_global_url         = "${var.rekor_tiles_pqc_dns_subdomain_name}.${trimsuffix(var.dns_domain_name, ".")}"
+  uptime_check_period      = var.rekor_tiles_pqc_uptime_check_period
+  slo_service_id           = "rekor_pqc_global_lb_view"
+  service_display_name     = "Rekor PQC"
+}

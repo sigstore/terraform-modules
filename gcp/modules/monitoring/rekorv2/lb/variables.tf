@@ -68,3 +68,15 @@ variable "uptime_check_period" {
   type        = string
   default     = "60s"
 }
+
+variable "slo_service_id" {
+  description = "Service ID for the custom monitoring service."
+  type        = string
+  default     = "rekor_v2_global_lb_view"
+}
+
+variable "service_display_name" {
+  description = "Display name prefix for monitoring resources (e.g. 'Rekor v2' or 'Rekor PQC')."
+  type        = string
+  default     = "Rekor v2"
+}

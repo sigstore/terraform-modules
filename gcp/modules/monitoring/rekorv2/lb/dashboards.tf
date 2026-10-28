@@ -18,6 +18,7 @@ resource "google_monitoring_dashboard" "rekor_v2_lb_dashboard" {
   project = var.project_id
 
   dashboard_json = templatefile("${path.module}/rekor_v2_lb.json.tpl", {
+    display_name  = "${var.service_display_name} Requests"
     active_shards = var.active_shards
     all_shards    = concat(var.active_shards, var.frozen_shards)
   })

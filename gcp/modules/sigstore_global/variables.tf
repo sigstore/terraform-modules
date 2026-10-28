@@ -297,3 +297,27 @@ variable "rekor_tiles_uptime_check_period" {
   type        = string
   default     = "60s"
 }
+
+variable "rekor_tiles_pqc_active_shards" {
+  description = "List of active Rekor PQC shard names to monitor."
+  type        = list(string)
+  default     = []
+}
+
+variable "rekor_tiles_pqc_frozen_shards" {
+  description = "List of frozen Rekor PQC shard names to monitor."
+  type        = list(string)
+  default     = []
+}
+
+variable "rekor_tiles_pqc_create_slos" {
+  description = "True to enable Rekor PQC tiles global LB SLO creation."
+  type        = bool
+  default     = true
+}
+
+variable "rekor_tiles_pqc_uptime_check_period" {
+  description = "Uptime check period for the global Rekor PQC tiles LB."
+  type        = string
+  default     = "60s"
+}

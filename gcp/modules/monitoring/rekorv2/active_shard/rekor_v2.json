@@ -1,5 +1,5 @@
 {
-  "displayName": "Rekor v2",
+  "displayName": "${service_display_name} - ${shard_name} - ${cluster_location}",
   "gridLayout": {
     "columns": "2",
     "widgets": [
@@ -10,7 +10,7 @@
             "upperBound": 1
           },
           "timeSeriesQuery": {
-            "prometheusQuery": "max(tessera_appender_integrated_size)"
+            "prometheusQuery": "max(tessera_appender_integrated_size{namespace=\"${namespace}\"})"
           }
         }
       },
@@ -35,7 +35,7 @@
                     ],
                     "perSeriesAligner": "ALIGN_RATE"
                   },
-                  "filter": "metric.type=\"prometheus.googleapis.com/rekor_v2_http_requests_total/counter\" resource.type=\"prometheus_target\""
+                  "filter": "metric.type=\"prometheus.googleapis.com/rekor_v2_http_requests_total/counter\" resource.type=\"prometheus_target\" resource.label.\"namespace\"=\"${namespace}\""
                 }
               }
             }
@@ -46,7 +46,7 @@
         }
       },
       {
-        "title": "Rekor V2 HTTP Latency",
+        "title": "${service_display_name} HTTP Latency",
         "xyChart": {
           "chartOptions": {
             "mode": "COLOR"
@@ -56,7 +56,7 @@
               "plotType": "LINE",
               "targetAxis": "Y1",
               "timeSeriesQuery": {
-                "timeSeriesQueryLanguage": "fetch prometheus_target\n| metric 'prometheus.googleapis.com/rekor_v2_http_api_latency/histogram'\n| align delta(1m)\n| every 1m\n| group_by [],\n    [mean_latency_s:\n       mean(value.rekor_v2_http_api_latency)]\n"
+                "timeSeriesQueryLanguage": "fetch prometheus_target\n| metric 'prometheus.googleapis.com/rekor_v2_http_api_latency/histogram'\n| filter (resource.namespace == '${namespace}')\n| align delta(1m)\n| every 1m\n| group_by [],\n    [mean_latency_s:\n       mean(value.rekor_v2_http_api_latency)]\n"
               }
             }
           ],
@@ -84,7 +84,7 @@
                     "crossSeriesReducer": "REDUCE_SUM",
                     "perSeriesAligner": "ALIGN_DELTA"
                   },
-                  "filter": "metric.type=\"prometheus.googleapis.com/tessera_appender_add_duration_milliseconds/histogram\" resource.type=\"prometheus_target\""
+                  "filter": "metric.type=\"prometheus.googleapis.com/tessera_appender_add_duration_milliseconds/histogram\" resource.type=\"prometheus_target\" resource.label.\"namespace\"=\"${namespace}\""
                 }
               }
             }
@@ -168,7 +168,7 @@
                     "crossSeriesReducer": "REDUCE_SUM",
                     "perSeriesAligner": "ALIGN_RATE"
                   },
-                  "filter": "metric.type=\"prometheus.googleapis.com/rekor_v2_grpc_req_panics_recovered_total/counter\" resource.type=\"prometheus_target\""
+                  "filter": "metric.type=\"prometheus.googleapis.com/rekor_v2_grpc_req_panics_recovered_total/counter\" resource.type=\"prometheus_target\" resource.label.\"namespace\"=\"${namespace}\""
                 }
               }
             }
@@ -196,7 +196,7 @@
                     "crossSeriesReducer": "REDUCE_SUM",
                     "perSeriesAligner": "ALIGN_RATE"
                   },
-                  "filter": "metric.type=\"prometheus.googleapis.com/rekor_v2_inclusion_proof_failure_total/counter\" resource.type=\"prometheus_target\""
+                  "filter": "metric.type=\"prometheus.googleapis.com/rekor_v2_inclusion_proof_failure_total/counter\" resource.type=\"prometheus_target\" resource.label.\"namespace\"=\"${namespace}\""
                 }
               }
             }

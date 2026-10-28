@@ -653,6 +653,7 @@ module "rekor_monitoring" {
   cluster_name         = var.cluster_name
   gke_namespace_suffix = each.value.cluster_namespace_suffix
   rekor_url            = each.value.rekor_url
+  grpc_service         = split("/", trimprefix(each.value.grpc_write_path, "/"))[0]
   spanner_instance_id  = each.value.spanner_instance_id != null && each.value.spanner_instance_id != "" ? each.value.spanner_instance_id : module.rekor_tiles[each.key].spanner_instance_id
 
   notification_channel_ids = var.monitoring.notification_channel_ids
