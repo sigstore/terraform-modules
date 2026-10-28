@@ -70,6 +70,10 @@ variable "freeze_shard" {
 variable "spanner_instance_name_suffix" {
   description = "base name for transparency log resources"
   type        = string
+  validation {
+    condition     = length("${var.shard_name}-${var.spanner_instance_name_suffix}") >= 2 && length("${var.shard_name}-${var.spanner_instance_name_suffix}") <= 36
+    error_message = "Spanner instance name ('${var.shard_name}-${var.spanner_instance_name_suffix}') must be between 2 and 36 characters."
+  }
 }
 
 variable "spanner_processing_units" {
@@ -82,6 +86,10 @@ variable "spanner_instance_display_name_suffix" {
   description = "display name for the Spanner instance"
   type        = string
   default     = "tiles-tlog"
+  validation {
+    condition     = length("${var.shard_name}-${var.spanner_instance_display_name_suffix}") >= 4 && length("${var.shard_name}-${var.spanner_instance_display_name_suffix}") <= 30
+    error_message = "Spanner instance display name ('${var.shard_name}-${var.spanner_instance_display_name_suffix}') must be between 4 and 30 characters."
+  }
 }
 
 variable "spanner_database_sequencer_deletion_protection" {
@@ -99,6 +107,10 @@ variable "spanner_database_antispam_deletion_protection" {
 variable "bucket_name_suffix" {
   description = "suffix of the bucket for Tessera tiles and checkpoints"
   type        = string
+  validation {
+    condition     = length("${var.shard_name}-${var.bucket_name_suffix}") + (var.bucket_id_length > 0 ? 1 + (var.bucket_id_length * 2) : 0) <= 63
+    error_message = "GCS bucket name ('${var.shard_name}-${var.bucket_name_suffix}' plus random suffix) cannot exceed 63 characters."
+  }
 }
 
 variable "bucket_id_length" {
@@ -156,6 +168,14 @@ variable "dns_domain_name" {
 variable "dns_subdomain_name" {
   description = "DNS subdomain name"
   type        = string
+  validation {
+    condition = (
+      length("${replace("${var.shard_name}-${var.dns_subdomain_name}", ".", "-")}-${var.cluster_name}-gce-ext-lb") <= 63 &&
+      length("${replace("${var.shard_name}-${var.dns_subdomain_name}", ".", "-")}-k8s-grpc-neg-backend-service") <= 63 &&
+      (!var.single_region || length("${var.shard_name}-${var.dns_subdomain_name}-k8s-http-grpc-security-policy") <= 63)
+    )
+    error_message = "Generated Compute Engine LB resource names for shard '${var.shard_name}' and subdomain '${var.dns_subdomain_name}' cannot exceed 63 characters."
+  }
 }
 
 variable "cluster_namespace_suffix" {

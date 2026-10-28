@@ -36,6 +36,10 @@ variable "dns_domain_name" {
 variable "dns_subdomain_name" {
   description = "Subdomain name for the service, e.g. 'v2.rekor' or 'tessera.ct'"
   type        = string
+  validation {
+    condition     = length("${replace(var.dns_subdomain_name, ".", "-")}-global-k8s-grpc-neg-backend-service") <= 63
+    error_message = "Generated global LB resource names for dns_subdomain_name '${var.dns_subdomain_name}' cannot exceed 63 characters (dns_subdomain_name must be at most 27 characters)."
+  }
 }
 
 variable "active_http_negs" {

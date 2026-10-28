@@ -935,6 +935,41 @@ variable "rekor_tiles_shards" {
   }))
   description = "Map of Rekor shards to dynamically instantiate"
   default     = {}
+
+  validation {
+    condition = alltrue([
+      for k, v in var.rekor_tiles_shards :
+      length("${k}-${v.spanner_instance_name_suffix}") >= 2 && length("${k}-${v.spanner_instance_name_suffix}") <= 36
+    ])
+    error_message = "Spanner instance name ('<shard_name>-<spanner_instance_name_suffix>') must be between 2 and 36 characters."
+  }
+
+  validation {
+    condition = alltrue([
+      for k, v in var.rekor_tiles_shards :
+      length("${k}-${v.spanner_instance_display_name_suffix}") >= 4 && length("${k}-${v.spanner_instance_display_name_suffix}") <= 30
+    ])
+    error_message = "Spanner instance display name ('<shard_name>-<spanner_instance_display_name_suffix>') must be between 4 and 30 characters."
+  }
+
+  validation {
+    condition = alltrue([
+      for k, v in var.rekor_tiles_shards :
+      length("${k}-${v.bucket_name_suffix}") + (v.bucket_id_length > 0 ? 1 + (v.bucket_id_length * 2) : 0) <= 63
+    ])
+    error_message = "GCS bucket name ('<shard_name>-<bucket_name_suffix>' plus random suffix) cannot exceed 63 characters."
+  }
+
+  validation {
+    condition = alltrue([
+      for k, v in var.rekor_tiles_shards : (
+        length("${replace("${k}-${v.dns_subdomain_name}", ".", "-")}-${var.cluster_name}-gce-ext-lb") <= 63 &&
+        length("${replace("${k}-${v.dns_subdomain_name}", ".", "-")}-k8s-grpc-neg-backend-service") <= 63 &&
+        (!v.single_region || length("${k}-${v.dns_subdomain_name}-k8s-http-grpc-security-policy") <= 63)
+      )
+    ])
+    error_message = "Generated Compute Engine LB resource names for each shard in rekor_tiles_shards cannot exceed 63 characters."
+  }
 }
 
 variable "ctlog_tiles_shards" {
