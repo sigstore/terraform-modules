@@ -320,3 +320,38 @@ variable "ssl_policy_id" {
   type        = string
   default     = ""
 }
+
+variable "cloud_armor_rules" {
+  description = "Additional Cloud Armor security policy rules for the HTTP and gRPC backend services."
+  type = list(object({
+    action      = string
+    priority    = number
+    description = optional(string)
+
+    match = object({
+      versioned_expr = optional(string)
+
+      config = optional(object({
+        src_ip_ranges = list(string)
+      }))
+
+      expr = optional(object({
+        expression = string
+      }))
+    })
+
+    rate_limit_options = optional(object({
+      enforce_on_key = string
+      conform_action = string
+      exceed_action  = string
+      qpm_rate_limit = number
+      interval_sec   = number
+    }))
+
+    redirect_options = optional(object({
+      type   = string
+      target = string
+    }))
+  }))
+  default = []
+}

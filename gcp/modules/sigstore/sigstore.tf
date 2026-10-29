@@ -630,6 +630,8 @@ module "rekor_tiles" {
 
   single_region = each.value.single_region
 
+  cloud_armor_rules = each.value.use_pqc_global_lb ? var.rekor_pqc_cloud_armor_rules : var.rekor_cloud_armor_rules
+
   depends_on = [
     module.gke-cluster,
     module.network,

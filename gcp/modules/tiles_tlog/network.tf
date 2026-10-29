@@ -34,6 +34,7 @@ module "shared" {
   security_policy_name        = "${var.shard_name}-${var.dns_subdomain_name}-k8s-http-grpc-security-policy"
   bucket_security_policy_name = "${var.shard_name}-${var.dns_subdomain_name}-bucket-security-policy"
   ssl_policy_name             = "${var.shard_name}-${var.dns_subdomain_name}-ssl-policy"
+  cloud_armor_rules           = var.cloud_armor_rules
 }
 moved {
   from = google_compute_health_check.http_health_check

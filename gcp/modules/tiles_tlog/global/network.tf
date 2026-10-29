@@ -26,6 +26,7 @@ module "shared" {
   http_grpc_qpm_rate_limit           = var.http_grpc_qpm_rate_limit
   enable_adaptive_protection         = var.enable_adaptive_protection
   create_grpc_health_check           = var.grpc_write_path == "" ? false : true
+  cloud_armor_rules                  = var.cloud_armor_rules
 }
 
 locals {
