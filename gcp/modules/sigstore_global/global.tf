@@ -124,6 +124,8 @@ module "rekor_tiles_global" {
 
   http_write_path = "/api/v2/log/entries"
   grpc_write_path = "/dev.sigstore.rekor.v2.Rekor/CreateEntry"
+
+  cloud_armor_rules = var.rekor_cloud_armor_rules
 }
 
 module "rekor_tiles_pqc_global" {
@@ -139,6 +141,8 @@ module "rekor_tiles_pqc_global" {
 
   http_write_path = "/api/v2/log/entries"
   grpc_write_path = "/dev.sigstore.rekor.v2.IdentityRekor/CreateEntry"
+
+  cloud_armor_rules = var.rekor_pqc_cloud_armor_rules
 }
 
 module "ctlog_tiles_shared" {

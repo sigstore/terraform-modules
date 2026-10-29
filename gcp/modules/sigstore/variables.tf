@@ -973,6 +973,76 @@ variable "rekor_tiles_shards" {
   }
 }
 
+variable "rekor_cloud_armor_rules" {
+  description = "Additional Cloud Armor security policy rules for Rekor v2."
+  type = list(object({
+    action      = string
+    priority    = number
+    description = optional(string)
+
+    match = object({
+      versioned_expr = optional(string)
+
+      config = optional(object({
+        src_ip_ranges = list(string)
+      }))
+
+      expr = optional(object({
+        expression = string
+      }))
+    })
+
+    rate_limit_options = optional(object({
+      enforce_on_key = string
+      conform_action = string
+      exceed_action  = string
+      qpm_rate_limit = number
+      interval_sec   = number
+    }))
+
+    redirect_options = optional(object({
+      type   = string
+      target = string
+    }))
+  }))
+  default = []
+}
+
+variable "rekor_pqc_cloud_armor_rules" {
+  description = "Additional Cloud Armor security policy rules for Rekor PQC."
+  type = list(object({
+    action      = string
+    priority    = number
+    description = optional(string)
+
+    match = object({
+      versioned_expr = optional(string)
+
+      config = optional(object({
+        src_ip_ranges = list(string)
+      }))
+
+      expr = optional(object({
+        expression = string
+      }))
+    })
+
+    rate_limit_options = optional(object({
+      enforce_on_key = string
+      conform_action = string
+      exceed_action  = string
+      qpm_rate_limit = number
+      interval_sec   = number
+    }))
+
+    redirect_options = optional(object({
+      type   = string
+      target = string
+    }))
+  }))
+  default = []
+}
+
 variable "ctlog_tiles_shards" {
   type = map(object({
     cluster_namespace_suffix                       = string

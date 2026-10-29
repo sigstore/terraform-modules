@@ -96,6 +96,52 @@ resource "google_compute_security_policy" "k8s_http_grpc_security_policy" {
     description = "Rate limit all HTTP write traffic by client IP"
   }
 
+  dynamic "rule" {
+    for_each = var.cloud_armor_rules
+    content {
+      action   = rule.value.action
+      priority = rule.value.priority
+      match {
+        versioned_expr = rule.value.match.versioned_expr
+        dynamic "config" {
+          for_each = rule.value.match.config != null ? [rule.value.match.config] : []
+          content {
+            src_ip_ranges = config.value.src_ip_ranges
+          }
+        }
+        dynamic "expr" {
+          for_each = rule.value.match.expr != null ? [rule.value.match.expr] : []
+          content {
+            expression = expr.value.expression
+          }
+        }
+      }
+
+      dynamic "rate_limit_options" {
+        for_each = rule.value.rate_limit_options != null ? [rule.value.rate_limit_options] : []
+        content {
+          enforce_on_key = rate_limit_options.value.enforce_on_key
+          conform_action = rate_limit_options.value.conform_action
+          exceed_action  = rate_limit_options.value.exceed_action
+          rate_limit_threshold {
+            count        = rate_limit_options.value.qpm_rate_limit
+            interval_sec = rate_limit_options.value.interval_sec
+          }
+        }
+      }
+
+      dynamic "redirect_options" {
+        for_each = rule.value.redirect_options != null ? [rule.value.redirect_options] : []
+        content {
+          type   = redirect_options.value.type
+          target = redirect_options.value.target
+        }
+      }
+
+      description = rule.value.description
+    }
+  }
+
   rule {
     action   = "allow"
     priority = "2147483647"
