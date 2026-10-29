@@ -15,7 +15,7 @@
  */
 
 resource "google_monitoring_uptime_check_config" "rekor_v2_global_uptime" {
-  display_name = "Rekor v2 Uptime - global"
+  display_name = "${var.service_display_name} Uptime - global"
 
   http_check {
     mask_headers   = "false"

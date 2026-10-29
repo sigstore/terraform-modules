@@ -15,7 +15,7 @@
  */
 
 resource "google_monitoring_uptime_check_config" "uptime_rekorv2" {
-  display_name = "Rekor v2 Uptime - ${var.cluster_location}"
+  display_name = "${local.service_display_name} Uptime - ${var.shard_name} - ${var.cluster_location}"
 
   http_check {
     mask_headers   = "false"

@@ -41,13 +41,13 @@ resource "google_monitoring_alert_policy" "prober_rekorv2_endpoint_latency" {
       }
     }
 
-    display_name = "API Prober: Rekor v2 API Endpoint Latency > 10 s"
+    display_name = "API Prober: ${local.service_display_name} API Endpoint Latency > 10 s"
   }
 
-  display_name = "API Prober: Rekor v2 API Endpoint Latency > 10 s for 10 minutes"
+  display_name = "API Prober: ${local.service_display_name} API Endpoint Latency > 10 s for 10 minutes"
 
   documentation {
-    content   = "At least one supported Rekor v2 API Endpoint has had latency > 10 s for 10 minutes."
+    content   = "At least one supported ${local.service_display_name} API Endpoint has had latency > 10 s for 10 minutes."
     mime_type = "text/markdown"
   }
 

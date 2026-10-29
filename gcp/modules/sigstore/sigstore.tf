@@ -616,11 +616,11 @@ module "rekor_tiles" {
   http_read_path         = "/api/v2/{path=**}"
   http_read_rewrite_path = "/{path}"
 
-  http_health_check_id      = var.rekor_http_health_check_id
-  grpc_health_check_id      = var.rekor_grpc_health_check_id
-  security_policy_id        = var.rekor_security_policy_id
-  bucket_security_policy_id = var.rekor_bucket_security_policy_id
-  ssl_policy_id             = var.rekor_ssl_policy_id
+  http_health_check_id      = each.value.use_pqc_global_lb ? var.rekor_pqc_http_health_check_id : var.rekor_http_health_check_id
+  grpc_health_check_id      = each.value.use_pqc_global_lb ? var.rekor_pqc_grpc_health_check_id : var.rekor_grpc_health_check_id
+  security_policy_id        = each.value.use_pqc_global_lb ? var.rekor_pqc_security_policy_id : var.rekor_security_policy_id
+  bucket_security_policy_id = each.value.use_pqc_global_lb ? var.rekor_pqc_bucket_security_policy_id : var.rekor_bucket_security_policy_id
+  ssl_policy_id             = each.value.use_pqc_global_lb ? var.rekor_pqc_ssl_policy_id : var.rekor_ssl_policy_id
 
   spanner_timeseries_role_id = "SpannerMonitoringTimeseries"
   monitoring_role_id         = "OTelMetrics"
@@ -653,6 +653,7 @@ module "rekor_monitoring" {
   cluster_name         = var.cluster_name
   gke_namespace_suffix = each.value.cluster_namespace_suffix
   rekor_url            = each.value.rekor_url
+  grpc_service         = split("/", trimprefix(each.value.grpc_write_path, "/"))[0]
   spanner_instance_id  = each.value.spanner_instance_id != null && each.value.spanner_instance_id != "" ? each.value.spanner_instance_id : module.rekor_tiles[each.key].spanner_instance_id
 
   notification_channel_ids = var.monitoring.notification_channel_ids

@@ -44,8 +44,8 @@ resource "google_monitoring_alert_policy" "rekor_v2_global_uptime_alert" {
     display_name = "Failure of uptime check_id rekor-v2-global-uptime"
   }
 
-  display_name          = "Rekor v2 Uptime Alert - global"
-  enabled               = "true"
+  display_name          = "${var.service_display_name} Uptime Alert - global"
+  enabled               = length(var.active_shards) > 0
   notification_channels = local.notification_channels
   project               = var.project_id
   depends_on            = [google_monitoring_uptime_check_config.rekor_v2_global_uptime]

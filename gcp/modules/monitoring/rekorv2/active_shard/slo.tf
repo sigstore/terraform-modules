@@ -15,7 +15,7 @@
  */
 
 locals {
-  prober_url = var.prober_url != "" ? var.prober_url : format("http://rekor-tiles-%s.%s-rekor-tiles-system.svc", var.shard_name, var.shard_name)
+  prober_url = var.prober_url != "" ? var.prober_url : format("http://rekor-tiles-%s.%s-%s.svc", var.shard_name, var.shard_name, var.gke_namespace_suffix)
 }
 
 module "slos" {
@@ -25,14 +25,14 @@ module "slos" {
   project_id            = var.project_id
   project_number        = var.project_number
   service_id            = "${var.shard_name}-${var.cluster_location}-rekorv2"
-  display_name          = "Rekor v2 - ${var.shard_name} - ${var.cluster_location}"
+  display_name          = "${local.service_display_name} - ${var.shard_name} - ${var.cluster_location}"
   resource_name         = format("//container.googleapis.com/projects/%s/locations/%s/clusters/%s/k8s/namespaces/%s-%s", var.project_id, var.cluster_location, var.cluster_name, var.shard_name, var.gke_namespace_suffix)
   notification_channels = local.notification_channels
 
   availability_slos = {
     http-server-availability = {
       display_prefix            = "Availability (HTTP Server)"
-      base_total_service_filter = "metric.type=\"prometheus.googleapis.com/rekor_v2_http_requests_total/counter\" resource.type=\"prometheus_target\""
+      base_total_service_filter = format("metric.type=\"prometheus.googleapis.com/rekor_v2_http_requests_total/counter\" resource.type=\"prometheus_target\" resource.labels.namespace=\"%s-%s\"", var.shard_name, var.gke_namespace_suffix)
       # Only count 500s as server errors since clients can trigger 400s.
       bad_filter = "metric.labels.code=monitoring.regex.full_match(\"5[0-9][0-9]\")"
       slos = {
@@ -50,7 +50,7 @@ module "slos" {
       slos = {
         api-v2-log-entries-post = {
           display_suffix = "Create Entry"
-          label_filter   = "metric.labels.grpc_service=\"dev.sigstore.rekor.v2.Rekor\" metric.labels.grpc_method=\"CreateEntry\""
+          label_filter   = format("metric.labels.grpc_service=\"%s\" metric.labels.grpc_method=\"CreateEntry\"", var.grpc_service)
           goal           = 0.995
         },
       },

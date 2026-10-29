@@ -16,6 +16,10 @@
 
 ### K8s Alerts
 
+locals {
+  alert_display_prefix = local.service_display_name == "Rekor v2" ? "Rekor V2" : local.service_display_name
+}
+
 resource "google_monitoring_alert_policy" "rekorv2_k8s_pod_restart_failing_container" {
   # adding a dependency on the associated metric means that Terraform will 
   # always try to apply changes to the metric before this alert
@@ -50,7 +54,7 @@ resource "google_monitoring_alert_policy" "rekorv2_k8s_pod_restart_failing_conta
     display_name = "K8s Restart Failing Container for more than ten minutes"
   }
 
-  display_name = "Rekor V2 ${var.shard_name} ${var.cluster_location} K8s Restart Failing Container"
+  display_name = "${local.alert_display_prefix} ${var.shard_name} ${var.cluster_location} K8s Restart Failing Container"
 
   documentation {
     content   = "K8s is restarting a failing container for longer than the accepted time limit, please see playbook for help.\n"
@@ -95,7 +99,7 @@ resource "google_monitoring_alert_policy" "rekorv2_k8s_pod_unschedulable" {
     display_name = "K8s was unable to schedule a pod for more than ten minutes"
   }
 
-  display_name = "Rekor V2 ${var.shard_name} ${var.cluster_location} K8s Unschedulable"
+  display_name = "${local.alert_display_prefix} ${var.shard_name} ${var.cluster_location} K8s Unschedulable"
 
   documentation {
     content   = "K8s was unable to schedule a pod for longer than the accepted time limit, please see playbook for help."
@@ -137,7 +141,7 @@ resource "google_monitoring_alert_policy" "rekorv2_uptime_alert" {
     display_name = "Failure of uptime check_id rekorv2-uptime"
   }
 
-  display_name          = "Rekor v2 Uptime Alert - ${var.cluster_location}"
+  display_name          = "${local.service_display_name} Uptime Alert - ${var.shard_name} - ${var.cluster_location}"
   enabled               = "true"
   notification_channels = local.notification_channels
   project               = var.project_id
@@ -170,9 +174,9 @@ resource "google_monitoring_alert_policy" "spanner_high_priority_cpu_utilization
         count = "1"
       }
     }
-    display_name = "Spanner Instance High Priority CPU Utilization > 65% (Rekor v2 - ${var.cluster_location})"
+    display_name = "Spanner Instance High Priority CPU Utilization > 65% (${local.service_display_name} - ${var.shard_name} - ${var.cluster_location})"
   }
-  display_name = "Spanner Instance High Priority CPU Utilization > 65% (Rekor v2 - ${var.cluster_location})"
+  display_name = "Spanner Instance High Priority CPU Utilization > 65% (${local.service_display_name} - ${var.shard_name} - ${var.cluster_location})"
   documentation {
     content   = "Spanner instance high priority CPU utilization is >65%. Please reduce CPU utilization (https://cloud.google.com/spanner/docs/cpu-utilization#reduce)."
     mime_type = "text/markdown"
@@ -209,9 +213,9 @@ resource "google_monitoring_alert_policy" "spanner_smoothed_cpu_utilization_warn
         count = "1"
       }
     }
-    display_name = "Spanner Instance 24 Hour Rolling Average CPU Utilization > 90% (Rekor v2 - ${var.cluster_location})"
+    display_name = "Spanner Instance 24 Hour Rolling Average CPU Utilization > 90% (${local.service_display_name} - ${var.shard_name} - ${var.cluster_location})"
   }
-  display_name = "Spanner Instance 24 Hour Rolling Average CPU Utilization > 90% (Rekor v2 - ${var.cluster_location})"
+  display_name = "Spanner Instance 24 Hour Rolling Average CPU Utilization > 90% (${local.service_display_name} - ${var.shard_name} - ${var.cluster_location})"
   documentation {
     content   = "Spanner instance 24 hour rolling average CPU utilization is >90%. Please reduce CPU utilization (https://cloud.google.com/spanner/docs/cpu-utilization#reduce)."
     mime_type = "text/markdown"
@@ -248,9 +252,9 @@ resource "google_monitoring_alert_policy" "spanner_disk_utilization_warning" {
         count = "1"
       }
     }
-    display_name = "Spanner Instance Disk Usage > 80% (Rekor v2 - ${var.cluster_location})"
+    display_name = "Spanner Instance Disk Usage > 80% (${local.service_display_name} - ${var.shard_name} - ${var.cluster_location})"
   }
-  display_name = "Spanner Instance Disk Usage > 80% (Rekor v2 - ${var.cluster_location})"
+  display_name = "Spanner Instance Disk Usage > 80% (${local.service_display_name} - ${var.shard_name} - ${var.cluster_location})"
   documentation {
     content   = "Spanner instance disk usage is reaching maximum capacity (https://cloud.google.com/spanner/docs/storage-utilization#reduce)."
     mime_type = "text/markdown"
