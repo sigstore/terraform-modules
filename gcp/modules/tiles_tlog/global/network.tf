@@ -27,6 +27,7 @@ module "shared" {
   enable_adaptive_protection         = var.enable_adaptive_protection
   create_grpc_health_check           = var.grpc_write_path == "" ? false : true
   cloud_armor_rules                  = var.cloud_armor_rules
+  min_tls_version                    = var.min_tls_version
 }
 
 locals {

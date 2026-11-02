@@ -391,3 +391,33 @@ variable "rekor_pqc_cloud_armor_rules" {
   }))
   default = []
 }
+
+variable "rekor_tiles_min_tls_version" {
+  description = "Minimum TLS version for the global Rekor tiles SSL policy."
+  type        = string
+  default     = "TLS_1_2"
+  validation {
+    condition     = contains(["TLS_1_2", "TLS_1_3"], var.rekor_tiles_min_tls_version)
+    error_message = "rekor_tiles_min_tls_version must be either TLS_1_2 or TLS_1_3."
+  }
+}
+
+variable "rekor_tiles_pqc_min_tls_version" {
+  description = "Minimum TLS version for the global Rekor PQC tiles SSL policy."
+  type        = string
+  default     = "TLS_1_3"
+  validation {
+    condition     = contains(["TLS_1_2", "TLS_1_3"], var.rekor_tiles_pqc_min_tls_version)
+    error_message = "rekor_tiles_pqc_min_tls_version must be either TLS_1_2 or TLS_1_3."
+  }
+}
+
+variable "ctlog_tiles_min_tls_version" {
+  description = "Minimum TLS version for the shared CTLog tiles SSL policy."
+  type        = string
+  default     = "TLS_1_2"
+  validation {
+    condition     = contains(["TLS_1_2", "TLS_1_3"], var.ctlog_tiles_min_tls_version)
+    error_message = "ctlog_tiles_min_tls_version must be either TLS_1_2 or TLS_1_3."
+  }
+}

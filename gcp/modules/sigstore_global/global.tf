@@ -126,6 +126,7 @@ module "rekor_tiles_global" {
   grpc_write_path = "/dev.sigstore.rekor.v2.Rekor/CreateEntry"
 
   cloud_armor_rules = var.rekor_cloud_armor_rules
+  min_tls_version   = var.rekor_tiles_min_tls_version
 }
 
 module "rekor_tiles_pqc_global" {
@@ -143,6 +144,7 @@ module "rekor_tiles_pqc_global" {
   grpc_write_path = "/dev.sigstore.rekor.v2.IdentityRekor/CreateEntry"
 
   cloud_armor_rules = var.rekor_pqc_cloud_armor_rules
+  min_tls_version   = var.rekor_tiles_pqc_min_tls_version
 }
 
 module "ctlog_tiles_shared" {
@@ -150,6 +152,7 @@ module "ctlog_tiles_shared" {
 
   project_id         = var.project_id
   dns_subdomain_name = var.ctlog_tiles_dns_subdomain_name
+  min_tls_version    = var.ctlog_tiles_min_tls_version
 }
 
 module "monitoring_rekorv2_lb_all" {

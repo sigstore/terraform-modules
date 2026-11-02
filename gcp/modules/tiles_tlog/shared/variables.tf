@@ -106,6 +106,16 @@ variable "ssl_policy_name" {
   default     = ""
 }
 
+variable "min_tls_version" {
+  description = "Minimum TLS version for the SSL policy."
+  type        = string
+  default     = "TLS_1_2"
+  validation {
+    condition     = contains(["TLS_1_2", "TLS_1_3"], var.min_tls_version)
+    error_message = "min_tls_version must be either TLS_1_2 or TLS_1_3."
+  }
+}
+
 variable "cloud_armor_rules" {
   description = "Additional Cloud Armor security policy rules for the HTTP and gRPC backend services."
   type = list(object({
