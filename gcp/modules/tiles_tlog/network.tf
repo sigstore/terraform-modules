@@ -196,6 +196,20 @@ resource "google_compute_url_map" "url_map" {
   project = var.project_id
 
   default_service = google_compute_backend_bucket.tessera_backend_bucket.id
+  # When read requests are served under a rewritten prefix (e.g. /api/v2/* -> /*
+  # for Rekor Tiles), rewrite unmatched paths on the default route to a
+  # non-existent bucket prefix so the bucket is not also served from root (/).
+  # This is gated on http_read_rewrite_path so CTLog Tiles (which sets
+  # http_read_rewrite_path = "" and relies on default_service to serve /tile/*
+  # and /issuer/* from root) continues to serve root paths.
+  dynamic "default_route_action" {
+    for_each = var.http_read_rewrite_path == "" ? [] : [1]
+    content {
+      url_rewrite {
+        path_prefix_rewrite = "/404/"
+      }
+    }
+  }
 
   host_rule {
     hosts        = var.dns_domain_name == "" ? ["*"] : [local.hostname]
@@ -205,6 +219,15 @@ resource "google_compute_url_map" "url_map" {
   path_matcher {
     name            = var.shard_name
     default_service = google_compute_backend_bucket.tessera_backend_bucket.id
+    # See comment above on top-level default_route_action.
+    dynamic "default_route_action" {
+      for_each = var.http_read_rewrite_path == "" ? [] : [1]
+      content {
+        url_rewrite {
+          path_prefix_rewrite = "/404/"
+        }
+      }
+    }
     dynamic "route_rules" {
       for_each = var.lb_backend_turndown ? [] : [1]
 
