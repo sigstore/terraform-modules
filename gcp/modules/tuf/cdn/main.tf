@@ -115,8 +115,8 @@ resource "google_compute_url_map" "url_map" {
 resource "google_compute_ssl_policy" "ssl_policy" {
   project                   = var.project_id
   name                      = "${var.name_prefix}-repo-cdn-ingress-ssl-policy"
-  profile                   = "MODERN"
-  min_tls_version           = "TLS_1_2"
+  profile                   = var.min_tls_version == "TLS_1_3" ? "RESTRICTED" : "MODERN"
+  min_tls_version           = var.min_tls_version
   post_quantum_key_exchange = "ENABLED"
 }
 

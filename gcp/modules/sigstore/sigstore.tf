@@ -631,6 +631,7 @@ module "rekor_tiles" {
   single_region = each.value.single_region
 
   cloud_armor_rules = each.value.use_pqc_global_lb ? var.rekor_pqc_cloud_armor_rules : var.rekor_cloud_armor_rules
+  min_tls_version   = each.value.min_tls_version
 
   depends_on = [
     module.gke-cluster,
@@ -717,6 +718,8 @@ module "ctlog_tiles" {
   spanner_database_antispam_deletion_protection  = each.value.spanner_database_antispam_deletion_protection
 
   single_region = each.value.single_region
+
+  min_tls_version = each.value.min_tls_version
 
   depends_on = [
     module.gke-cluster,

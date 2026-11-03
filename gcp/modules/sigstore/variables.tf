@@ -933,6 +933,7 @@ variable "rekor_tiles_shards" {
     enable_monitoring                              = optional(bool, true)
     grpc_write_path                                = optional(string, "/dev.sigstore.rekor.v2.Rekor/CreateEntry")
     use_pqc_global_lb                              = optional(bool, false)
+    min_tls_version                                = optional(string, "TLS_1_2")
   }))
   description = "Map of Rekor shards to dynamically instantiate"
   default     = {}
@@ -970,6 +971,14 @@ variable "rekor_tiles_shards" {
       )
     ])
     error_message = "Generated Compute Engine LB resource names for each shard in rekor_tiles_shards cannot exceed 63 characters."
+  }
+
+  validation {
+    condition = alltrue([
+      for k, v in var.rekor_tiles_shards :
+      contains(["TLS_1_2", "TLS_1_3"], v.min_tls_version)
+    ])
+    error_message = "min_tls_version for each shard in rekor_tiles_shards must be either TLS_1_2 or TLS_1_3."
   }
 }
 
@@ -1066,9 +1075,18 @@ variable "ctlog_tiles_shards" {
     single_region                                  = optional(bool, true)
     spanner_instance_id                            = optional(string)
     enable_monitoring                              = optional(bool, true)
+    min_tls_version                                = optional(string, "TLS_1_2")
   }))
   description = "Map of CTLog shards to dynamically instantiate"
   default     = {}
+
+  validation {
+    condition = alltrue([
+      for k, v in var.ctlog_tiles_shards :
+      contains(["TLS_1_2", "TLS_1_3"], v.min_tls_version)
+    ])
+    error_message = "min_tls_version for each shard in ctlog_tiles_shards must be either TLS_1_2 or TLS_1_3."
+  }
 }
 
 /********************************/
