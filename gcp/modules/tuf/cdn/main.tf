@@ -36,20 +36,29 @@ resource "google_compute_managed_ssl_certificate" "cert" {
   }
 }
 
-// backend bucket with CDN policy with aggressive caching
+// backend bucket with CDN policy with aggressive caching. When var.enable_cdn
+// is false this serves identically to the not_cached bucket below; the two are
+// kept distinct so the url_map routing stays intact and CDN can be re-enabled
+// without recreating backends.
 resource "google_compute_backend_bucket" "cached" {
   project = var.project_id
 
   name        = "${var.name_prefix}-root-cached-backend-bucket"
   description = "Cached - ${var.name_prefix} TUF repository"
   bucket_name = var.tuf_bucket_name
-  enable_cdn  = true
-  cdn_policy {
-    cache_mode        = "FORCE_CACHE_ALL"
-    client_ttl        = 86400
-    default_ttl       = 86400
-    negative_caching  = false
-    serve_while_stale = 0
+  enable_cdn  = var.enable_cdn
+
+  // omitted entirely when CDN is off, so the disabled policy the API reports
+  // back does not show up as a permanent diff
+  dynamic "cdn_policy" {
+    for_each = var.enable_cdn ? [1] : []
+    content {
+      cache_mode        = "FORCE_CACHE_ALL"
+      client_ttl        = 86400
+      default_ttl       = 86400
+      negative_caching  = false
+      serve_while_stale = 0
+    }
   }
 }
 
