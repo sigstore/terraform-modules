@@ -56,6 +56,12 @@ variable "dns_ttl" {
   default     = 60
 }
 
+variable "enable_cdn" {
+  description = "whether to enable Cloud CDN on the cached backend bucket"
+  type        = bool
+  default     = true
+}
+
 variable "min_tls_version" {
   description = "Minimum TLS version for the SSL policy."
   type        = string
