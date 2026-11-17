@@ -26,19 +26,6 @@ output "mysql_connection" {
   value       = format("%s:%s:%s", var.project_id, var.region, google_sql_database_instance.trillian.name)
 }
 
-// Mysql DB username.
-output "mysql_user" {
-  description = "The Cloud SQL Instance User name"
-  value       = google_sql_user.trillian.name
-}
-
-// Mysql DB password.
-output "mysql_pass" {
-  sensitive   = true
-  description = "The Cloud SQL Instance Password (Generated)"
-  value       = google_sql_user.trillian.password
-}
-
 output "mysql_database" {
   description = "The Cloud SQL Instance Database name"
   value       = google_sql_database.trillian.name

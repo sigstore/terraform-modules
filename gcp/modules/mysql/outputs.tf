@@ -30,16 +30,3 @@ output "mysql_connection" {
   description = "The connection string dynamically generated for storage inside the Kubernetes configmap"
   value       = format("%s:%s:%s", var.project_id, var.region, google_sql_database_instance.sigstore.name)
 }
-
-// MySQL DB username.
-output "mysql_user" {
-  description = "The Cloud SQL Instance User name"
-  value       = google_sql_user.trillian.name
-}
-
-// MySQL DB password.
-output "mysql_pass" {
-  sensitive   = true
-  description = "The Cloud SQL Instance Password"
-  value       = google_sql_user.trillian.password
-}

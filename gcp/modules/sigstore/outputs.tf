@@ -61,19 +61,6 @@ output "mysql_connection" {
   value       = length(module.mysql) > 0 ? module.mysql[0].mysql_connection : ""
 }
 
-// MySQL DB username.
-output "mysql_user" {
-  description = "The Cloud SQL Instance User name"
-  value       = length(module.mysql) > 0 ? module.mysql[0].mysql_user : ""
-}
-
-// MySQL DB password.
-output "mysql_pass" {
-  sensitive   = true
-  description = "The Cloud SQL Instance Password (Generated)"
-  value       = length(module.mysql) > 0 ? module.mysql[0].mysql_pass : ""
-}
-
 // CTLog MySQL DB name.
 output "ctlog_mysql_database" {
   description = "The CTLog Cloud SQL Database name"
