@@ -134,15 +134,6 @@ resource "google_sql_database" "trillian" {
   depends_on = [google_sql_database_instance.trillian]
 }
 
-resource "google_sql_user" "trillian" {
-  name       = "trillian"
-  project    = var.project_id
-  instance   = google_sql_database_instance.trillian.name
-  password   = var.password
-  host       = "%"
-  depends_on = [google_sql_database_instance.trillian]
-}
-
 // be sure to manually GRANT SELECT, INSERT, CREATE privileges for this user
 resource "google_sql_user" "iam_user" {
   name     = var.cloud_sql_iam_service_account
