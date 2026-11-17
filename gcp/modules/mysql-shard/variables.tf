@@ -127,14 +127,6 @@ variable "deletion_protection" {
   default     = true
 }
 
-// This is ok to have here because nobody can connect to the database without
-// IAM and it sits on private network.
-variable "password" {
-  type        = string
-  description = "mysql password within the database"
-  sensitive   = true
-}
-
 variable "collation" {
   type        = string
   description = "collation setting for database"
